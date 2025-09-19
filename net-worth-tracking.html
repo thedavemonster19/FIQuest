@@ -1,0 +1,2528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Net Worth Tracking - FIQuest</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background: #f8f9fa;
+        }
+
+        .app-container {
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            height: 100vh;
+            overflow-y: auto;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            background: rgba(0,0,0,0.2);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .app-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+            color: white;
+        }
+
+        .user-info {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        .nav-menu {
+            padding: 20px 0;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .nav-menu a.active {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            font-size: 18px;
+        }
+
+        /* Collapsible Navigation Styles */
+        .nav-section {
+            margin: 5px 0;
+        }
+
+        .nav-section-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-section-toggle:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .toggle-arrow {
+            font-size: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-arrow.expanded {
+            transform: rotate(90deg);
+        }
+
+        .nav-subsection {
+            background: rgba(0,0,0,0.2);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .nav-subitem {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px 10px 40px;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .nav-subitem:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .nav-subitem.active {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            font-weight: bold;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 0;
+            background: #f8f9fa;
+            min-height: 100vh;
+        }
+
+        .page {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .page-title {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            color: #666;
+            font-size: 16px;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .input-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        input[readonly] {
+            background-color: #f8f9fa;
+        }
+
+        .calculate-btn, .clear-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        .calculate-btn:hover, .clear-btn:hover {
+            background: #5a67d8;
+        }
+
+        .scenario-controls {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        /* Tracking Table Styles */
+        #trackingTableWrapper {
+            position: relative;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        #trackingTableHeader {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            background: white;
+            border-bottom: 2px solid #ddd;
+        }
+
+        #trackingTableContainer {
+            overflow-x: auto;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        #netWorthTrackingTable {
+            position: relative;
+            width: 100%;
+        }
+
+        #netWorthTrackingTable th,
+        #netWorthTrackingTable td {
+            padding: 12px;
+            text-align: right;
+            border: 1px solid #ddd;
+            white-space: nowrap;
+            min-width: 120px;
+        }
+
+        #netWorthTrackingTable thead th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+            position: sticky;
+            top: 0;
+            z-index: 4;
+        }
+
+        #netWorthTrackingTable tbody td:first-child,
+        #netWorthTrackingTable thead th:first-child {
+            text-align: left;
+            position: sticky;
+            left: 0;
+            background: white;
+            z-index: 3;
+            font-weight: bold;
+            min-width: 200px;
+            max-width: 200px;
+        }
+
+        #netWorthTrackingTable thead th:first-child {
+            background: #667eea;
+            color: white;
+            z-index: 5;
+        }
+
+        /* Asset and Liability Section Headers */
+        .section-header {
+            background: #e8f5e8 !important;
+            font-weight: bold;
+            color: #2e7d32 !important;
+        }
+
+        .liability-section-header {
+            background: #fff3e0 !important;
+            color: #d32f2f !important;
+        }
+
+        .total-row {
+            background: #f0f0f0 !important;
+            font-weight: bold;
+            border-top: 2px solid #333 !important;
+        }
+
+        .net-worth-row {
+            background: #667eea !important;
+            color: white !important;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .net-worth-row td:first-child {
+            color: #4CAF50 !important;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-250px);
+                transition: transform 0.3s ease;
+                z-index: 1000;
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .page {
+                padding: 20px 10px;
+            }
+
+            .input-section {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            #trackingTableContainer {
+                font-size: 12px;
+            }
+
+            #netWorthTrackingTable td:first-child,
+            #netWorthTrackingTable th:first-child {
+                min-width: 150px;
+            }
+        }
+
+        .disclaimer {
+            margin: 40px 0;
+            padding: 30px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            border: 1px solid #dee2e6;
+        }
+
+        .disclaimer h3 {
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .disclaimer p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 0;
+            text-align: justify;
+        }
+    </style>
+    <script src="user-manager.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h1 class="app-title">FIQuest</h1>
+                <p class="user-info">Financial Independence Journey</p>
+            </div>
+            
+            <div class="nav-menu">
+                <a href="my-scenario.html" id="nav-scenarios">
+                    <span class="nav-icon">📊</span>
+                    My Scenario
+                </a>
+                <a href="net-worth-tracking.html" id="nav-net-worth-tracking" class="active">
+                    <span class="nav-icon">📈</span>
+                    Net Worth Tracking
+                </a>
+                <!-- Collapsible Initial Setup Section -->
+                <div class="nav-section">
+                    <a href="#" class="nav-section-toggle" onclick="toggleInitialSetup(event)">
+                        <span class="nav-icon">⚙️</span>
+                        Initial Setup
+                        <span class="toggle-arrow" id="setup-arrow">▶</span>
+                    </a>
+                    <div class="nav-subsection" id="initial-setup-section" style="display: none;">
+                        <a href="fi-calculator.html?access=intentional" id="nav-fi-calculator" class="nav-subitem">
+                            <span class="nav-icon">🧮</span>
+                            FI Calculator
+                        </a>
+                        <a href="net-worth.html" id="nav-net-worth" class="nav-subitem">
+                            <span class="nav-icon">💰</span>
+                            Net Worth Setup
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <div class="page">
+                <div class="page-header">
+                    <h1 class="page-title">Net Worth Tracking</h1>
+                    <p class="page-subtitle">Track your net worth progress over time</p>
+                </div>
+                <div class="container">
+                    <!-- Scenario Display -->
+                    <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin-bottom: 25px;">
+                        <h3 style="margin: 0 0 10px 0; color: #2e7d32;">FI Scenario & Initial Setup</h3>
+                        <p id="scenarioNameDisplay" style="margin: 0 0 5px 0; font-weight: bold; color: #1565c0;">Loading...</p>
+                        <p id="setupDateDisplay" style="margin: 0; color: #666; font-size: 14px;">Setup Date: Loading...</p>
+                    </div>
+
+                    <!-- Summary Cards -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                        <div style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+                            <h4 style="margin: 0 0 10px 0;">Initial Net Worth</h4>
+                            <div id="initialNetWorthDisplay" style="font-size: 24px; font-weight: bold;">Loading...</div>
+                        </div>
+                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+                            <h4 style="margin: 0 0 10px 0;">FI Target Net Worth</h4>
+                            <div id="fiTargetNetWorthDisplay" style="font-size: 24px; font-weight: bold;">Loading...</div>
+                        </div>
+                        <div style="background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+                            <h4 style="margin: 0 0 10px 0;">Years to FI</h4>
+                            <div id="yearsToFiDisplay" style="font-size: 24px; font-weight: bold;">Loading...</div>
+                        </div>
+                    </div>
+
+                    <!-- Update Current Values Button -->
+                    <div style="margin-bottom: 20px;">
+                        <button class="calculate-btn" onclick="showUpdateForm()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold;">📝 Update Current Values</button>
+                    </div>
+
+                    <!-- Net Worth Tracking Table -->
+                    <div style="margin-bottom: 30px;">
+                        <h3 style="color: #333; border-bottom: 2px solid #667eea; padding-bottom: 10px; margin-bottom: 20px;">📊 Net Worth Projection by Year</h3>
+
+                        <div id="trackingTableWrapper">
+                            <!-- Table Container with Horizontal Scroll -->
+                            <div id="trackingTableContainer">
+                                <table id="netWorthTrackingTable" style="border-collapse: collapse; font-size: 14px;">
+                                    <!-- Table will be populated by JavaScript -->
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Update Current Values Form (Hidden by default) -->
+                    <div id="updateValuesForm" style="display: none; background: #f8f9fa; border: 2px solid #667eea; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h3 style="color: #333; margin: 0;">📝 Update Current Values</h3>
+                            <button onclick="closeUpdateForm()" style="background: #dc3545; color: white; border: none; border-radius: 4px; padding: 6px 12px; cursor: pointer;">✕ Close</button>
+                        </div>
+
+                        <!-- Date Input Section -->
+                        <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                            <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">Entry Date:</label>
+                            <input type="date" id="entryDate" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+                            <small style="display: block; color: #666; margin-top: 5px;">Defaults to today's date. You can change this if entering historical data.</small>
+                        </div>
+
+                        <!-- Account Values Input Section -->
+                        <div id="accountValuesSection">
+                            <!-- Dynamic account inputs will be populated here -->
+                        </div>
+
+                        <!-- Notes Section -->
+                        <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                            <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">Notes (Optional):</label>
+                            <textarea id="entryNotes" placeholder="Add any notes about this entry..." style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; height: 80px; resize: vertical;"></textarea>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div style="display: flex; gap: 15px; justify-content: flex-end;">
+                            <button onclick="closeUpdateForm()" style="background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">Cancel</button>
+                            <button onclick="saveCurrentValues()" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold;">💾 Save Entry</button>
+                        </div>
+                    </div>
+
+                    <!-- Net Worth Chart -->
+                    <div style="margin-bottom: 30px;">
+                        <h3 style="color: #333; border-bottom: 2px solid #667eea; padding-bottom: 10px; margin-bottom: 20px;">📈 Net Worth & Portfolio Progress Chart</h3>
+                        <div id="chartContainer" style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); height: 600px;">
+                            <canvas id="netWorthChart" style="height: 100%; width: 100%;"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="disclaimer">
+                        <h3>Disclaimer</h3>
+                        <p>This material is provided for general informational purposes only and does not constitute financial, investment, tax, legal or accounting advice, it should not be relied upon in that regard or be considered predictive of any future market performance, nor does it constitute an offer or solicitation to buy or sell any securities referred to. Individual circumstances and current events are critical to sound investment planning; anyone wishing to act on this material should consult with their advisor. Before making any investment decisions, we encourage you to consider these and other factors carefully. Past performance may not be repeated and is not indicative of future results.</p>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+    <!-- Chart.js Library -->
+    <script src="chart.min.js"></script>
+    
+    <script>
+        // Net Worth Setup Functions
+        let assetAllocationChart = null;
+
+        function initializeNetWorthPage() {
+            // Load from saved Net Worth Setup data
+            const savedSetup = JSON.parse(localStorage.getItem('fiquest_net_worth_setup') || 'null');
+            const activeScenario = JSON.parse(localStorage.getItem('fiquest_active_scenario') || 'null');
+            
+            if (savedSetup && savedSetup.scenario) {
+                
+                // Check if setup has individual accounts (new format)
+                const hasIndividualAccounts = savedSetup.assets && 
+                                             Array.isArray(savedSetup.assets.investmentAccounts) && 
+                                             savedSetup.assets.investmentAccounts.length > 0;
+                
+                // Display scenario and setup info
+                document.getElementById('scenarioNameDisplay').textContent = savedSetup.scenario.name || 'FI Scenario';
+                document.getElementById('setupDateDisplay').textContent = `Initial Setup: ${savedSetup.setupDate || 'Unknown Date'}`;
+                
+                if (!hasIndividualAccounts) {
+                    // Show upgrade message for old format
+                    document.getElementById('setupDateDisplay').innerHTML = `
+                        Initial Setup: ${savedSetup.setupDate || 'Unknown Date'}
+                        <div style="color: #d39e00; font-size: 12px; margin-top: 5px;">
+                            ⚠️ <a href="net-worth.html" style="color: #d39e00;">Re-save Net Worth Setup</a> for individual account tracking
+                        </div>
+                    `;
+                }
+                
+                // Build the comprehensive tracking table
+                buildTrackingTable(savedSetup);
+
+                // Update summary cards
+                updateSummaryCards(savedSetup);
+
+                // Create the net worth chart
+                createNetWorthChart(savedSetup);
+                
+            } else if (activeScenario) {
+                // Fallback to scenario data if no setup saved
+                
+                document.getElementById('scenarioNameDisplay').textContent = activeScenario.name;
+                document.getElementById('setupDateDisplay').textContent = 'Setup Required - Please complete Net Worth Setup first';
+                
+                // Show message to complete setup first
+                const table = document.getElementById('netWorthTrackingTable');
+                table.innerHTML = `
+                    <tr>
+                        <td colspan="100%" style="text-align: center; padding: 40px; color: #666;">
+                            <h3>Net Worth Setup Required</h3>
+                            <p>Please complete your initial Net Worth Setup first to see projections.</p>
+                            <button onclick="window.location.href='net-worth.html'" style="margin-top: 15px; padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                Go to Net Worth Setup →
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                
+            } else {
+                // No data available
+                document.getElementById('scenarioNameDisplay').textContent = 'No Data Available';
+                document.getElementById('setupDateDisplay').textContent = 'No setup data found';
+                
+                const table = document.getElementById('netWorthTrackingTable');
+                table.innerHTML = '<tr><td style="text-align: center; padding: 40px; color: #666;">No data available. Please start with the FI Calculator.</td></tr>';
+            }
+        }
+
+        function getAnnualSpendingForYear(scenario, year, setupYear, index) {
+            if (!scenario.results || !scenario.results.years) return 0;
+            const yearData = scenario.results.years.find(y => y.year === year);
+            return yearData ? yearData.annualSpending || 0 : 0;
+        }
+        
+        function getWithdrawalCapacityForYear(scenario, year, setupYear, index) {
+            if (!scenario.results || !scenario.results.years) return 0;
+            const yearData = scenario.results.years.find(y => y.year === year);
+            return yearData ? yearData.withdrawalCapacity || 0 : 0;
+        }
+        
+        function getNetContributionsForYear(scenario, year, setupYear, index) {
+            if (!scenario.results || !scenario.results.years) return 0;
+            const yearData = scenario.results.years.find(y => y.year === year);
+            return yearData ? yearData.contributions || 0 : 0;
+        }
+        
+        function getTotalRemainingDebtForYear(scenario, year, setupYear, index) {
+            if (!scenario.results || !scenario.results.years) return 0;
+            const yearData = scenario.results.years.find(y => y.year === year);
+            return yearData ? yearData.totalRemainingDebt || 0 : 0;
+        }
+        
+        function getPortfolioValueForYear(scenario, year, setupYear, index) {
+            if (!scenario.results || !scenario.results.years) return 0;
+            const yearData = scenario.results.years.find(y => y.year === year);
+            return yearData ? yearData.portfolioValue || 0 : 0;
+        }
+
+        function getActualAccountValue(entry, accountName, accountType) {
+            // Helper function to extract actual values from saved entry
+            if (!entry || !entry.accounts) {
+                return null;
+            }
+            
+            const accounts = entry.accounts;
+            
+            let searchIn = null;
+            
+            if (accountType === 'investment' || accountType === 'asset') {
+                searchIn = accounts.assets;
+            } else if (accountType === 'debt' || accountType === 'liability') {
+                searchIn = accounts.liabilities;
+            }
+            
+            if (!searchIn) {
+                return null;
+            }
+            
+            // Try to find by stored accountName first, then fallback to key matching
+            for (const [key, accountData] of Object.entries(searchIn)) {
+                
+                // Check if the stored accountName matches
+                if (accountData.accountName && accountData.accountName === accountName) {
+                    return accountData.actual || 0;
+                }
+                
+                // Fallback: try to match by key or partial name
+                if (key.includes(accountName.toLowerCase()) || 
+                    accountName.toLowerCase().includes(key) ||
+                    (accountData.accountName && accountData.accountName.toLowerCase().includes(accountName.toLowerCase()))) {
+                    return accountData.actual || 0;
+                }
+            }
+            
+            return null;
+        }
+
+        function calculateActualTotalAssets(entry) {
+            if (!entry || !entry.totals) return null;
+            return entry.totals.totalAssets || 0;
+        }
+
+        function calculateActualTotalLiabilities(entry) {
+            if (!entry || !entry.totals) return null;
+            return entry.totals.totalLiabilities || 0;
+        }
+
+        function calculateActualPortfolioValue(entry, savedSetup) {
+            // Calculate the sum of all investment account actual values
+            if (!entry || !savedSetup || !savedSetup.scenario || !savedSetup.scenario.inputs) {
+                return null;
+            }
+
+            const investmentAccounts = savedSetup.scenario.inputs.accounts || [];
+            let portfolioTotal = 0;
+            let hasAnyValue = false;
+
+            // Sum up all investment account values from the actual entry
+            investmentAccounts.forEach(account => {
+                const actualValue = getActualAccountValue(entry, account.name, 'investment');
+                if (actualValue !== null) {
+                    portfolioTotal += actualValue;
+                    hasAnyValue = true;
+                }
+            });
+
+            // Return null if no investment accounts had actual values, otherwise return the sum
+            return hasAnyValue ? portfolioTotal : null;
+        }
+
+        function buildChartData(savedSetup) {
+            // Extract data for the chart from the same data sources used by the table
+            const scenario = savedSetup.scenario;
+            const setupYear = savedSetup.setupYear || new Date().getFullYear();
+
+            // Get user's current age and life expectancy from scenario
+            const currentAge = scenario.inputs?.currentAge || 35;
+            const lifeExpectancy = scenario.inputs?.lifeExpectancy || 85;
+            const fiAge = scenario.results?.fiAge || lifeExpectancy;
+
+            // Calculate years for chart (from setup year to FI year)
+            const fiYear = scenario.results?.fiYear || (setupYear + (fiAge - currentAge));
+            const projectionYears = [];
+            const ages = [];
+
+            for (let year = setupYear; year <= fiYear; year++) {
+                projectionYears.push(year);
+                ages.push(currentAge + (year - setupYear));
+            }
+
+            // Get saved net worth entries for actual data points
+            const netWorthEntries = userManager.getNetWorthEntries();
+
+            // Build projection data arrays
+            const projectedNetWorth = [];
+            const projectedPortfolio = [];
+            const years = [];
+
+            projectionYears.forEach(year => {
+                years.push(year);
+
+                // Calculate projected net worth
+                const totalAssets = calculateTotalAssetsForYear(savedSetup, year, setupYear);
+                const totalLiabilities = calculateTotalLiabilitiesForYear(savedSetup, year, setupYear);
+                const netWorth = totalAssets - totalLiabilities;
+                projectedNetWorth.push(netWorth);
+
+                // Calculate projected portfolio value
+                const yearsFromSetup = year - setupYear;
+                const portfolioValue = getPortfolioValueForYear(scenario, year, setupYear, yearsFromSetup);
+                projectedPortfolio.push(portfolioValue);
+            });
+
+            // Build actual data arrays
+            const actualNetWorthData = [];
+            const actualPortfolioData = [];
+            const actualYears = [];
+
+            netWorthEntries.forEach(entry => {
+                const entryDate = new Date(entry.date);
+                const entryYear = entryDate.getFullYear();
+
+                // Calculate fractional year position (e.g., June 15 = 0.5, Sept 30 = 0.75)
+                const startOfYear = new Date(entryYear, 0, 1);
+                const endOfYear = new Date(entryYear + 1, 0, 1);
+                const yearProgress = (entryDate - startOfYear) / (endOfYear - startOfYear);
+                const fractionalYear = entryYear + yearProgress;
+
+                // Only include entries within our projection range
+                if (entryYear >= setupYear && entryYear <= fiYear) {
+                    actualYears.push(fractionalYear);
+
+                    // Calculate actual net worth
+                    const actualAssets = calculateActualTotalAssets(entry);
+                    const actualLiabilities = calculateActualTotalLiabilities(entry);
+                    const actualNetWorth = actualAssets !== null && actualLiabilities !== null ?
+                        actualAssets - actualLiabilities : null;
+                    actualNetWorthData.push({x: fractionalYear, y: actualNetWorth});
+
+                    // Calculate actual portfolio value
+                    const actualPortfolioValue = calculateActualPortfolioValue(entry, savedSetup);
+                    actualPortfolioData.push({x: fractionalYear, y: actualPortfolioValue});
+                }
+            });
+
+            return {
+                years: years,
+                projectedNetWorth: projectedNetWorth,
+                projectedPortfolio: projectedPortfolio,
+                actualNetWorth: actualNetWorthData,
+                actualPortfolio: actualPortfolioData
+            };
+        }
+
+        let netWorthChart = null; // Global chart instance
+
+        function createNetWorthChart(savedSetup) {
+            // Destroy existing chart if it exists
+            if (netWorthChart) {
+                netWorthChart.destroy();
+            }
+
+            // Get chart data
+            const chartData = buildChartData(savedSetup);
+
+            // Calculate custom y-axis scaling based on FI target year values
+            const fiYear = savedSetup.scenario.results?.fiYear || chartData.years[chartData.years.length - 1];
+            const fiYearIndex = chartData.years.indexOf(fiYear);
+
+            let maxValueAtFI = 0;
+            if (fiYearIndex >= 0) {
+                const netWorthAtFI = chartData.projectedNetWorth[fiYearIndex] || 0;
+                const portfolioAtFI = chartData.projectedPortfolio[fiYearIndex] || 0;
+                maxValueAtFI = Math.max(netWorthAtFI, portfolioAtFI);
+            }
+
+            // Round to nearest 1,000,000 and divide by 10 for step size
+            const roundedMax = Math.ceil(maxValueAtFI / 1000000) * 1000000;
+            const stepSize = roundedMax / 10;
+
+            // Debug to verify calculations
+            console.log('Scaling Values - Max at FI:', maxValueAtFI, 'Rounded:', roundedMax, 'Step:', stepSize);
+
+            // Get canvas context
+            const ctx = document.getElementById('netWorthChart').getContext('2d');
+
+            // Create chart configuration
+            const config = {
+                type: 'line',
+                data: {
+                    labels: chartData.years,
+                    datasets: [
+                        {
+                            label: 'Projected Net Worth',
+                            data: chartData.projectedNetWorth,
+                            borderColor: '#2196F3',
+                            backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                            borderWidth: 3,
+                            fill: false,
+                            tension: 0.1,
+                            pointRadius: 3,
+                            pointHoverRadius: 6
+                        },
+                        {
+                            label: 'Projected Portfolio Value',
+                            data: chartData.projectedPortfolio,
+                            borderColor: '#9C27B0',
+                            backgroundColor: 'rgba(156, 39, 176, 0.1)',
+                            borderWidth: 3,
+                            fill: false,
+                            tension: 0.1,
+                            pointRadius: 3,
+                            pointHoverRadius: 6
+                        },
+                        {
+                            label: 'Actual Net Worth',
+                            data: chartData.actualNetWorth,
+                            borderColor: '#2196F3',
+                            backgroundColor: '#2196F3',
+                            borderWidth: 0,
+                            pointRadius: 8,
+                            pointHoverRadius: 10,
+                            showLine: false,
+                            pointStyle: 'circle'
+                        },
+                        {
+                            label: 'Actual Portfolio Value',
+                            data: chartData.actualPortfolio,
+                            borderColor: '#9C27B0',
+                            backgroundColor: '#9C27B0',
+                            borderWidth: 0,
+                            pointRadius: 8,
+                            pointHoverRadius: 10,
+                            showLine: false,
+                            pointStyle: 'circle'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Net Worth & Portfolio Progress Over Time',
+                            font: {
+                                size: 18,
+                                weight: 'bold'
+                            },
+                            padding: {
+                                top: 10,
+                                bottom: 20
+                            }
+                        },
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20,
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            title: {
+                                display: true,
+                                text: 'Year',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                display: true,
+                                color: 'rgba(0,0,0,0.1)'
+                            },
+                            min: chartData.years[0],
+                            max: chartData.years[chartData.years.length - 1],
+                            ticks: {
+                                stepSize: 1,
+                                callback: function(value, index, ticks) {
+                                    // Only show whole year labels
+                                    if (value % 1 === 0) {
+                                        return value.toString();
+                                    }
+                                    return '';
+                                },
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Value ($)',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                display: true,
+                                color: 'rgba(0,0,0,0.1)',
+                                lineWidth: 1
+                            },
+                            min: 0,
+                            max: roundedMax,
+                            ticks: {
+                                stepSize: stepSize,
+                                autoSkip: false,
+                                font: {
+                                    size: 12
+                                },
+                                callback: function(value, index, ticks) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
+                    hover: {
+                        animationDuration: 200
+                    }
+                }
+            };
+
+            // Create the chart
+            netWorthChart = new Chart(ctx, config);
+        }
+
+        function buildTrackingTable(savedSetup) {
+            const scenario = savedSetup.scenario;
+            const setupYear = savedSetup.setupYear || new Date().getFullYear();
+            
+            // Get user's current age and life expectancy from scenario
+            const currentAge = scenario.inputs?.currentAge || 35; // Fallback if missing
+            const lifeExpectancy = scenario.inputs?.lifeExpectancy || 85; // Fallback if missing
+            
+            // Calculate the year they reach life expectancy
+            const lifeExpectancyYear = setupYear + (lifeExpectancy - currentAge);
+            
+            // Calculate FI year from scenario results
+            let fiYear = setupYear + 30; // Default fallback
+            if (scenario.results && scenario.results.fiYear) {
+                fiYear = scenario.results.fiYear; // fiYear is already an absolute year
+            }
+            
+            // Use the earlier of FI year or life expectancy year, but include both milestones
+            const endYear = Math.max(fiYear, lifeExpectancyYear);
+            
+            // Generate projection year columns from setup year to end year
+            const projectionYears = [];
+            const ages = [];
+            for (let year = setupYear; year <= endYear; year++) {
+                projectionYears.push(year);
+                const ageInYear = currentAge + (year - setupYear);
+                ages.push(ageInYear);
+            }
+            
+            // Get all saved net worth entries and sort by date
+            const netWorthEntries = userManager.getNetWorthEntries();
+            
+            // Build combined column structure: projections + actual data entries in chronological order
+            const allColumns = [];
+            
+            // Add each projection year with potential actual data inserted chronologically
+            projectionYears.forEach((projYear, projIndex) => {
+                const projAge = ages[projIndex];
+                
+                // Add the projection column
+                allColumns.push({
+                    type: 'projection',
+                    year: projYear,
+                    age: projAge,
+                    isInitial: projIndex === 0,
+                    isFI: projYear === fiYear && projYear < lifeExpectancyYear,
+                    isLifeExp: projYear === lifeExpectancyYear && projYear > fiYear,
+                    isBoth: projYear === fiYear && projYear === lifeExpectancyYear
+                });
+                
+                // Insert actual data columns that fall between this year and next year
+                const nextProjYear = projIndex < projectionYears.length - 1 ? projectionYears[projIndex + 1] : projYear + 1;
+                
+                netWorthEntries.forEach(entry => {
+                    // Parse date as local date to avoid timezone offset issues
+                    const dateParts = entry.date.split('-'); // YYYY-MM-DD
+                    const entryDate = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2])); // Local date
+                    
+                    const entryYear = entryDate.getFullYear();
+                    
+                    // Insert if entry falls between current projection year and next projection year
+                    if (entryYear >= projYear && entryYear < nextProjYear) {
+                        // Check if we already added this entry
+                        const alreadyAdded = allColumns.some(col => col.type === 'actual' && col.entryId === entry.id);
+                        
+                        if (!alreadyAdded) {
+                            allColumns.push({
+                                type: 'actual',
+                                entryId: entry.id,
+                                date: entry.date,
+                                year: entryYear,
+                                entry: entry,
+                                displayDate: entryDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                            });
+                        }
+                    }
+                });
+            });
+            
+            // Sort columns to ensure proper chronological order
+            allColumns.sort((a, b) => {
+                if (a.type === 'projection' && b.type === 'projection') {
+                    return a.year - b.year;
+                } else if (a.type === 'actual' && b.type === 'actual') {
+                    return new Date(a.date) - new Date(b.date);
+                } else if (a.type === 'projection' && b.type === 'actual') {
+                    return a.year === b.year ? -1 : a.year - b.year; // Projection comes before actual for same year
+                } else { // a.type === 'actual' && b.type === 'projection'
+                    return a.year === b.year ? 1 : a.year - b.year; // Actual comes after projection for same year
+                }
+            });
+            
+            
+            // Build table structure
+            const table = document.getElementById('netWorthTrackingTable');
+            let tableHTML = '';
+            
+            // Header row
+            tableHTML += '<thead><tr><th>Asset / Liability</th>';
+            allColumns.forEach(col => {
+                if (col.type === 'projection') {
+                    if (col.isInitial) {
+                        tableHTML += `<th style="background: #4CAF50; color: white;">Initial<br>(${col.year})<br>Age ${col.age}</th>`;
+                    } else if (col.isFI) {
+                        tableHTML += `<th style="background: #FF9800; color: white;">FI Target<br>(${col.year})<br>Age ${col.age}</th>`;
+                    } else if (col.isLifeExp) {
+                        tableHTML += `<th style="background: #9C27B0; color: white;">Life Exp.<br>(${col.year})<br>Age ${col.age}</th>`;
+                    } else if (col.isBoth) {
+                        tableHTML += `<th style="background: #E91E63; color: white;">FI & Life Exp.<br>(${col.year})<br>Age ${col.age}</th>`;
+                    } else {
+                        tableHTML += `<th>${col.year}<br>Age ${col.age}</th>`;
+                    }
+                } else { // actual data
+                    tableHTML += `<th style="background: #2196F3; color: white; font-size: 12px; position: sticky; top: 0; z-index: 4;">
+                        📊 ACTUAL<br>${col.displayDate}
+                        <button onclick="deleteNetWorthEntry('${col.entryId}')"
+                                style="position: absolute; top: 2px; right: 2px; background: #f44336; color: white; border: none;
+                                       border-radius: 50%; width: 20px; height: 20px; font-size: 12px; cursor: pointer;
+                                       display: flex; align-items: center; justify-content: center;"
+                                title="Delete this entry">×</button>
+                    </th>`;
+                }
+            });
+            tableHTML += '</tr></thead><tbody>';
+            
+            // Assets section
+            tableHTML += '<tr class="section-header"><td><strong>📈 ASSETS</strong></td>';
+            allColumns.forEach(() => tableHTML += '<td></td>');
+            tableHTML += '</tr>';
+            
+            // Investment accounts
+            if (scenario.inputs && scenario.inputs.accounts) {
+                scenario.inputs.accounts.forEach(account => {
+                    tableHTML += `<tr><td>&nbsp;&nbsp;&nbsp;${account.name}</td>`;
+                    allColumns.forEach(col => {
+                        if (col.type === 'projection') {
+                            if (col.isInitial) {
+                                tableHTML += `<td>$${formatNumber(Math.round(account.value))}</td>`;
+                            } else {
+                                // Project growth using FI Calculator logic
+                                const yearsFromSetup = col.year - setupYear;
+                                const projectedValue = calculateInvestmentAccountProjection(account, scenario, yearsFromSetup, setupYear);
+                                tableHTML += `<td>$${formatNumber(Math.round(projectedValue))}</td>`;
+                            }
+                        } else { // actual data
+                            const actualValue = getActualAccountValue(col.entry, account.name, 'investment');
+                            const cellClass = actualValue !== null ? 'actual-value' : 'no-data';
+                            const displayValue = actualValue !== null ? `$${formatNumber(Math.round(actualValue))}` : '-';
+                            tableHTML += `<td class="${cellClass}" style="background: #e3f2fd; font-weight: bold;">${displayValue}</td>`;
+                        }
+                    });
+                    tableHTML += '</tr>';
+                });
+            }
+            
+            // Additional assets (remain static - no growth applied)
+            if (savedSetup.assets && savedSetup.assets.additionalAssets) {
+                Object.entries(savedSetup.assets.additionalAssets).forEach(([name, value]) => {
+                    if (value > 0) {
+                        tableHTML += `<tr><td>&nbsp;&nbsp;&nbsp;${name}</td>`;
+                        allColumns.forEach(col => {
+                            if (col.type === 'projection') {
+                                // Custom assets remain static - no growth applied
+                                tableHTML += `<td>$${formatNumber(Math.round(value))}</td>`;
+                            } else { // actual data
+                                const actualValue = getActualAccountValue(col.entry, name, 'asset');
+                                const cellClass = actualValue !== null ? 'actual-value' : 'no-data';
+                                const displayValue = actualValue !== null ? `$${formatNumber(Math.round(actualValue))}` : '-';
+                                tableHTML += `<td class="${cellClass}" style="background: #e3f2fd; font-weight: bold;">${displayValue}</td>`;
+                            }
+                        });
+                        tableHTML += '</tr>';
+                    }
+                });
+            }
+            
+            // Total assets row
+            tableHTML += '<tr class="total-row"><td><strong>Total Assets</strong></td>';
+            allColumns.forEach(col => {
+                if (col.type === 'projection') {
+                    const totalAssets = calculateTotalAssetsForYear(savedSetup, col.year, setupYear);
+                    tableHTML += `<td><strong>$${formatNumber(totalAssets)}</strong></td>`;
+                } else { // actual data
+                    const actualTotal = calculateActualTotalAssets(col.entry);
+                    const displayValue = actualTotal !== null ? `$${formatNumber(actualTotal)}` : '-';
+                    tableHTML += `<td style="background: #e3f2fd; font-weight: bold;"><strong>${displayValue}</strong></td>`;
+                }
+            });
+            tableHTML += '</tr>';
+            
+            // Liabilities section
+            tableHTML += '<tr class="liability-section-header"><td><strong>📉 LIABILITIES</strong></td>';
+            allColumns.forEach(() => tableHTML += '<td></td>');
+            tableHTML += '</tr>';
+            
+            // Scenario debts
+            if (scenario.inputs && scenario.inputs.debts) {
+                ['mortgage', 'vehicle', 'other'].forEach(debtType => {
+                    const debt = scenario.inputs.debts[debtType];
+                    if (debt && debt.balance > 0) {
+                        let debtName = debtType.charAt(0).toUpperCase() + debtType.slice(1);
+                        if (debtType === 'vehicle') debtName = 'Vehicle Loan';
+                        else if (debtType === 'other') debtName = 'Other Debt';
+                        
+                        tableHTML += `<tr><td>&nbsp;&nbsp;&nbsp;${debtName}</td>`;
+                        allColumns.forEach(col => {
+                            if (col.type === 'projection') {
+                                const remainingBalance = calculateDebtBalance(debt, col.year - setupYear);
+                                tableHTML += `<td>$${formatNumber(Math.round(Math.max(0, remainingBalance)))}</td>`;
+                            } else { // actual data
+                                const actualValue = getActualAccountValue(col.entry, debtName, 'debt');
+                                const cellClass = actualValue !== null ? 'actual-value' : 'no-data';
+                                const displayValue = actualValue !== null ? `$${formatNumber(Math.round(actualValue))}` : '-';
+                                tableHTML += `<td class="${cellClass}" style="background: #ffebee; font-weight: bold;">${displayValue}</td>`;
+                            }
+                        });
+                        tableHTML += '</tr>';
+                    }
+                });
+            }
+            
+            // Additional liabilities (remain static - no amortization)
+            if (savedSetup.liabilities && savedSetup.liabilities.additionalLiabilities) {
+                Object.entries(savedSetup.liabilities.additionalLiabilities).forEach(([name, value]) => {
+                    if (value > 0) {
+                        tableHTML += `<tr><td>&nbsp;&nbsp;&nbsp;${name}</td>`;
+                        allColumns.forEach(col => {
+                            if (col.type === 'projection') {
+                                // Additional liabilities remain static (no amortization schedule)
+                                tableHTML += `<td>$${formatNumber(Math.round(value))}</td>`;
+                            } else { // actual data
+                                const actualValue = getActualAccountValue(col.entry, name, 'liability');
+                                const cellClass = actualValue !== null ? 'actual-value' : 'no-data';
+                                const displayValue = actualValue !== null ? `$${formatNumber(Math.round(actualValue))}` : '-';
+                                tableHTML += `<td class="${cellClass}" style="background: #ffebee; font-weight: bold;">${displayValue}</td>`;
+                            }
+                        });
+                        tableHTML += '</tr>';
+                    }
+                });
+            }
+            
+            // Total liabilities row
+            tableHTML += '<tr class="total-row"><td><strong>Total Liabilities</strong></td>';
+            allColumns.forEach(col => {
+                if (col.type === 'projection') {
+                    const totalLiabilities = calculateTotalLiabilitiesForYear(savedSetup, col.year, setupYear);
+                    tableHTML += `<td><strong>$${formatNumber(totalLiabilities)}</strong></td>`;
+                } else { // actual data
+                    const actualTotal = calculateActualTotalLiabilities(col.entry);
+                    const displayValue = actualTotal !== null ? `$${formatNumber(actualTotal)}` : '-';
+                    tableHTML += `<td style="background: #ffebee; font-weight: bold;"><strong>${displayValue}</strong></td>`;
+                }
+            });
+            tableHTML += '</tr>';
+            
+            // Net Worth row
+            tableHTML += '<tr class="net-worth-row"><td><strong>💰 NET WORTH</strong></td>';
+            allColumns.forEach(col => {
+                if (col.type === 'projection') {
+                    const totalAssets = calculateTotalAssetsForYear(savedSetup, col.year, setupYear);
+                    const totalLiabilities = calculateTotalLiabilitiesForYear(savedSetup, col.year, setupYear);
+                    const netWorth = totalAssets - totalLiabilities;
+                    tableHTML += `<td><strong>$${formatNumber(netWorth)}</strong></td>`;
+                } else { // actual data
+                    const actualAssets = calculateActualTotalAssets(col.entry);
+                    const actualLiabilities = calculateActualTotalLiabilities(col.entry);
+                    const actualNetWorth = actualAssets !== null && actualLiabilities !== null ? actualAssets - actualLiabilities : null;
+                    const displayValue = actualNetWorth !== null ? `$${formatNumber(actualNetWorth)}` : '-';
+                    tableHTML += `<td><strong>${displayValue}</strong></td>`;
+                }
+            });
+            tableHTML += '</tr>';
+            
+            // Financial Flow Analysis section
+            tableHTML += '<tr class="section-header"><td><strong>📊 FINANCIAL FLOWS</strong></td>';
+            allColumns.forEach(() => tableHTML += '<td></td>');
+            tableHTML += '</tr>';
+            
+            // Annual Spending row
+            tableHTML += '<tr><td>&nbsp;&nbsp;&nbsp;Annual Spending</td>';
+            allColumns.forEach(col => {
+                if (col.type === 'projection') {
+                    const annualSpending = getAnnualSpendingForYear(savedSetup.scenario, col.year, setupYear, col.year - setupYear);
+                    tableHTML += `<td>$${formatNumber(Math.round(annualSpending))}</td>`;
+                } else { // actual data - no spending data in entries
+                    tableHTML += '<td style="background: #f5f5f5;">-</td>';
+                }
+            });
+            tableHTML += '</tr>';
+            
+            // Withdrawal Capacity row
+            tableHTML += '<tr><td>&nbsp;&nbsp;&nbsp;Withdrawal Capacity</td>';
+            allColumns.forEach(col => {
+                if (col.type === 'projection') {
+                    const withdrawalCapacity = getWithdrawalCapacityForYear(savedSetup.scenario, col.year, setupYear, col.year - setupYear);
+                    tableHTML += `<td>$${formatNumber(Math.round(withdrawalCapacity))}</td>`;
+                } else { // actual data - no withdrawal capacity data in entries
+                    tableHTML += '<td style="background: #f5f5f5;">-</td>';
+                }
+            });
+            tableHTML += '</tr>';
+            
+            // Net Contributions row
+            tableHTML += '<tr><td>&nbsp;&nbsp;&nbsp;Net Contributions</td>';
+            allColumns.forEach(col => {
+                if (col.type === 'projection') {
+                    const netContributions = getNetContributionsForYear(savedSetup.scenario, col.year, setupYear, col.year - setupYear);
+                    tableHTML += `<td>$${formatNumber(Math.round(netContributions))}</td>`;
+                } else { // actual data - no contributions data in entries
+                    tableHTML += '<td style="background: #f5f5f5;">-</td>';
+                }
+            });
+            tableHTML += '</tr>';
+            
+            // Remaining Debt Payments row
+            tableHTML += '<tr><td>&nbsp;&nbsp;&nbsp;Total Remaining Debt</td>';
+            allColumns.forEach(col => {
+                if (col.type === 'projection') {
+                    const totalRemainingDebt = getTotalRemainingDebtForYear(savedSetup.scenario, col.year, setupYear, col.year - setupYear);
+                    tableHTML += `<td>$${formatNumber(Math.round(totalRemainingDebt))}</td>`;
+                } else { // actual data - no debt payments data in entries
+                    tableHTML += '<td style="background: #f5f5f5;">-</td>';
+                }
+            });
+            tableHTML += '</tr>';
+            
+            // Portfolio Value row
+            tableHTML += '<tr class="net-worth-row"><td><strong>📈 PORTFOLIO VALUE</strong></td>';
+            allColumns.forEach(col => {
+                if (col.type === 'projection') {
+                    const portfolioValue = getPortfolioValueForYear(savedSetup.scenario, col.year, setupYear, col.year - setupYear);
+                    tableHTML += `<td><strong>$${formatNumber(Math.round(portfolioValue))}</strong></td>`;
+                } else { // actual data - calculate sum of investment accounts
+                    const actualPortfolioValue = calculateActualPortfolioValue(col.entry, savedSetup);
+                    const displayValue = actualPortfolioValue !== null ? `$${formatNumber(Math.round(actualPortfolioValue))}` : '-';
+                    tableHTML += `<td><strong>${displayValue}</strong></td>`;
+                }
+            });
+            tableHTML += '</tr>';
+            
+            tableHTML += '</tbody>';
+            
+            
+            table.innerHTML = tableHTML;
+            
+        }
+
+        function calculateInvestmentAccountProjection(account, scenario, yearsFromSetup, setupYear) {
+            if (yearsFromSetup === 0) {
+                return account.value;
+            }
+            
+            // Calculate individual account growth pattern
+            const accountIndex = getAccountIndex(account.name);
+            const accountAnnualContribution = getAccountContribution(scenario, accountIndex);
+            const rateOfReturn = scenario.inputs?.rateOfReturn || 0.07;
+            
+            let currentValue = account.value;
+            let totalPortfolioFromIndividual = 0;
+            
+            // First, calculate what this account would be using individual logic
+            for (let year = 1; year <= yearsFromSetup; year++) {
+                const actualYear = setupYear + year;
+                const yearData = scenario.results?.years?.find(y => y.year === actualYear);
+                const isFiAchieved = yearData?.status === 'Financial Independence Achieved';
+                
+                if (!isFiAchieved) {
+                    // Accumulation phase: add contributions then apply growth
+                    currentValue += accountAnnualContribution;
+                    currentValue *= (1 + rateOfReturn);
+                } else {
+                    // Withdrawal phase: proportional withdrawals
+                    currentValue *= (1 + rateOfReturn);
+                    const annualSpending = yearData?.annualSpending || 0;
+                    const totalPortfolioValue = getPortfolioValueForYear(scenario, actualYear, setupYear, year);
+                    const accountProportion = totalPortfolioValue > 0 ? (currentValue / totalPortfolioValue) : 0;
+                    const accountWithdrawal = annualSpending * accountProportion;
+                    currentValue = Math.max(0, currentValue - accountWithdrawal);
+                }
+            }
+            
+            // Now normalize to match FI Calculator's total portfolio value
+            const targetYear = setupYear + yearsFromSetup;
+            const fiCalculatorPortfolioValue = getPortfolioValueForYear(scenario, targetYear, setupYear, yearsFromSetup);
+            
+            // Calculate the total if all accounts grew individually
+            const allAccounts = scenario.inputs?.accounts || [];
+            let totalFromIndividualCalcs = 0;
+            
+            allAccounts.forEach(acc => {
+                const accIndex = getAccountIndex(acc.name);
+                const accContrib = getAccountContribution(scenario, accIndex);
+                let accValue = acc.value;
+                
+                for (let year = 1; year <= yearsFromSetup; year++) {
+                    const actualYear = setupYear + year;
+                    const yearData = scenario.results?.years?.find(y => y.year === actualYear);
+                    const isFiAchieved = yearData?.status === 'Financial Independence Achieved';
+                    
+                    if (!isFiAchieved) {
+                        accValue += accContrib;
+                        accValue *= (1 + rateOfReturn);
+                    } else {
+                        accValue *= (1 + rateOfReturn);
+                        const annualSpending = yearData?.annualSpending || 0;
+                        const accountProportion = fiCalculatorPortfolioValue > 0 ? (accValue / fiCalculatorPortfolioValue) : 0;
+                        const accountWithdrawal = annualSpending * accountProportion;
+                        accValue = Math.max(0, accValue - accountWithdrawal);
+                    }
+                }
+                totalFromIndividualCalcs += accValue;
+            });
+            
+            // Apply normalization factor to match FI Calculator's portfolio value
+            const normalizationFactor = totalFromIndividualCalcs > 0 ? 
+                fiCalculatorPortfolioValue / totalFromIndividualCalcs : 1;
+                
+            return currentValue * normalizationFactor;
+        }
+        
+        function getAccountIndex(accountName) {
+            // Map account names to their index in the FI Calculator
+            const nameMap = {
+                'RRSP1': 1, 'RRSP2': 2, 'TFSA1': 3, 'TFSA2': 4, 
+                'Taxable Brokerage': 5, 'Smith': 6, 'Other': 6
+            };
+            return nameMap[accountName] || 1;
+        }
+        
+        function getAccountContribution(scenario, accountIndex) {
+            // Default contribution amounts based on standard FI Calculator setup
+            // Since FI Calculator doesn't store individual contributions in scenario,
+            // we need to use the known default values
+            const defaultContributions = {
+                1: 20000, // RRSP1
+                2: 10000, // RRSP2  
+                3: 25000, // TFSA1
+                4: 20000, // TFSA2
+                5: 10000, // Taxable Brokerage
+                6: 0      // Smith (Other)
+            };
+            
+            return defaultContributions[accountIndex] || 0;
+        }
+
+        function calculateTotalAssetsForYear(savedSetup, year, setupYear) {
+            let totalAssets = 0;
+            const yearsFromSetup = year - setupYear;
+            
+            // Investment accounts (using FI Calculator projection logic)
+            if (savedSetup.scenario.inputs && savedSetup.scenario.inputs.accounts) {
+                savedSetup.scenario.inputs.accounts.forEach(account => {
+                    const projectedValue = calculateInvestmentAccountProjection(account, savedSetup.scenario, yearsFromSetup, setupYear);
+                    totalAssets += projectedValue;
+                });
+            }
+            
+            // Additional assets (remain static)
+            if (savedSetup.assets && savedSetup.assets.additionalAssets) {
+                Object.values(savedSetup.assets.additionalAssets).forEach(value => {
+                    totalAssets += value; // No growth applied
+                });
+            }
+            
+            return Math.round(totalAssets);
+        }
+
+        function calculateTotalLiabilitiesForYear(savedSetup, year, setupYear) {
+            let totalLiabilities = 0;
+            const yearsFromSetup = year - setupYear;
+            
+            // Scenario debts (with proper amortization)
+            if (savedSetup.scenario.inputs && savedSetup.scenario.inputs.debts) {
+                ['mortgage', 'vehicle', 'other'].forEach(debtType => {
+                    const debt = savedSetup.scenario.inputs.debts[debtType];
+                    if (debt && debt.balance > 0) {
+                        const remainingBalance = calculateDebtBalance(debt, yearsFromSetup);
+                        totalLiabilities += Math.max(0, remainingBalance);
+                    }
+                });
+            }
+            
+            // Additional liabilities (remain constant)
+            if (savedSetup.liabilities && savedSetup.liabilities.additionalLiabilities) {
+                Object.values(savedSetup.liabilities.additionalLiabilities).forEach(value => {
+                    totalLiabilities += value;
+                });
+            }
+            
+            return Math.round(totalLiabilities);
+        }
+
+        function calculateDebtBalance(debt, yearsElapsed) {
+            // Return original balance if no payments or no time elapsed
+            if (!debt.payment || debt.payment <= 0 || yearsElapsed <= 0) {
+                return debt.balance;
+            }
+            
+            const monthsElapsed = yearsElapsed * 12;
+            const monthlyRate = debt.rate / 12;
+            const monthlyPayment = debt.payment + (debt.extraPayment || 0);
+            let balance = debt.balance;
+            
+            // Apply month-by-month amortization
+            for (let month = 0; month < monthsElapsed; month++) {
+                if (balance <= 0) break;
+                
+                const interestPayment = balance * monthlyRate;
+                const principalPayment = Math.max(0, monthlyPayment - interestPayment);
+                balance = Math.max(0, balance - principalPayment);
+                
+                // If payment is less than interest, debt grows
+                if (monthlyPayment < interestPayment) {
+                    balance = debt.balance * Math.pow(1 + monthlyRate, month + 1);
+                }
+            }
+            
+            return Math.round(balance);
+        }
+
+        function updateSummaryCards(savedSetup) {
+            const scenario = savedSetup.scenario;
+            const setupYear = savedSetup.setupYear || new Date().getFullYear();
+            
+            // Initial Net Worth
+            const initialNetWorth = (savedSetup.totals && savedSetup.totals.netWorth) ? savedSetup.totals.netWorth : 0;
+            document.getElementById('initialNetWorthDisplay').textContent = '$' + formatNumber(initialNetWorth);
+            
+            // Calculate FI Target Net Worth and Years to FI based on actual table projections
+            let fiTargetNetWorth = 0;
+            let yearsToFI = 0;
+            
+            // Get FI year from scenario results
+            let fiYear = setupYear + 30; // Default fallback
+            if (scenario.results && scenario.results.fiYear) {
+                fiYear = scenario.results.fiYear; // fiYear is already an absolute year
+            }
+            
+            // Calculate years from setup to FI
+            yearsToFI = fiYear - setupYear;
+            
+            // Calculate the actual projected net worth at FI year
+            const totalAssetsAtFI = calculateTotalAssetsForYear(savedSetup, fiYear, setupYear);
+            const totalLiabilitiesAtFI = calculateTotalLiabilitiesForYear(savedSetup, fiYear, setupYear);
+            fiTargetNetWorth = totalAssetsAtFI - totalLiabilitiesAtFI;
+            
+            // Update displays
+            document.getElementById('fiTargetNetWorthDisplay').textContent = '$' + formatNumber(Math.round(fiTargetNetWorth));
+            document.getElementById('yearsToFiDisplay').textContent = yearsToFI + ' years';
+        }
+
+        function populateDefaultInvestmentAccounts() {
+            const accountsList = document.getElementById('investmentAccountsList');
+            let totalInvestment = 0;
+            
+            accountsList.innerHTML = '';
+            
+            // Default demo investment accounts for testing
+            const defaultAccounts = [
+                { name: 'RRSP1', value: 250000 },
+                { name: 'RRSP2', value: 150000 },
+                { name: 'TFSA1', value: 300000 },
+                { name: 'TFSA2', value: 200000 },
+                { name: 'Taxable Brokerage', value: 100000 }
+            ];
+            
+            defaultAccounts.forEach(account => {
+                const accountDiv = document.createElement('div');
+                accountDiv.style.cssText = 'display: grid; grid-template-columns: 150px 150px; gap: 10px; margin-bottom: 8px; align-items: center;';
+                
+                const nameSpan = document.createElement('span');
+                nameSpan.textContent = account.name;
+                nameSpan.style.color = '#666';
+                
+                const valueSpan = document.createElement('span');
+                valueSpan.textContent = '$' + formatNumber(account.value);
+                valueSpan.style.fontWeight = 'bold';
+                
+                accountDiv.appendChild(nameSpan);
+                accountDiv.appendChild(valueSpan);
+                accountsList.appendChild(accountDiv);
+                
+                totalInvestment += account.value;
+            });
+            
+            document.getElementById('totalInvestmentAccounts').value = '$' + formatNumber(totalInvestment);
+        }
+
+        function populateDefaultScenarioDebts() {
+            const debtsList = document.getElementById('scenarioDebtsList');
+            let totalDebt = 0;
+            
+            debtsList.innerHTML = '';
+            
+            // Default demo debts for testing
+            const defaultDebts = [
+                { name: 'Mortgage', value: 270000 },
+                { name: 'Vehicle Loan', value: 25000 },
+                { name: 'Other Debt', value: 15000 }
+            ];
+            
+            defaultDebts.forEach(debt => {
+                const debtDiv = document.createElement('div');
+                debtDiv.style.cssText = 'display: grid; grid-template-columns: 150px 150px; gap: 10px; margin-bottom: 8px; align-items: center;';
+                
+                const nameSpan = document.createElement('span');
+                nameSpan.textContent = debt.name;
+                nameSpan.style.color = '#666';
+                
+                const valueSpan = document.createElement('span');
+                valueSpan.textContent = '$' + formatNumber(debt.value);
+                valueSpan.style.fontWeight = 'bold';
+                
+                debtDiv.appendChild(nameSpan);
+                debtDiv.appendChild(valueSpan);
+                debtsList.appendChild(debtDiv);
+                
+                totalDebt += debt.value;
+            });
+            
+            document.getElementById('totalScenarioDebts').value = '$' + formatNumber(totalDebt);
+        }
+
+        function populateInvestmentAccounts(scenario) {
+            const accountsList = document.getElementById('investmentAccountsList');
+            let totalInvestment = 0;
+            
+            accountsList.innerHTML = '';
+            
+            if (scenario.inputs && scenario.inputs.accounts && scenario.inputs.accounts.length > 0) {
+                // Use actual account data from scenario
+                scenario.inputs.accounts.forEach(account => {
+                    const accountDiv = document.createElement('div');
+                    accountDiv.style.cssText = 'display: grid; grid-template-columns: 150px 150px; gap: 10px; margin-bottom: 8px; align-items: center;';
+                    
+                    const nameSpan = document.createElement('span');
+                    nameSpan.textContent = account.name;
+                    nameSpan.style.color = '#666';
+                    
+                    const valueSpan = document.createElement('span');
+                    valueSpan.textContent = '$' + formatNumber(account.value);
+                    valueSpan.style.fontWeight = 'bold';
+                    
+                    accountDiv.appendChild(nameSpan);
+                    accountDiv.appendChild(valueSpan);
+                    accountsList.appendChild(accountDiv);
+                    
+                    totalInvestment += account.value;
+                });
+            } else {
+                // Fallback to defaults if no account data available
+                populateDefaultInvestmentAccounts();
+                return;
+            }
+            
+            document.getElementById('totalInvestmentAccounts').value = '$' + formatNumber(totalInvestment);
+        }
+
+        function populateScenarioDebts(scenario) {
+            const debtsList = document.getElementById('scenarioDebtsList');
+            let totalDebt = 0;
+            
+            debtsList.innerHTML = '';
+            
+            // Check mortgage from scenario data
+            if (scenario.inputs?.debts?.mortgage && scenario.inputs.debts.mortgage.balance > 0) {
+                const mortgageBalance = scenario.inputs.debts.mortgage.balance;
+                const debtDiv = document.createElement('div');
+                debtDiv.style.cssText = 'display: grid; grid-template-columns: 150px 150px; gap: 10px; margin-bottom: 8px; align-items: center;';
+                
+                const nameSpan = document.createElement('span');
+                nameSpan.textContent = 'Mortgage';
+                nameSpan.style.color = '#666';
+                
+                const valueSpan = document.createElement('span');
+                valueSpan.textContent = '$' + formatNumber(mortgageBalance);
+                valueSpan.style.fontWeight = 'bold';
+                
+                debtDiv.appendChild(nameSpan);
+                debtDiv.appendChild(valueSpan);
+                debtsList.appendChild(debtDiv);
+                
+                totalDebt += mortgageBalance;
+            }
+            
+            // Check vehicle loan from scenario data
+            if (scenario.inputs?.debts?.vehicle && scenario.inputs.debts.vehicle.balance > 0) {
+                const vehicleBalance = scenario.inputs.debts.vehicle.balance;
+                const debtDiv = document.createElement('div');
+                debtDiv.style.cssText = 'display: grid; grid-template-columns: 150px 150px; gap: 10px; margin-bottom: 8px; align-items: center;';
+                
+                const nameSpan = document.createElement('span');
+                nameSpan.textContent = 'Vehicle Loan';
+                nameSpan.style.color = '#666';
+                
+                const valueSpan = document.createElement('span');
+                valueSpan.textContent = '$' + formatNumber(vehicleBalance);
+                valueSpan.style.fontWeight = 'bold';
+                
+                debtDiv.appendChild(nameSpan);
+                debtDiv.appendChild(valueSpan);
+                debtsList.appendChild(debtDiv);
+                
+                totalDebt += vehicleBalance;
+            }
+            
+            // Check other debt from scenario data
+            if (scenario.inputs?.debts?.other && scenario.inputs.debts.other.balance > 0) {
+                const otherBalance = scenario.inputs.debts.other.balance;
+                const debtDiv = document.createElement('div');
+                debtDiv.style.cssText = 'display: grid; grid-template-columns: 150px 150px; gap: 10px; margin-bottom: 8px; align-items: center;';
+                
+                const nameSpan = document.createElement('span');
+                nameSpan.textContent = 'Other Debt';
+                nameSpan.style.color = '#666';
+                
+                const valueSpan = document.createElement('span');
+                valueSpan.textContent = '$' + formatNumber(otherBalance);
+                valueSpan.style.fontWeight = 'bold';
+                
+                debtDiv.appendChild(nameSpan);
+                debtDiv.appendChild(valueSpan);
+                debtsList.appendChild(debtDiv);
+                
+                totalDebt += otherBalance;
+            }
+            
+            // If no debts found, show a message
+            if (totalDebt === 0) {
+                const noDebtsDiv = document.createElement('div');
+                noDebtsDiv.style.cssText = 'color: #666; font-style: italic; text-align: center; padding: 10px;';
+                noDebtsDiv.textContent = 'No debts from FI scenario';
+                debtsList.appendChild(noDebtsDiv);
+            }
+            
+            document.getElementById('totalScenarioDebts').value = '$' + formatNumber(totalDebt);
+        }
+
+        function initializeNetWorthInputs() {
+            // Format currency inputs for additional assets
+            const assetInputs = ['asset1Value', 'asset2Value', 'asset3Value', 'asset4Value', 'asset5Value'];
+            assetInputs.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    formatCurrencyInput(element);
+                }
+            });
+            
+            // Format currency inputs for additional liabilities
+            const liabilityInputs = ['liability1Value', 'liability2Value'];
+            liabilityInputs.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    formatCurrencyInput(element);
+                }
+            });
+        }
+
+        function updateNetWorth() {
+            // Calculate total assets
+            let totalAssets = 0;
+            
+            // Add investment accounts total
+            const investmentTotal = unformatNumber(document.getElementById('totalInvestmentAccounts').value.replace('$', ''));
+            totalAssets += investmentTotal;
+            
+            // Add additional assets
+            for (let i = 1; i <= 5; i++) {
+                const assetValue = unformatNumber(document.getElementById(`asset${i}Value`).value);
+                totalAssets += assetValue;
+            }
+            
+            // Calculate total liabilities
+            let totalLiabilities = 0;
+            
+            // Add scenario debts total
+            const scenarioDebtsTotal = unformatNumber(document.getElementById('totalScenarioDebts').value.replace('$', ''));
+            totalLiabilities += scenarioDebtsTotal;
+            
+            // Add additional liabilities
+            for (let i = 1; i <= 2; i++) {
+                const liabilityValue = unformatNumber(document.getElementById(`liability${i}Value`).value);
+                totalLiabilities += liabilityValue;
+            }
+            
+            // Update displays
+            document.getElementById('totalAssets').value = '$' + formatNumber(totalAssets);
+            document.getElementById('totalLiabilities').value = '$' + formatNumber(totalLiabilities);
+            
+            const netWorth = totalAssets - totalLiabilities;
+            document.getElementById('currentNetWorth').value = '$' + formatNumber(netWorth);
+            
+            // Update asset allocation chart
+            updateAssetAllocationChart(totalAssets);
+        }
+
+        function updateAssetAllocationChart(totalAssets) {
+            const ctx = document.getElementById('assetAllocationChart').getContext('2d');
+            
+            if (assetAllocationChart) {
+                assetAllocationChart.destroy();
+            }
+            
+            // Gather data for chart
+            const data = [];
+            const labels = [];
+            const colors = ['#4CAF50', '#2196F3', '#FF9800', '#9C27B0', '#607D8B', '#795548', '#E91E63', '#00BCD4'];
+            
+            // Investment accounts (combined as "Stocks")
+            const investmentTotal = unformatNumber(document.getElementById('totalInvestmentAccounts').value.replace('$', ''));
+            if (investmentTotal > 0) {
+                data.push(((investmentTotal / totalAssets) * 100).toFixed(1));
+                labels.push('Stocks');
+            }
+            
+            // Additional assets
+            for (let i = 1; i <= 5; i++) {
+                const assetValue = unformatNumber(document.getElementById(`asset${i}Value`).value);
+                const assetName = document.getElementById(`asset${i}Name`).value;
+                
+                if (assetValue > 0) {
+                    data.push(((assetValue / totalAssets) * 100).toFixed(1));
+                    labels.push(assetName);
+                }
+            }
+            
+            assetAllocationChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: colors.slice(0, labels.length),
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': ' + context.parsed + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateNetWorthTracking() {
+            const trackingData = {
+                timestamp: new Date().toISOString(),
+                scenario: JSON.parse(localStorage.getItem('fiquest_active_scenario')),
+                assets: {
+                    investmentAccounts: parseFloat(document.getElementById('totalInvestmentAccounts').value.replace(/[$,]/g, '')),
+                    additionalAssets: {}
+                },
+                liabilities: {
+                    scenarioDebts: parseFloat(document.getElementById('totalScenarioDebts').value.replace(/[$,]/g, '')),
+                    additionalLiabilities: {}
+                },
+                totals: {
+                    totalAssets: parseFloat(document.getElementById('totalAssets').value.replace(/[$,]/g, '')),
+                    totalLiabilities: parseFloat(document.getElementById('totalLiabilities').value.replace(/[$,]/g, '')),
+                    netWorth: parseFloat(document.getElementById('currentNetWorth').value.replace(/[$,]/g, ''))
+                }
+            };
+            
+            // Capture additional asset data
+            for (let i = 1; i <= 5; i++) {
+                const name = document.getElementById(`asset${i}Name`).value;
+                const value = parseFloat(document.getElementById(`asset${i}Value`).value.replace(/[$,]/g, '')) || 0;
+                trackingData.assets.additionalAssets[name] = value;
+            }
+            
+            // Capture additional liability data
+            for (let i = 1; i <= 2; i++) {
+                const name = document.getElementById(`liability${i}Name`).value;
+                const value = parseFloat(document.getElementById(`liability${i}Value`).value.replace(/[$,]/g, '')) || 0;
+                trackingData.liabilities.additionalLiabilities[name] = value;
+            }
+            
+            // Get existing tracking history
+            const existingHistory = JSON.parse(localStorage.getItem('fiquest_net_worth_history') || '[]');
+            existingHistory.push(trackingData);
+            
+            // Save updated history
+            localStorage.setItem('fiquest_net_worth_history', JSON.stringify(existingHistory));
+            
+            // Update current snapshot
+            const currentData = {
+                timestamp: trackingData.timestamp,
+                netWorth: trackingData.totals.netWorth,
+                totalAssets: trackingData.totals.totalAssets,
+                totalLiabilities: trackingData.totals.totalLiabilities
+            };
+            localStorage.setItem('fiquest_current_net_worth', JSON.stringify(currentData));
+            
+            alert(`Net Worth updated successfully! Current Net Worth: $${formatNumber(trackingData.totals.netWorth)}`);
+        }
+
+        function saveNetWorthSetup() {
+            const netWorthData = {
+                timestamp: new Date().toISOString(),
+                scenario: JSON.parse(localStorage.getItem('fiquest_active_scenario')),
+                assets: {
+                    investmentAccounts: parseFloat(document.getElementById('totalInvestmentAccounts').value.replace(/[$,]/g, '')),
+                    additionalAssets: {}
+                },
+                liabilities: {
+                    scenarioDebts: parseFloat(document.getElementById('totalScenarioDebts').value.replace(/[$,]/g, '')),
+                    additionalLiabilities: {}
+                },
+                netWorth: parseFloat(document.getElementById('currentNetWorth').value.replace(/[$,]/g, ''))
+            };
+            
+            // Capture additional asset data
+            for (let i = 1; i <= 5; i++) {
+                const name = document.getElementById(`asset${i}Name`).value;
+                const value = parseFloat(document.getElementById(`asset${i}Value`).value.replace(/[$,]/g, ''));
+                if (name && value > 0) {
+                    netWorthData.assets.additionalAssets[name] = value;
+                }
+            }
+            
+            // Capture additional liability data
+            for (let i = 1; i <= 2; i++) {
+                const name = document.getElementById(`liability${i}Name`).value;
+                const value = parseFloat(document.getElementById(`liability${i}Value`).value.replace(/[$,]/g, ''));
+                if (name && value > 0) {
+                    netWorthData.liabilities.additionalLiabilities[name] = value;
+                }
+            }
+            
+            localStorage.setItem('fiquest_net_worth_setup', JSON.stringify(netWorthData));
+            alert('Net worth setup saved successfully!');
+        }
+
+        // Utility functions
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        function unformatNumber(str) {
+            return parseFloat(str.replace(/[$,]/g, '')) || 0;
+        }
+
+        function formatCurrencyInput(input) {
+            input.addEventListener('input', function() {
+                let value = this.value.replace(/[$,]/g, '');
+                if (!isNaN(value) && value !== '') {
+                    this.value = formatNumber(value);
+                }
+            });
+            
+            // Format initial value
+            let initialValue = input.value.replace(/[$,]/g, '');
+            if (!isNaN(initialValue) && initialValue !== '') {
+                input.value = formatNumber(initialValue);
+            }
+        }
+
+        function formatInputValue(input) {
+            let value = input.value.replace(/[$,]/g, '');
+            if (!isNaN(value) && value !== '') {
+                input.value = '$' + formatNumber(value);
+            }
+        }
+
+        // Update Current Values Form Functions
+        function showUpdateForm() {
+            // Show the form
+            document.getElementById('updateValuesForm').style.display = 'block';
+            
+            // Set default date to today using DateTimeUtils
+            const today = DateTimeUtils.getUserLocalDate();
+            
+            // Convert MM/DD/YYYY to YYYY-MM-DD format
+            const dateParts = today.date.split('/'); // ["MM", "DD", "YYYY"]
+            const month = dateParts[0].padStart(2, '0');
+            const day = dateParts[1].padStart(2, '0'); 
+            const year = dateParts[2];
+            const isoDate = `${year}-${month}-${day}`;
+            
+            document.getElementById('entryDate').value = isoDate;
+            
+            // Populate account inputs based on current setup
+            populateAccountInputs();
+
+            // Add event listener for entry date changes to update projected values in real-time
+            const entryDateInput = document.getElementById('entryDate');
+            entryDateInput.addEventListener('change', handleEntryDateChange);
+            entryDateInput.addEventListener('input', handleEntryDateChange);
+
+            // Scroll to form
+            document.getElementById('updateValuesForm').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function closeUpdateForm() {
+            document.getElementById('updateValuesForm').style.display = 'none';
+        }
+
+        function handleEntryDateChange() {
+            // Re-populate all account inputs with updated projected values based on new entry date
+            const savedSetup = JSON.parse(localStorage.getItem('fiquest_net_worth_setup') || 'null');
+            if (savedSetup) {
+                populateAccountInputs();
+            }
+        }
+
+        function populateAccountInputs() {
+            const savedSetup = JSON.parse(localStorage.getItem('fiquest_net_worth_setup') || 'null');
+            if (!savedSetup) {
+                document.getElementById('accountValuesSection').innerHTML = '<p style="color: #dc3545; padding: 20px; text-align: center;">No net worth setup found. Please complete the Net Worth Setup first.</p>';
+                return;
+            }
+
+            
+            // Check if setup is in old format (needs re-saving)
+            const hasIndividualAccounts = savedSetup.assets && 
+                                         Array.isArray(savedSetup.assets.investmentAccounts) && 
+                                         savedSetup.assets.investmentAccounts.length > 0;
+                                         
+            if (!hasIndividualAccounts) {
+                document.getElementById('accountValuesSection').innerHTML = `
+                    <div style="color: #dc3545; padding: 20px; text-align: center; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px;">
+                        <h4 style="color: #d39e00;">⚠️ Setup Update Required</h4>
+                        <p>Your Net Worth Setup needs to be updated to support individual account tracking.</p>
+                        <p><strong>Please go to <a href="net-worth.html" style="color: #d39e00;">Net Worth Setup</a> and click "Save Net Worth Setup" again.</strong></p>
+                        <p>This will enable individual account breakdown (RRSP1, TFSA1, Mortgage, etc.) in the Update Current Values form.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const accountsHTML = `
+                <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                    <h4 style="color: #2e7d32; margin-bottom: 15px; border-bottom: 2px solid #4CAF50; padding-bottom: 8px;">📈 Assets</h4>
+                    
+                    <!-- Investment Accounts -->
+                    <div style="margin-bottom: 20px;">
+                        <h5 style="color: #666; margin-bottom: 10px;">Investment Accounts</h5>
+                        <div id="investmentAccountInputs"></div>
+                    </div>
+                    
+                    <!-- Additional Assets -->
+                    <div>
+                        <h5 style="color: #666; margin-bottom: 10px;">Additional Assets</h5>
+                        <div id="additionalAssetInputs"></div>
+                    </div>
+                </div>
+
+                <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                    <h4 style="color: #c62828; margin-bottom: 15px; border-bottom: 2px solid #f44336; padding-bottom: 8px;">🏠 Liabilities</h4>
+                    
+                    <!-- Scenario Debts -->
+                    <div style="margin-bottom: 20px;">
+                        <h5 style="color: #666; margin-bottom: 10px;">Scenario Debts</h5>
+                        <div id="scenarioDebtInputs"></div>
+                    </div>
+                    
+                    <!-- Additional Liabilities -->
+                    <div>
+                        <h5 style="color: #666; margin-bottom: 10px;">Additional Liabilities</h5>
+                        <div id="additionalLiabilityInputs"></div>
+                    </div>
+                </div>
+
+                <!-- Real-time Totals -->
+                <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; border-left: 4px solid #2196F3;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; text-align: center;">
+                        <div>
+                            <strong style="color: #2e7d32;">Total Assets</strong><br>
+                            <span id="totalAssetsDisplay" style="font-size: 18px; font-weight: bold; color: #2e7d32;">$0</span>
+                        </div>
+                        <div>
+                            <strong style="color: #c62828;">Total Liabilities</strong><br>
+                            <span id="totalLiabilitiesDisplay" style="font-size: 18px; font-weight: bold; color: #c62828;">$0</span>
+                        </div>
+                        <div>
+                            <strong style="color: #1565c0;">Net Worth</strong><br>
+                            <span id="netWorthDisplay" style="font-size: 20px; font-weight: bold; color: #1565c0;">$0</span>
+                        </div>
+                        <div>
+                            <strong style="color: #ff9800;">Variance</strong><br>
+                            <span id="varianceDisplay" style="font-size: 18px; font-weight: bold; color: #ff9800;">$0</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('accountValuesSection').innerHTML = accountsHTML;
+
+            // Populate individual account inputs
+            populateInvestmentAccountInputs(savedSetup);
+            populateAdditionalAssetInputs(savedSetup);
+            populateScenarioDebtInputs(savedSetup);
+            populateAdditionalLiabilityInputs(savedSetup);
+        }
+
+        function populateInvestmentAccountInputs(savedSetup) {
+            const container = document.getElementById('investmentAccountInputs');
+            let html = '';
+
+            // Access investmentAccounts array from assets structure
+            if (savedSetup.assets && savedSetup.assets.investmentAccounts && Array.isArray(savedSetup.assets.investmentAccounts)) {
+                savedSetup.assets.investmentAccounts.forEach((account, index) => {
+                    // Get entry date for prorated calculations
+                    const entryDate = document.getElementById('entryDate').value;
+                    // Calculate prorated projected value based on entry date
+                    const projectedValue = calculateProratedProjectedValue(account, entryDate, savedSetup, 'investment');
+                    html += createAccountInput(`investment_${index}`, account.name, projectedValue, account.value);
+                });
+            } else {
+                html = '<p style="color: #dc3545; padding: 10px; text-align: center;">No individual investment accounts found. Please re-save your Net Worth Setup.</p>';
+            }
+
+            container.innerHTML = html;
+            attachInputListeners();
+        }
+
+        function populateAdditionalAssetInputs(savedSetup) {
+            const container = document.getElementById('additionalAssetInputs');
+            let html = '';
+
+            // Access additionalAssets object from assets structure
+            if (savedSetup.assets && savedSetup.assets.additionalAssets) {
+                let index = 0;
+                Object.entries(savedSetup.assets.additionalAssets).forEach(([name, value]) => {
+                    if (name && name.trim() !== '' && value > 0) {
+                        // Get entry date for prorated calculations
+                        const entryDate = document.getElementById('entryDate').value;
+                        // Calculate prorated projected value based on entry date (additional assets don't grow)
+                        const projectedValue = calculateProratedProjectedValue({name, value}, entryDate, savedSetup, 'additional');
+                        html += createAccountInput(`additional_asset_${index}`, name, projectedValue, value);
+                        index++;
+                    }
+                });
+            }
+
+            container.innerHTML = html;
+            attachInputListeners();
+        }
+
+        function populateScenarioDebtInputs(savedSetup) {
+            const container = document.getElementById('scenarioDebtInputs');
+            let html = '';
+
+            // Access scenarioDebts array from liabilities structure
+            if (savedSetup.liabilities && savedSetup.liabilities.scenarioDebts && Array.isArray(savedSetup.liabilities.scenarioDebts)) {
+                savedSetup.liabilities.scenarioDebts.forEach((debt, index) => {
+                    // Get entry date for prorated calculations
+                    const entryDate = document.getElementById('entryDate').value;
+                    // Calculate prorated projected value based on entry date
+                    const projectedValue = calculateProratedProjectedValue(debt, entryDate, savedSetup, 'debt');
+                    html += createAccountInput(`debt_${index}`, debt.name, projectedValue, debt.value);
+                });
+            } else {
+                html = '<p style="color: #dc3545; padding: 10px; text-align: center;">No individual scenario debts found. Please re-save your Net Worth Setup.</p>';
+            }
+
+            container.innerHTML = html;
+            attachInputListeners();
+        }
+
+        function populateAdditionalLiabilityInputs(savedSetup) {
+            const container = document.getElementById('additionalLiabilityInputs');
+            let html = '';
+
+            // Access additionalLiabilities object from liabilities structure
+            if (savedSetup.liabilities && savedSetup.liabilities.additionalLiabilities) {
+                let index = 0;
+                Object.entries(savedSetup.liabilities.additionalLiabilities).forEach(([name, value]) => {
+                    if (name && name.trim() !== '' && value > 0) {
+                        // Get entry date for prorated calculations
+                        const entryDate = document.getElementById('entryDate').value;
+                        // Calculate prorated projected value based on entry date (additional liabilities don't change)
+                        const projectedValue = calculateProratedProjectedValue({name, value}, entryDate, savedSetup, 'additional');
+                        html += createAccountInput(`additional_liability_${index}`, name, projectedValue, value);
+                        index++;
+                    }
+                });
+            }
+
+            container.innerHTML = html;
+            attachInputListeners();
+        }
+
+        function calculateProratedProjectedValue(account, entryDate, savedSetup, accountType) {
+            try {
+                // Parse the entry date
+                const entryDateObj = new Date(entryDate);
+                if (isNaN(entryDateObj.getTime())) {
+                    // Invalid date, return original value
+                    return account.value || 0;
+                }
+
+                const scenario = savedSetup.scenario;
+                const setupYear = savedSetup.setupYear || new Date().getFullYear();
+                const entryYear = entryDateObj.getFullYear();
+
+                // Get user's current age and life expectancy
+                const currentAge = scenario.inputs?.currentAge || 35;
+                const lifeExpectancy = scenario.inputs?.lifeExpectancy || 85;
+                const lifeExpectancyYear = setupYear + (lifeExpectancy - currentAge);
+
+                // Calculate FI year from scenario results
+                let fiYear = setupYear + 30; // Default fallback
+                if (scenario.results && scenario.results.fiYear) {
+                    fiYear = scenario.results.fiYear;
+                }
+
+                // Use life expectancy year as boundary instead of FI year
+                const finalProjectionYear = Math.max(fiYear, lifeExpectancyYear);
+
+                // If entry date is before setup year, use setup year values
+                if (entryYear < setupYear) {
+                    return account.value || 0;
+                }
+
+                // If entry date is after final projection year, use final year values
+                if (entryYear > finalProjectionYear) {
+                    const yearsFromSetup = finalProjectionYear - setupYear;
+                    if (accountType === 'investment') {
+                        return calculateInvestmentAccountProjection(account, scenario, yearsFromSetup, setupYear);
+                    } else if (accountType === 'debt') {
+                        return calculateDebtBalance(account, yearsFromSetup);
+                    } else {
+                        // Additional assets/liabilities - assume no growth
+                        return account.value || 0;
+                    }
+                }
+
+                // Calculate year progress (0.0 = start of year, 1.0 = end of year)
+                const startOfYear = new Date(entryYear, 0, 1);
+                const endOfYear = new Date(entryYear + 1, 0, 1);
+                const yearProgress = (entryDateObj - startOfYear) / (endOfYear - startOfYear);
+
+                // Get projected values for current year and next year
+                const currentYearOffset = entryYear - setupYear;
+                const nextYearOffset = currentYearOffset + 1;
+
+                let currentYearValue, nextYearValue;
+
+                if (accountType === 'investment') {
+                    currentYearValue = calculateInvestmentAccountProjection(account, scenario, currentYearOffset, setupYear);
+                    if (entryYear < finalProjectionYear) {
+                        nextYearValue = calculateInvestmentAccountProjection(account, scenario, nextYearOffset, setupYear);
+                    } else {
+                        nextYearValue = currentYearValue; // No growth beyond final year
+                    }
+                } else if (accountType === 'debt') {
+                    // For scenario debts, use the total remaining debt from scenario results
+                    // since individual debt objects don't have payment/rate information
+                    const currentYearTotal = getTotalRemainingDebtForYear(scenario, entryYear, setupYear);
+                    const nextYearTotal = entryYear < finalProjectionYear ?
+                        getTotalRemainingDebtForYear(scenario, entryYear + 1, setupYear) : currentYearTotal;
+
+                    // Calculate this debt's proportion of total debt to get individual values
+                    const totalCurrentDebtValue = savedSetup.liabilities?.scenarioDebts?.reduce((sum, debt) => sum + (debt.value || 0), 0) || 1;
+                    const debtProportion = (account.value || 0) / totalCurrentDebtValue;
+
+                    currentYearValue = currentYearTotal * debtProportion;
+                    nextYearValue = nextYearTotal * debtProportion;
+                } else {
+                    // Additional assets/liabilities - assume no growth
+                    currentYearValue = account.value || 0;
+                    nextYearValue = account.value || 0;
+                }
+
+                // Linear interpolation between current year and next year
+                const interpolatedValue = currentYearValue + (nextYearValue - currentYearValue) * yearProgress;
+
+                return Math.max(0, Math.round(interpolatedValue)); // Round to nearest whole number and ensure non-negative
+
+            } catch (error) {
+                console.error('Error calculating prorated projected value:', error);
+                return account.value || 0; // Fallback to original value
+            }
+        }
+
+        function createAccountInput(id, name, projectedValue, defaultActual = 0) {
+            return `
+                <div style="display: grid; grid-template-columns: 1fr 120px 120px 120px; gap: 10px; margin-bottom: 8px; align-items: center; padding: 8px; background: #f8f9fa; border-radius: 4px;">
+                    <span style="font-weight: 500;">${name}</span>
+                    <div style="text-align: right;">
+                        <small style="color: #666;">Projected:</small><br>
+                        <strong style="color: #666;">$${formatNumber(projectedValue)}</strong>
+                    </div>
+                    <div>
+                        <small style="color: #333;">Actual:</small><br>
+                        <input type="text" id="${id}_actual" value="$${formatNumber(defaultActual)}" 
+                               data-projected="${projectedValue}"
+                               data-account-id="${id}"
+                               style="width: 100%; padding: 4px 6px; border: 1px solid #ddd; border-radius: 3px; text-align: right;"
+                               onInput="formatInputValue(this); updateTotals(); updateVariances();">
+                    </div>
+                    <div style="text-align: right;">
+                        <small style="color: #666;">Variance:</small><br>
+                        <span id="${id}_variance" style="font-weight: bold;">$0</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function attachInputListeners() {
+            // Add event listeners to all currency inputs for real-time formatting and calculation
+            const inputs = document.querySelectorAll('#accountValuesSection input[type="text"]');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    formatInputValue(this);
+                    updateTotals();
+                    updateVariances();
+                });
+            });
+        }
+
+        function updateTotals() {
+            let totalAssets = 0;
+            let totalLiabilities = 0;
+
+            // Sum all asset inputs
+            const assetInputs = document.querySelectorAll('#investmentAccountInputs input, #additionalAssetInputs input');
+            assetInputs.forEach(input => {
+                const value = unformatNumber(input.value);
+                totalAssets += value;
+            });
+
+            // Sum all liability inputs
+            const liabilityInputs = document.querySelectorAll('#scenarioDebtInputs input, #additionalLiabilityInputs input');
+            liabilityInputs.forEach(input => {
+                const value = unformatNumber(input.value);
+                totalLiabilities += value;
+            });
+
+            const netWorth = totalAssets - totalLiabilities;
+
+            // Update displays
+            document.getElementById('totalAssetsDisplay').textContent = '$' + formatNumber(totalAssets);
+            document.getElementById('totalLiabilitiesDisplay').textContent = '$' + formatNumber(totalLiabilities);
+            document.getElementById('netWorthDisplay').textContent = '$' + formatNumber(netWorth);
+        }
+
+        function updateVariances() {
+            let totalProjected = 0;
+            let totalActual = 0;
+            
+            // Update individual account variances using data attributes
+            const inputs = document.querySelectorAll('#accountValuesSection input[type="text"]');
+            inputs.forEach(input => {
+                const accountId = input.getAttribute('data-account-id');
+                const projectedValue = parseFloat(input.getAttribute('data-projected')) || 0;
+                const actualValue = unformatNumber(input.value);
+                const variance = actualValue - projectedValue;
+                
+                // Update the variance display
+                const varianceElement = document.getElementById(accountId + '_variance');
+                if (varianceElement) {
+                    varianceElement.textContent = '$' + formatNumber(variance);
+                    varianceElement.style.color = variance >= 0 ? '#2e7d32' : '#c62828';
+                }
+                
+                // Track totals for overall variance
+                totalProjected += projectedValue;
+                totalActual += actualValue;
+            });
+            
+            // Update overall variance in the totals section
+            const overallVariance = totalActual - totalProjected;
+            const varianceDisplay = document.getElementById('varianceDisplay');
+            if (varianceDisplay) {
+                varianceDisplay.textContent = '$' + formatNumber(overallVariance);
+                varianceDisplay.style.color = overallVariance >= 0 ? '#2e7d32' : '#c62828';
+            }
+        }
+
+        function saveCurrentValues() {
+            // Collect all form data
+            const entryDate = document.getElementById('entryDate').value;
+            const notes = document.getElementById('entryNotes').value;
+
+            if (!entryDate) {
+                alert('Please select an entry date.');
+                return;
+            }
+
+            // Collect account data
+            const accounts = {
+                assets: {},
+                liabilities: {}
+            };
+
+            // Get all inputs and organize by account type
+            const inputs = document.querySelectorAll('#accountValuesSection input[type="text"]');
+            
+            inputs.forEach(input => {
+                const id = input.id.replace('_actual', '');
+                const actualValue = unformatNumber(input.value);
+                const projectedValue = parseFloat(input.getAttribute('data-projected')) || 0;
+                
+                // Get the actual account name from the row
+                const accountRow = input.closest('div[style*="grid-template-columns"]');
+                const accountNameElement = accountRow ? accountRow.querySelector('span') : null;
+                const accountName = accountNameElement ? accountNameElement.textContent.trim() : id;
+                
+                // Determine if it's an asset or liability based on the section
+                const section = input.closest('[id*="Input"]').id;
+                
+                // More specific logic for determining asset vs liability
+                let isAsset;
+                if (section.includes('investment') || section.includes('Asset')) {
+                    isAsset = true;
+                } else if (section.includes('debt') || section.includes('Liability')) {
+                    isAsset = false;
+                } else {
+                    // Fallback: check if we're in the assets or liabilities section of the form
+                    const assetsSection = input.closest('div').closest('div[style*="background: white"]');
+                    const sectionHeader = assetsSection ? assetsSection.querySelector('h4') : null;
+                    const headerText = sectionHeader ? sectionHeader.textContent : '';
+                    isAsset = headerText.includes('ASSETS') || headerText.includes('📈');
+                }
+                
+                
+                
+                const accountData = {
+                    actual: actualValue,
+                    projected: projectedValue,
+                    variance: actualValue - projectedValue,
+                    accountName: accountName  // Store the actual account name for lookup
+                };
+                
+                if (isAsset) {
+                    accounts.assets[id] = accountData;
+                } else {
+                    accounts.liabilities[id] = accountData;
+                }
+            });
+            
+
+            // Create entry data
+            const entryData = {
+                date: entryDate,
+                accounts: accounts,
+                notes: notes
+            };
+
+            // Debug before save
+            
+            // Save using UserManager
+            const result = userManager.addNetWorthEntry(entryData);
+            
+            if (result) {
+                alert('Net worth entry saved successfully!');
+                closeUpdateForm();
+                
+                // Debug: Check if entries exist immediately after save
+                const entries = userManager.getNetWorthEntries();
+                
+                // Rebuild the table with the new actual data column
+                const savedSetup = JSON.parse(localStorage.getItem('fiquest_net_worth_setup') || 'null');
+                
+                if (savedSetup) {
+                    buildTrackingTable(savedSetup);
+                    updateSummaryCards(savedSetup);
+                    createNetWorthChart(savedSetup);
+                } else {
+                    console.error('No saved setup found for table rebuild');
+                }
+            } else {
+                console.error('Failed to save net worth entry, result:', result);
+                alert('Error saving net worth entry. Please try again.');
+            }
+        }
+
+
+        function deleteNetWorthEntry(entryId) {
+            
+            // Get the entry details for the confirmation message
+            const entries = userManager.getNetWorthEntries();
+            const entryToDelete = entries.find(entry => entry.id === entryId);
+            
+            if (!entryToDelete) {
+                alert('Entry not found!');
+                return;
+            }
+            
+            // Parse date as local date to avoid timezone offset issues
+            const dateParts = entryToDelete.date.split('-'); // YYYY-MM-DD
+            const entryDateObj = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2]));
+            const entryDate = entryDateObj.toLocaleDateString('en-US', { 
+                month: 'long', 
+                day: 'numeric', 
+                year: 'numeric' 
+            });
+            
+            // Confirmation dialog
+            const confirmMessage = `Are you sure you want to delete the net worth entry from ${entryDate}?\n\nThis will permanently remove all actual values from that date and cannot be undone.`;
+            
+            if (confirm(confirmMessage)) {
+                
+                // Delete the entry using UserManager
+                const deleteResult = userManager.deleteNetWorthEntry(entryId);
+                
+                if (deleteResult) {
+                    alert('Net worth entry deleted successfully!');
+                    
+                    // Rebuild the table to remove the deleted column
+                    const savedSetup = JSON.parse(localStorage.getItem('fiquest_net_worth_setup') || 'null');
+                    if (savedSetup) {
+                        buildTrackingTable(savedSetup);
+                        updateSummaryCards(savedSetup);
+                        createNetWorthChart(savedSetup);
+                    }
+                } else {
+                    alert('Error deleting net worth entry. Please try again.');
+                }
+            } else {
+            }
+        }
+
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in - redirect to start if not
+            if (!userManager.requireLogin()) {
+                return;
+            }
+            
+            // Initialize netWorthTracking array if it doesn't exist
+            const currentPlayer = userManager.getCurrentPlayer();
+            if (currentPlayer && currentPlayer.gameData) {
+                if (!currentPlayer.gameData.netWorthTracking) {
+                    currentPlayer.gameData.netWorthTracking = [];
+                    userManager.savePlayerData();
+                }
+            }
+            
+            // Add player info to UI
+            userManager.addPlayerInfoToUI();
+            
+            initializeNetWorthPage();
+        });
+
+        // Toggle Initial Setup section
+        function toggleInitialSetup(event) {
+            event.preventDefault();
+            
+            const section = document.getElementById('initial-setup-section');
+            const arrow = document.getElementById('setup-arrow');
+            
+            if (section.style.display === 'none') {
+                section.style.display = 'block';
+                arrow.classList.add('expanded');
+            } else {
+                section.style.display = 'none';
+                arrow.classList.remove('expanded');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+# macOS system files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Claude Code files
+.claude/
+
+# Archive folder (development history)
+Archive/
+
+# Session summaries and development notes
+SESSION_SUMMARY_*.md
+
+# Editor files
+*.swp
+*.swo
+*~
+
+# Log files
+*.log
+
+# Temporary files
+*.tmp
+*.temp

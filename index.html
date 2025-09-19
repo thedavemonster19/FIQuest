@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIQuest - Start Your Financial Journey</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            position: relative;
+            background-color: #000;
+        }
+
+        /* Cinematic container with letterbox bars */
+        .cinematic-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .image-container {
+            position: relative;
+            width: 100%;
+            height: 75vh; /* Cinematic aspect ratio */
+            background-image: url('FIQuest.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* Black bars for cinematic effect */
+        .letterbox-top, .letterbox-bottom {
+            position: absolute;
+            width: 100%;
+            height: 12.5vh;
+            background: linear-gradient(to bottom, #000 0%, #000 80%, rgba(0,0,0,0.8) 100%);
+            z-index: 5;
+        }
+
+        .letterbox-top {
+            top: 0;
+            background: linear-gradient(to bottom, #000 0%, #000 80%, rgba(0,0,0,0.8) 100%);
+        }
+
+        .letterbox-bottom {
+            bottom: 0;
+            background: linear-gradient(to top, #000 0%, #000 80%, rgba(0,0,0,0.8) 100%);
+        }
+
+        .game-container {
+            text-align: center;
+            z-index: 10;
+            position: absolute;
+            bottom: 20vh; /* Position in lower portion */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+        }
+
+        .title-image {
+            display: none; /* Hide the original image since it's now the background */
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .press-start-btn {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 15px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 12px 30px rgba(76, 175, 80, 0.6);
+                transform: scale(1.05);
+            }
+            100% {
+                box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+                transform: scale(1);
+            }
+        }
+
+        .press-start-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 35px rgba(76, 175, 80, 0.4);
+        }
+
+        .press-start-btn:active {
+            transform: scale(0.95);
+        }
+
+
+
+        @media (max-width: 768px) {
+            body {
+                background-size: cover;
+                background-position: center center;
+            }
+            
+            .press-start-btn {
+                padding: 15px 30px;
+                font-size: 20px;
+            }
+            
+            .subtitle {
+                font-size: 16px;
+                margin: 0 20px 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Cinematic container with letterbox bars -->
+    <div class="cinematic-container">
+        <!-- Image container -->
+        <div class="image-container"></div>
+        
+        <!-- Letterbox bars -->
+        <div class="letterbox-top"></div>
+        <div class="letterbox-bottom"></div>
+        
+        <!-- Game UI container positioned in lower portion -->
+        <div class="game-container">
+            <button class="press-start-btn" onclick="proceedToMenu()" id="pressStartBtn">
+                Press Start
+            </button>
+        </div>
+    </div>
+
+
+    <script>
+        // Add keyboard support for Enter key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                proceedToMenu();
+            }
+        });
+
+        function proceedToMenu() {
+            // Add a nice transition effect
+            const btn = document.getElementById('pressStartBtn');
+            btn.style.transform = 'scale(0.9)';
+            btn.innerHTML = 'Loading...';
+            
+            setTimeout(() => {
+                window.location.href = 'menu.html';
+            }, 500);
+        }
+
+        // Add some interactive hover effects
+        document.addEventListener('DOMContentLoaded', function() {
+            const button = document.getElementById('pressStartBtn');
+            
+            // Add click sound effect (visual feedback)
+            button.addEventListener('click', function() {
+                this.style.animation = 'none';
+                setTimeout(() => {
+                    this.style.animation = 'pulse 2s infinite';
+                }, 100);
+            });
+        });
+    </script>
+</body>
+</html>
