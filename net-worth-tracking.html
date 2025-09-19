@@ -446,7 +446,7 @@
 
                     <!-- Update Current Values Button -->
                     <div style="margin-bottom: 20px;">
-                        <button class="calculate-btn" onclick="showUpdateForm()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold;">📝 Update Current Values</button>
+                        <button class="calculate-btn" onclick="showUpdateForm()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold;">📝 Add Net Worth Entry</button>
                     </div>
 
                     <!-- Net Worth Tracking Table -->
@@ -466,7 +466,7 @@
                     <!-- Update Current Values Form (Hidden by default) -->
                     <div id="updateValuesForm" style="display: none; background: #f8f9fa; border: 2px solid #667eea; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                            <h3 style="color: #333; margin: 0;">📝 Update Current Values</h3>
+                            <h3 style="color: #333; margin: 0;">📝 Add Net Worth Entry</h3>
                             <button onclick="closeUpdateForm()" style="background: #dc3545; color: white; border: none; border-radius: 4px; padding: 6px 12px; cursor: pointer;">✕ Close</button>
                         </div>
 
@@ -474,7 +474,7 @@
                         <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
                             <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">Entry Date:</label>
                             <input type="date" id="entryDate" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
-                            <small style="display: block; color: #666; margin-top: 5px;">Defaults to today's date. You can change this if entering historical data.</small>
+                            <small style="display: block; color: #666; margin-top: 5px;">Defaults to today's date. You can enter any past date to add historical net worth data.</small>
                         </div>
 
                         <!-- Account Values Input Section -->
@@ -582,6 +582,16 @@
                 const table = document.getElementById('netWorthTrackingTable');
                 table.innerHTML = '<tr><td style="text-align: center; padding: 40px; color: #666;">No data available. Please start with the FI Calculator.</td></tr>';
             }
+        }
+
+        function getEarliestEntryYear(netWorthEntries, setupYear) {
+            if (!netWorthEntries || netWorthEntries.length === 0) return setupYear;
+
+            const earliestEntry = Math.min(...netWorthEntries.map(entry =>
+                new Date(entry.date).getFullYear()
+            ));
+
+            return Math.min(setupYear, earliestEntry);
         }
 
         function getAnnualSpendingForYear(scenario, year, setupYear, index) {
@@ -696,18 +706,19 @@
             const lifeExpectancy = scenario.inputs?.lifeExpectancy || 85;
             const fiAge = scenario.results?.fiAge || lifeExpectancy;
 
-            // Calculate years for chart (from setup year to FI year)
+            // Get net worth entries to find earliest entry year
+            const netWorthEntries = userManager.getNetWorthEntries();
+            const startYear = getEarliestEntryYear(netWorthEntries, setupYear);
+
+            // Calculate years for chart (from earliest entry year to FI year)
             const fiYear = scenario.results?.fiYear || (setupYear + (fiAge - currentAge));
             const projectionYears = [];
             const ages = [];
 
-            for (let year = setupYear; year <= fiYear; year++) {
+            for (let year = startYear; year <= fiYear; year++) {
                 projectionYears.push(year);
                 ages.push(currentAge + (year - setupYear));
             }
-
-            // Get saved net worth entries for actual data points
-            const netWorthEntries = userManager.getNetWorthEntries();
 
             // Build projection data arrays
             const projectedNetWorth = [];
@@ -960,34 +971,35 @@
         function buildTrackingTable(savedSetup) {
             const scenario = savedSetup.scenario;
             const setupYear = savedSetup.setupYear || new Date().getFullYear();
-            
+
             // Get user's current age and life expectancy from scenario
             const currentAge = scenario.inputs?.currentAge || 35; // Fallback if missing
             const lifeExpectancy = scenario.inputs?.lifeExpectancy || 85; // Fallback if missing
-            
+
+            // Get net worth entries to find earliest entry year
+            const netWorthEntries = userManager.getNetWorthEntries();
+            const startYear = getEarliestEntryYear(netWorthEntries, setupYear);
+
             // Calculate the year they reach life expectancy
             const lifeExpectancyYear = setupYear + (lifeExpectancy - currentAge);
-            
+
             // Calculate FI year from scenario results
             let fiYear = setupYear + 30; // Default fallback
             if (scenario.results && scenario.results.fiYear) {
                 fiYear = scenario.results.fiYear; // fiYear is already an absolute year
             }
-            
+
             // Use the earlier of FI year or life expectancy year, but include both milestones
             const endYear = Math.max(fiYear, lifeExpectancyYear);
-            
-            // Generate projection year columns from setup year to end year
+
+            // Generate projection year columns from earliest entry year to end year
             const projectionYears = [];
             const ages = [];
-            for (let year = setupYear; year <= endYear; year++) {
+            for (let year = startYear; year <= endYear; year++) {
                 projectionYears.push(year);
                 const ageInYear = currentAge + (year - setupYear);
                 ages.push(ageInYear);
             }
-            
-            // Get all saved net worth entries and sort by date
-            const netWorthEntries = userManager.getNetWorthEntries();
             
             // Build combined column structure: projections + actual data entries in chronological order
             const allColumns = [];
