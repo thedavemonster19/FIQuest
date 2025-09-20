@@ -1057,6 +1057,19 @@
                 const isBackdated = year < setupYear;
                 const isSetupYear = year === setupYear;
 
+                // Always add projection column for setup year and future years (needed for projections)
+                if (!isBackdated) {
+                    allColumns.push({
+                        type: 'projection',
+                        year: year,
+                        age: age,
+                        isInitial: isSetupYear, // Setup year is the initial projection baseline
+                        isFI: year === fiYear && year < lifeExpectancyYear,
+                        isLifeExp: year === lifeExpectancyYear && year > fiYear,
+                        isBoth: year === fiYear && year === lifeExpectancyYear
+                    });
+                }
+
                 // Check if there are actual entries for this year
                 const actualEntriesForYear = netWorthEntries.filter(entry =>
                     new Date(entry.date).getFullYear() === year
@@ -1076,23 +1089,15 @@
                             year: year,
                             age: age,
                             entry: entry,
-                            displayDate: entryDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-                            isInitial: isSetupYear, // Preserve setup year marking
-                            isFI: year === fiYear && year < lifeExpectancyYear,
-                            isLifeExp: year === lifeExpectancyYear && year > fiYear,
-                            isBoth: year === fiYear && year === lifeExpectancyYear
+                            displayDate: entryDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
                         });
                     });
-                } else {
-                    // Add projection/backdated column only if no actual entries exist
+                } else if (isBackdated) {
+                    // For backdated years with no entries, add a backdated column
                     allColumns.push({
-                        type: isBackdated ? 'backdated' : 'projection',
+                        type: 'backdated',
                         year: year,
-                        age: age,
-                        isInitial: isSetupYear, // Setup year is the initial projection baseline
-                        isFI: year === fiYear && year < lifeExpectancyYear,
-                        isLifeExp: year === lifeExpectancyYear && year > fiYear,
-                        isBoth: year === fiYear && year === lifeExpectancyYear
+                        age: age
                     });
                 }
             });
