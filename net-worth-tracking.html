@@ -710,34 +710,60 @@
             const netWorthEntries = userManager.getNetWorthEntries();
             const startYear = getEarliestEntryYear(netWorthEntries, setupYear);
 
-            // Calculate years for chart (from earliest entry year to FI year)
+            // Calculate years for chart (backdated + projected)
             const fiYear = scenario.results?.fiYear || (setupYear + (fiAge - currentAge));
+            const backdatedYears = [];
             const projectionYears = [];
+            const allYears = [];
             const ages = [];
 
-            for (let year = startYear; year <= fiYear; year++) {
-                projectionYears.push(year);
-                ages.push(currentAge + (year - setupYear));
+            // Find backdated years that have actual user entries
+            if (startYear < setupYear) {
+                for (let year = startYear; year < setupYear; year++) {
+                    const hasEntry = netWorthEntries.some(entry =>
+                        new Date(entry.date).getFullYear() === year
+                    );
+                    if (hasEntry) {
+                        backdatedYears.push(year);
+                        allYears.push(year);
+                        // Calculate age for backdated years
+                        const ageInYear = currentAge - (setupYear - year);
+                        ages.push(ageInYear);
+                    }
+                }
             }
 
-            // Build projection data arrays
+            // Generate projection years from setup year to FI year (unchanged logic)
+            for (let year = setupYear; year <= fiYear; year++) {
+                projectionYears.push(year);
+                allYears.push(year);
+                const ageInYear = currentAge + (year - setupYear);
+                ages.push(ageInYear);
+            }
+
+            // Build chart data arrays
             const projectedNetWorth = [];
             const projectedPortfolio = [];
             const years = [];
 
-            projectionYears.forEach(year => {
+            allYears.forEach(year => {
                 years.push(year);
 
-                // Calculate projected net worth
-                const totalAssets = calculateTotalAssetsForYear(savedSetup, year, setupYear);
-                const totalLiabilities = calculateTotalLiabilitiesForYear(savedSetup, year, setupYear);
-                const netWorth = totalAssets - totalLiabilities;
-                projectedNetWorth.push(netWorth);
+                if (year < setupYear) {
+                    // For backdated years, show null for projections (only actual data will be visible)
+                    projectedNetWorth.push(null);
+                    projectedPortfolio.push(null);
+                } else {
+                    // For setup year forward, calculate projections as normal
+                    const totalAssets = calculateTotalAssetsForYear(savedSetup, year, setupYear);
+                    const totalLiabilities = calculateTotalLiabilitiesForYear(savedSetup, year, setupYear);
+                    const netWorth = totalAssets - totalLiabilities;
+                    projectedNetWorth.push(netWorth);
 
-                // Calculate projected portfolio value
-                const yearsFromSetup = year - setupYear;
-                const portfolioValue = getPortfolioValueForYear(scenario, year, setupYear, yearsFromSetup);
-                projectedPortfolio.push(portfolioValue);
+                    const yearsFromSetup = year - setupYear;
+                    const portfolioValue = getPortfolioValueForYear(scenario, year, setupYear, yearsFromSetup);
+                    projectedPortfolio.push(portfolioValue);
+                }
             });
 
             // Build actual data arrays
@@ -992,73 +1018,75 @@
             // Use the earlier of FI year or life expectancy year, but include both milestones
             const endYear = Math.max(fiYear, lifeExpectancyYear);
 
-            // Generate projection year columns from earliest entry year to end year
+            // Separate backdated years from projection years
+            const backdatedYears = [];
             const projectionYears = [];
+            const allYears = [];
             const ages = [];
-            for (let year = startYear; year <= endYear; year++) {
+
+            // Find backdated years that have actual user entries
+            if (startYear < setupYear) {
+                for (let year = startYear; year < setupYear; year++) {
+                    const hasEntry = netWorthEntries.some(entry =>
+                        new Date(entry.date).getFullYear() === year
+                    );
+                    if (hasEntry) {
+                        backdatedYears.push(year);
+                        allYears.push(year);
+                        // Calculate age for backdated years
+                        const ageInYear = currentAge - (setupYear - year);
+                        ages.push(ageInYear);
+                    }
+                }
+            }
+
+            // Generate projection years from setup year forward (unchanged logic)
+            for (let year = setupYear; year <= endYear; year++) {
                 projectionYears.push(year);
+                allYears.push(year);
                 const ageInYear = currentAge + (year - setupYear);
                 ages.push(ageInYear);
             }
             
-            // Build combined column structure: projections + actual data entries in chronological order
+            // Build combined column structure: backdated + projected years in chronological order
             const allColumns = [];
-            
-            // Add each projection year with potential actual data inserted chronologically
-            projectionYears.forEach((projYear, projIndex) => {
-                const projAge = ages[projIndex];
-                
-                // Add the projection column
+
+            // Add each year (backdated and projected) in chronological order
+            allYears.forEach((year, yearIndex) => {
+                const age = ages[yearIndex];
+                const isBackdated = year < setupYear;
+                const isSetupYear = year === setupYear;
+
+                // Add the column
                 allColumns.push({
-                    type: 'projection',
-                    year: projYear,
-                    age: projAge,
-                    isInitial: projIndex === 0,
-                    isFI: projYear === fiYear && projYear < lifeExpectancyYear,
-                    isLifeExp: projYear === lifeExpectancyYear && projYear > fiYear,
-                    isBoth: projYear === fiYear && projYear === lifeExpectancyYear
+                    type: isBackdated ? 'backdated' : 'projection',
+                    year: year,
+                    age: age,
+                    isInitial: isSetupYear, // Setup year is the initial projection baseline
+                    isFI: year === fiYear && year < lifeExpectancyYear,
+                    isLifeExp: year === lifeExpectancyYear && year > fiYear,
+                    isBoth: year === fiYear && year === lifeExpectancyYear
                 });
-                
-                // Insert actual data columns that fall between this year and next year
-                const nextProjYear = projIndex < projectionYears.length - 1 ? projectionYears[projIndex + 1] : projYear + 1;
-                
+
+                // Add actual data entries that match this year
                 netWorthEntries.forEach(entry => {
-                    // Parse date as local date to avoid timezone offset issues
-                    const dateParts = entry.date.split('-'); // YYYY-MM-DD
-                    const entryDate = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2])); // Local date
-                    
-                    const entryYear = entryDate.getFullYear();
-                    
-                    // Insert if entry falls between current projection year and next projection year
-                    if (entryYear >= projYear && entryYear < nextProjYear) {
-                        // Check if we already added this entry
-                        const alreadyAdded = allColumns.some(col => col.type === 'actual' && col.entryId === entry.id);
-                        
-                        if (!alreadyAdded) {
-                            allColumns.push({
-                                type: 'actual',
-                                entryId: entry.id,
-                                date: entry.date,
-                                year: entryYear,
-                                entry: entry,
-                                displayDate: entryDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-                            });
-                        }
+                    const entryYear = new Date(entry.date).getFullYear();
+                    if (entryYear === year) {
+                        // Parse date as local date to avoid timezone offset issues
+                        const dateParts = entry.date.split('-'); // YYYY-MM-DD
+                        const entryDate = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2])); // Local date
+
+                        allColumns.push({
+                            type: 'actual',
+                            entryId: entry.id,
+                            date: entry.date,
+                            year: entryYear,
+                            age: age,
+                            entry: entry,
+                            displayDate: entryDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                        });
                     }
                 });
-            });
-            
-            // Sort columns to ensure proper chronological order
-            allColumns.sort((a, b) => {
-                if (a.type === 'projection' && b.type === 'projection') {
-                    return a.year - b.year;
-                } else if (a.type === 'actual' && b.type === 'actual') {
-                    return new Date(a.date) - new Date(b.date);
-                } else if (a.type === 'projection' && b.type === 'actual') {
-                    return a.year === b.year ? -1 : a.year - b.year; // Projection comes before actual for same year
-                } else { // a.type === 'actual' && b.type === 'projection'
-                    return a.year === b.year ? 1 : a.year - b.year; // Actual comes after projection for same year
-                }
             });
             
             
