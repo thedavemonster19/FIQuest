@@ -781,8 +781,8 @@
                 const yearProgress = (entryDate - startOfYear) / (endOfYear - startOfYear);
                 const fractionalYear = entryYear + yearProgress;
 
-                // Only include entries within our projection range
-                if (entryYear >= setupYear && entryYear <= fiYear) {
+                // Include entries within our chart range (including backdated entries)
+                if (entryYear >= allYears[0] && entryYear <= fiYear) {
                     actualYears.push(fractionalYear);
 
                     // Calculate actual net worth
@@ -1057,21 +1057,14 @@
                 const isBackdated = year < setupYear;
                 const isSetupYear = year === setupYear;
 
-                // Add the column
-                allColumns.push({
-                    type: isBackdated ? 'backdated' : 'projection',
-                    year: year,
-                    age: age,
-                    isInitial: isSetupYear, // Setup year is the initial projection baseline
-                    isFI: year === fiYear && year < lifeExpectancyYear,
-                    isLifeExp: year === lifeExpectancyYear && year > fiYear,
-                    isBoth: year === fiYear && year === lifeExpectancyYear
-                });
+                // Check if there are actual entries for this year
+                const actualEntriesForYear = netWorthEntries.filter(entry =>
+                    new Date(entry.date).getFullYear() === year
+                );
 
-                // Add actual data entries that match this year
-                netWorthEntries.forEach(entry => {
-                    const entryYear = new Date(entry.date).getFullYear();
-                    if (entryYear === year) {
+                if (actualEntriesForYear.length > 0) {
+                    // Add actual entry columns for this year
+                    actualEntriesForYear.forEach(entry => {
                         // Parse date as local date to avoid timezone offset issues
                         const dateParts = entry.date.split('-'); // YYYY-MM-DD
                         const entryDate = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2])); // Local date
@@ -1080,13 +1073,28 @@
                             type: 'actual',
                             entryId: entry.id,
                             date: entry.date,
-                            year: entryYear,
+                            year: year,
                             age: age,
                             entry: entry,
-                            displayDate: entryDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                            displayDate: entryDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                            isInitial: isSetupYear, // Preserve setup year marking
+                            isFI: year === fiYear && year < lifeExpectancyYear,
+                            isLifeExp: year === lifeExpectancyYear && year > fiYear,
+                            isBoth: year === fiYear && year === lifeExpectancyYear
                         });
-                    }
-                });
+                    });
+                } else {
+                    // Add projection/backdated column only if no actual entries exist
+                    allColumns.push({
+                        type: isBackdated ? 'backdated' : 'projection',
+                        year: year,
+                        age: age,
+                        isInitial: isSetupYear, // Setup year is the initial projection baseline
+                        isFI: year === fiYear && year < lifeExpectancyYear,
+                        isLifeExp: year === lifeExpectancyYear && year > fiYear,
+                        isBoth: year === fiYear && year === lifeExpectancyYear
+                    });
+                }
             });
             
             
