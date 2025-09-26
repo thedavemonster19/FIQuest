@@ -13,8 +13,26 @@
 
         body {
             font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #333;
             background: #f8f9fa;
         }
+
+        /* Typography System */
+        h1, .text-xl { font-size: 28px; font-weight: 300; line-height: 1.2; }
+        h2, .text-lg { font-size: 24px; font-weight: 500; line-height: 1.3; }
+        h3, .text-md { font-size: 18px; font-weight: 500; line-height: 1.4; }
+        h4, .text-sm { font-size: 16px; font-weight: 500; line-height: 1.4; }
+        .text-xs { font-size: 14px; font-weight: 400; line-height: 1.4; }
+        .text-micro { font-size: 12px; font-weight: 400; line-height: 1.3; }
+
+        .font-light { font-weight: 300; }
+        .font-normal { font-weight: 400; }
+        .font-medium { font-weight: 500; }
+        .font-semibold { font-weight: 600; }
+        .font-bold { font-weight: 700; }
 
         .app-container {
             min-height: 100vh;
@@ -63,6 +81,7 @@
             color: white;
             text-decoration: none;
             transition: background 0.3s ease;
+            font-size: 16px;
         }
 
         .nav-menu a:hover {
@@ -71,6 +90,7 @@
 
         .nav-menu a.active {
             background: rgba(255,255,255,0.2);
+            font-weight: bold;
         }
 
         .nav-icon {
@@ -123,7 +143,7 @@
             color: rgba(255,255,255,0.7);
             text-decoration: none;
             transition: all 0.3s ease;
-            font-size: 14px;
+            font-size: 16px;
         }
 
         .nav-subitem:hover {
@@ -135,6 +155,7 @@
             background: rgba(255,255,255,0.15);
             color: white;
             font-weight: bold;
+            border-right: 3px solid #fff;
         }
 
         .main-content {
@@ -162,12 +183,18 @@
             color: #333;
             font-size: 28px;
             margin-bottom: 8px;
+            font-weight: 300;
+            text-align: center;
+            line-height: 1.2;
         }
 
         .page-subtitle {
             color: #666;
             font-size: 16px;
             margin: 0;
+            font-weight: 400;
+            text-align: center;
+            line-height: 1.4;
         }
 
         .container {
@@ -372,6 +399,7 @@
             text-align: justify;
         }
     </style>
+    <script src="file-saver.js"></script>
     <script src="user-manager.js"></script>
 </head>
 <body>
@@ -391,6 +419,10 @@
                 <a href="net-worth-tracking.html" id="nav-net-worth-tracking" class="active">
                     <span class="nav-icon">📈</span>
                     Net Worth Tracking
+                </a>
+                <a href="data-management.html" id="nav-data-management">
+                    <span class="nav-icon">💾</span>
+                    Data Management
                 </a>
                 <!-- Collapsible Initial Setup Section -->
                 <div class="nav-section">
@@ -503,6 +535,14 @@
                         </div>
                     </div>
 
+                    <!-- Asset Allocation Chart -->
+                    <div style="margin-bottom: 30px;">
+                        <h3 style="color: #333; border-bottom: 2px solid #667eea; padding-bottom: 10px; margin-bottom: 20px;">📊 Asset Allocation Over Time</h3>
+                        <div id="assetAllocationContainer" style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); height: 500px;">
+                            <canvas id="assetAllocationChart" style="height: 100%; width: 100%;"></canvas>
+                        </div>
+                    </div>
+
                     <div class="disclaimer">
                         <h3>Disclaimer</h3>
                         <p>This material is provided for general informational purposes only and does not constitute financial, investment, tax, legal or accounting advice, it should not be relied upon in that regard or be considered predictive of any future market performance, nor does it constitute an offer or solicitation to buy or sell any securities referred to. Individual circumstances and current events are critical to sound investment planning; anyone wishing to act on this material should consult with their advisor. Before making any investment decisions, we encourage you to consider these and other factors carefully. Past performance may not be repeated and is not indicative of future results.</p>
@@ -553,6 +593,9 @@
 
                 // Create the net worth chart
                 createNetWorthChart(savedSetup);
+
+                // Create the asset allocation chart
+                createAssetAllocationChart(savedSetup);
                 
             } else if (activeScenario) {
                 // Fallback to scenario data if no setup saved
@@ -592,6 +635,31 @@
             ));
 
             return Math.min(setupYear, earliestEntry);
+        }
+
+        function formatSetupDateForHeader(setupDate) {
+            if (!setupDate) return '';
+
+            // Parse as local date to avoid timezone issues with ISO date strings
+            const dateParts = setupDate.split('-');
+            const date = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2]));
+
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                           'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const month = months[date.getMonth()];
+            const day = date.getDate();
+            const year = date.getFullYear();
+
+            return `${month} ${day}, ${year}`;
+        }
+
+        function isEntryBeforeSetupDate(entryDate, setupDate) {
+            if (!setupDate) return false;
+
+            const entry = new Date(entryDate);
+            const setup = new Date(setupDate);
+
+            return entry < setup;
         }
 
         function getAnnualSpendingForYear(scenario, year, setupYear, index) {
@@ -741,29 +809,76 @@
                 ages.push(ageInYear);
             }
 
-            // Build chart data arrays
+            // Calculate setup date fractional year for precise projection timeline
+            const setupDate = new Date(savedSetup.setupDate || `${setupYear}-01-01`);
+            const startOfSetupYear = new Date(setupYear, 0, 1);
+            const endOfSetupYear = new Date(setupYear + 1, 0, 1);
+            const setupYearProgress = (setupDate - startOfSetupYear) / (endOfSetupYear - startOfSetupYear);
+            const setupFractionalYear = setupYear + setupYearProgress;
+
+            // Build chart data arrays with precise timeline including all actual entries
             const projectedNetWorth = [];
             const projectedPortfolio = [];
             const years = [];
 
-            allYears.forEach(year => {
-                years.push(year);
+            // First, collect all actual entry fractional years
+            const actualEntryFractionalYears = [];
+            netWorthEntries.forEach(entry => {
+                const entryDate = new Date(entry.date);
+                const entryYear = entryDate.getFullYear();
+                const startOfYear = new Date(entryYear, 0, 1);
+                const endOfYear = new Date(entryYear + 1, 0, 1);
+                const yearProgress = (entryDate - startOfYear) / (endOfYear - startOfYear);
+                const fractionalYear = entryYear + yearProgress;
+                actualEntryFractionalYears.push(fractionalYear);
+            });
 
+            // Add backdated integer years (before setup year) - no projections
+            allYears.forEach(year => {
                 if (year < setupYear) {
-                    // For backdated years, show null for projections (only actual data will be visible)
+                    years.push(year);
                     projectedNetWorth.push(null);
                     projectedPortfolio.push(null);
-                } else {
-                    // For setup year forward, calculate projections as normal
-                    const totalAssets = calculateTotalAssetsForYear(savedSetup, year, setupYear);
-                    const totalLiabilities = calculateTotalLiabilitiesForYear(savedSetup, year, setupYear);
-                    const netWorth = totalAssets - totalLiabilities;
-                    projectedNetWorth.push(netWorth);
-
-                    const yearsFromSetup = year - setupYear;
-                    const portfolioValue = getPortfolioValueForYear(scenario, year, setupYear, yearsFromSetup);
-                    projectedPortfolio.push(portfolioValue);
                 }
+            });
+
+            // Add actual entry fractional years that are before setup date (same year entries)
+            actualEntryFractionalYears.forEach(fractionalYear => {
+                if (fractionalYear < setupFractionalYear && Math.floor(fractionalYear) === setupYear) {
+                    years.push(fractionalYear);
+                    projectedNetWorth.push(null);
+                    projectedPortfolio.push(null);
+                }
+            });
+
+            // Add setup year and future projections starting from actual setup date
+            const fractionalProjectionYears = [];
+
+            // Start with setup fractional year
+            fractionalProjectionYears.push(setupFractionalYear);
+
+            // Add subsequent integer years
+            for (let year = setupYear + 1; year <= fiYear; year++) {
+                fractionalProjectionYears.push(year);
+            }
+
+            // Generate projection data
+            fractionalProjectionYears.forEach((fractionalYear, index) => {
+                years.push(fractionalYear);
+
+                // Calculate years from setup for projection calculations
+                const yearsFromSetup = fractionalYear - setupFractionalYear;
+
+                // Use integer year for calculation functions that expect integer years
+                const calculationYear = Math.floor(fractionalYear);
+
+                const totalAssets = calculateTotalAssetsForYear(savedSetup, calculationYear, setupYear);
+                const totalLiabilities = calculateTotalLiabilitiesForYear(savedSetup, calculationYear, setupYear);
+                const netWorth = totalAssets - totalLiabilities;
+                projectedNetWorth.push(netWorth);
+
+                const portfolioValue = getPortfolioValueForYear(scenario, calculationYear, setupYear, Math.floor(yearsFromSetup));
+                projectedPortfolio.push(portfolioValue);
             });
 
             // Build actual data arrays
@@ -934,8 +1049,8 @@
                                 display: true,
                                 color: 'rgba(0,0,0,0.1)'
                             },
-                            min: chartData.years[0],
-                            max: chartData.years[chartData.years.length - 1],
+                            min: Math.floor(chartData.years[0]),
+                            max: Math.ceil(chartData.years[chartData.years.length - 1]),
                             ticks: {
                                 stepSize: 1,
                                 callback: function(value, index, ticks) {
@@ -992,6 +1107,310 @@
 
             // Create the chart
             netWorthChart = new Chart(ctx, config);
+        }
+
+        function createAssetAllocationChart(savedSetup) {
+            // Destroy existing chart if it exists
+            if (assetAllocationChart) {
+                assetAllocationChart.destroy();
+            }
+
+            // Get asset allocation data
+            const allocationData = buildAssetAllocationData(savedSetup);
+
+            // Get canvas context
+            const ctx = document.getElementById('assetAllocationChart').getContext('2d');
+
+            // Create chart configuration
+            const config = {
+                type: 'line',
+                data: {
+                    datasets: allocationData.datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Year',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                display: true,
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            min: Math.floor(allocationData.years[0]),
+                            max: Math.ceil(allocationData.years[allocationData.years.length - 1]),
+                            ticks: {
+                                stepSize: 1,
+                                callback: function(value, index, ticks) {
+                                    // Only show whole year labels
+                                    if (value % 1 === 0) {
+                                        return value.toString();
+                                    }
+                                    return '';
+                                },
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            stacked: true,
+                            title: {
+                                display: true,
+                                text: 'Asset Value ($)'
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            ticks: {
+                                callback: function(value, index, ticks) {
+                                    return '$' + (value >= 1000000 ?
+                                        (value / 1000000).toFixed(1) + 'M' :
+                                        (value >= 1000 ? (value / 1000).toFixed(0) + 'K' : value.toLocaleString())
+                                    );
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: false
+                        },
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                title: function(context) {
+                                    return 'Year ' + context[0].label;
+                                },
+                                label: function(context) {
+                                    const value = context.parsed.y;
+                                    const total = context.chart.data.datasets.reduce((sum, dataset, index) => {
+                                        const point = context.chart.getDatasetMeta(index).data[context.dataIndex];
+                                        const dataPoint = dataset.data[context.dataIndex];
+                                        const yValue = dataPoint && typeof dataPoint === 'object' ? dataPoint.y : dataPoint;
+                                        return sum + (point && yValue ? yValue : 0);
+                                    }, 0);
+                                    const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0.0';
+                                    return context.dataset.label + ': $' + value.toLocaleString() + ' (' + percentage + '%)';
+                                },
+                                footer: function(context) {
+                                    const total = context.reduce((sum, item) => sum + item.parsed.y, 0);
+                                    return 'Total Assets: $' + total.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            // Create the chart
+            assetAllocationChart = new Chart(ctx, config);
+        }
+
+        function buildAssetAllocationData(savedSetup) {
+            const scenario = savedSetup.scenario;
+            const setupYear = savedSetup.setupYear || new Date().getFullYear();
+            const netWorthEntries = userManager.getNetWorthEntries();
+            const startYear = getEarliestEntryYear(netWorthEntries, setupYear);
+
+            // Get user's current age and life expectancy from scenario
+            const currentAge = scenario.inputs?.currentAge || 35;
+            const lifeExpectancy = scenario.inputs?.lifeExpectancy || 85;
+            const fiAge = scenario.results?.fiAge || lifeExpectancy;
+            const fiYear = scenario.results?.fiYear || (setupYear + (fiAge - currentAge));
+
+            // Calculate setup date fractional year for consistent timeline with Net Worth chart
+            const setupDate = new Date(savedSetup.setupDate || `${setupYear}-01-01`);
+            const startOfSetupYear = new Date(setupYear, 0, 1);
+            const endOfSetupYear = new Date(setupYear + 1, 0, 1);
+            const setupYearProgress = (setupDate - startOfSetupYear) / (endOfSetupYear - startOfSetupYear);
+            const setupFractionalYear = setupYear + setupYearProgress;
+
+            // Generate years array with precise timeline matching Net Worth chart
+            const allYears = [];
+
+            // First, collect all actual entry fractional years (same logic as Net Worth chart)
+            const actualEntryFractionalYears = [];
+            netWorthEntries.forEach(entry => {
+                const entryDate = new Date(entry.date);
+                const entryYear = entryDate.getFullYear();
+                const startOfYear = new Date(entryYear, 0, 1);
+                const endOfYear = new Date(entryYear + 1, 0, 1);
+                const yearProgress = (entryDate - startOfYear) / (endOfYear - startOfYear);
+                const fractionalYear = entryYear + yearProgress;
+                actualEntryFractionalYears.push(fractionalYear);
+            });
+
+            // Add backdated years (before setup year)
+            for (let year = startYear; year < setupYear; year++) {
+                allYears.push(year);
+            }
+
+            // Add actual entry fractional years that are before setup date (same year entries)
+            actualEntryFractionalYears.forEach(fractionalYear => {
+                if (fractionalYear < setupFractionalYear && Math.floor(fractionalYear) === setupYear) {
+                    allYears.push(fractionalYear);
+                }
+            });
+
+            // Add setup fractional year
+            allYears.push(setupFractionalYear);
+
+            // Add future years
+            for (let year = setupYear + 1; year <= fiYear; year++) {
+                allYears.push(year);
+            }
+
+            // Asset categories and their colors (matching FIQuest color scheme)
+            const assetCategories = [
+                {
+                    name: 'Investment Portfolio',
+                    color: 'rgba(76, 175, 80, 0.8)',    // Green
+                    borderColor: 'rgba(76, 175, 80, 1)',
+                    accounts: ['RRSP1', 'RRSP2', 'TFSA1', 'TFSA2', 'Taxable Brokerage']
+                },
+                {
+                    name: 'Real Estate',
+                    color: 'rgba(33, 150, 243, 0.8)',   // Blue
+                    borderColor: 'rgba(33, 150, 243, 1)',
+                    accounts: ['Home']
+                },
+                {
+                    name: 'Cash & Equivalents',
+                    color: 'rgba(255, 152, 0, 0.8)',    // Orange
+                    borderColor: 'rgba(255, 152, 0, 1)',
+                    accounts: ['Cash']
+                },
+                {
+                    name: 'Stock Options/RSUs',
+                    color: 'rgba(156, 39, 176, 0.8)',   // Purple
+                    borderColor: 'rgba(156, 39, 176, 1)',
+                    accounts: ['Stock Options/RSUs']
+                },
+                {
+                    name: 'Crypto',
+                    color: 'rgba(96, 125, 139, 0.8)',   // Blue Grey
+                    borderColor: 'rgba(96, 125, 139, 1)',
+                    accounts: ['Crypto']
+                },
+                {
+                    name: 'Other Assets',
+                    color: 'rgba(121, 85, 72, 0.8)',    // Brown
+                    borderColor: 'rgba(121, 85, 72, 1)',
+                    accounts: ['Other']
+                }
+            ];
+
+            // Build datasets for each asset category
+            const datasets = assetCategories.map(category => {
+                const data = allYears.map(year => {
+                    let categoryTotal = 0;
+
+                    // Look for actual entries at this specific date/year (fractional or integer)
+                    let actualEntry = null;
+
+                    // For fractional years, find entries that match this specific fractional year
+                    if (!Number.isInteger(year)) {
+                        actualEntry = netWorthEntries.find(entry => {
+                            const entryDate = new Date(entry.date);
+                            const entryYear = entryDate.getFullYear();
+                            const startOfYear = new Date(entryYear, 0, 1);
+                            const endOfYear = new Date(entryYear + 1, 0, 1);
+                            const yearProgress = (entryDate - startOfYear) / (endOfYear - startOfYear);
+                            const entryFractionalYear = entryYear + yearProgress;
+                            return Math.abs(entryFractionalYear - year) < 0.001; // Close match for floating point
+                        });
+                    } else {
+                        // For integer years, look for actual entries in that year
+                        actualEntry = netWorthEntries.find(entry =>
+                            new Date(entry.date).getFullYear() === year
+                        );
+                    }
+
+                    if (actualEntry && actualEntry.accounts) {
+                        // Use actual data
+                        category.accounts.forEach(accountName => {
+                            // Use 'investment' type for Investment Portfolio accounts, 'asset' for others
+                            const accountType = category.name === 'Investment Portfolio' ? 'investment' : 'asset';
+                            const actualValue = getActualAccountValue(actualEntry, accountName, accountType);
+                            if (actualValue !== null) {
+                                categoryTotal += actualValue;
+                            }
+                        });
+                    } else {
+                        // Use projected data
+                        const yearsFromSetup = year >= setupFractionalYear ?
+                            year - setupFractionalYear : 0;
+                        const calculationYear = Math.floor(year);
+
+                        if (category.name === 'Investment Portfolio') {
+                            // For Investment Portfolio, use the same method as the table
+                            categoryTotal = getPortfolioValueForYear(scenario, calculationYear, setupYear, Math.floor(yearsFromSetup));
+                        } else {
+                            // For other categories, use existing logic
+                            category.accounts.forEach(accountName => {
+                                if (scenario.inputs?.accounts) {
+                                    // Investment accounts (shouldn't reach here for Investment Portfolio)
+                                    const investmentAccount = scenario.inputs.accounts.find(acc => acc.name === accountName);
+                                    if (investmentAccount) {
+                                        categoryTotal += calculateInvestmentAccountProjection(investmentAccount, scenario, Math.floor(yearsFromSetup), calculationYear);
+                                    }
+                                }
+
+                                // Additional assets from saved setup
+                                if (savedSetup.assets?.additionalAssets) {
+                                    const assetValue = savedSetup.assets.additionalAssets[accountName];
+                                    if (assetValue) {
+                                        categoryTotal += assetValue; // Static value for additional assets
+                                    }
+                                }
+                            });
+                        }
+                    }
+
+                    return {x: year, y: Math.max(0, categoryTotal)};
+                });
+
+                return {
+                    label: category.name,
+                    data: data,
+                    backgroundColor: category.color,
+                    borderColor: category.borderColor,
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.1
+                };
+            });
+
+            return {
+                years: allYears,
+                datasets: datasets
+            };
         }
 
         function buildTrackingTable(savedSetup) {
@@ -1057,26 +1476,85 @@
                 const isBackdated = year < setupYear;
                 const isSetupYear = year === setupYear;
 
-                // Always add projection column for setup year and future years (needed for projections)
-                if (!isBackdated) {
-                    allColumns.push({
-                        type: 'projection',
-                        year: year,
-                        age: age,
-                        isInitial: isSetupYear, // Setup year is the initial projection baseline
-                        isFI: year === fiYear && year < lifeExpectancyYear,
-                        isLifeExp: year === lifeExpectancyYear && year > fiYear,
-                        isBoth: year === fiYear && year === lifeExpectancyYear
-                    });
-                }
-
                 // Check if there are actual entries for this year
                 const actualEntriesForYear = netWorthEntries.filter(entry =>
                     new Date(entry.date).getFullYear() === year
                 );
 
                 if (actualEntriesForYear.length > 0) {
-                    // Add actual entry columns for this year
+                    // Sort entries by date in chronological order (earliest to latest)
+                    actualEntriesForYear.sort((a, b) => new Date(a.date) - new Date(b.date));
+                }
+
+                // For setup year, handle chronological ordering with setup date
+                if (isSetupYear) {
+                    // Add entries that are before the setup date first
+                    const entriesBeforeSetup = actualEntriesForYear.filter(entry =>
+                        isEntryBeforeSetupDate(entry.date, savedSetup.setupDate)
+                    );
+
+                    entriesBeforeSetup.forEach(entry => {
+                        // Parse date as local date to avoid timezone offset issues
+                        const dateParts = entry.date.split('-'); // YYYY-MM-DD
+                        const entryDate = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2])); // Local date
+
+                        allColumns.push({
+                            type: 'actual',
+                            entryId: entry.id,
+                            date: entry.date,
+                            entry: entry,
+                            year: year,
+                            age: age,
+                            isBeforeSetup: true,
+                            displayDate: entryDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                        });
+                    });
+
+                    // Add the initial projection column at the setup date
+                    allColumns.push({
+                        type: 'projection',
+                        year: year,
+                        age: age,
+                        isInitial: true, // Setup year is the initial projection baseline
+                        isFI: year === fiYear && year < lifeExpectancyYear,
+                        isLifeExp: year === lifeExpectancyYear && year > fiYear,
+                        isBoth: year === fiYear && year === lifeExpectancyYear
+                    });
+
+                    // Now add entries that are on/after the setup date
+                    const entriesAfterSetup = actualEntriesForYear.filter(entry =>
+                        !isEntryBeforeSetupDate(entry.date, savedSetup.setupDate)
+                    );
+
+                    entriesAfterSetup.forEach(entry => {
+                        // Parse date as local date to avoid timezone offset issues
+                        const dateParts = entry.date.split('-'); // YYYY-MM-DD
+                        const entryDate = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2])); // Local date
+
+                        allColumns.push({
+                            type: 'actual',
+                            entryId: entry.id,
+                            date: entry.date,
+                            entry: entry,
+                            year: year,
+                            age: age,
+                            isAfterSetup: true,
+                            displayDate: entryDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                        });
+                    });
+                } else if (!isBackdated) {
+                    // For future years (not setup year), add projection column
+                    allColumns.push({
+                        type: 'projection',
+                        year: year,
+                        age: age,
+                        isInitial: false,
+                        isFI: year === fiYear && year < lifeExpectancyYear,
+                        isLifeExp: year === lifeExpectancyYear && year > fiYear,
+                        isBoth: year === fiYear && year === lifeExpectancyYear
+                    });
+
+                    // Add actual entries for future years
                     actualEntriesForYear.forEach(entry => {
                         // Parse date as local date to avoid timezone offset issues
                         const dateParts = entry.date.split('-'); // YYYY-MM-DD
@@ -1092,7 +1570,27 @@
                             displayDate: entryDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
                         });
                     });
-                } else if (isBackdated) {
+                } else {
+                    // For backdated years, just add actual entries (no projection columns)
+                    actualEntriesForYear.forEach(entry => {
+                        // Parse date as local date to avoid timezone offset issues
+                        const dateParts = entry.date.split('-'); // YYYY-MM-DD
+                        const entryDate = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2])); // Local date
+
+                        allColumns.push({
+                            type: 'actual',
+                            entryId: entry.id,
+                            date: entry.date,
+                            year: year,
+                            age: age,
+                            entry: entry,
+                            displayDate: entryDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                        });
+                    });
+                }
+
+                // Handle years with no entries
+                if (actualEntriesForYear.length === 0 && isBackdated) {
                     // For backdated years with no entries, add a backdated column
                     allColumns.push({
                         type: 'backdated',
@@ -1112,19 +1610,26 @@
             allColumns.forEach(col => {
                 if (col.type === 'projection') {
                     if (col.isInitial) {
-                        tableHTML += `<th style="background: #4CAF50; color: white;">Initial<br>(${col.year})<br>Age ${col.age}</th>`;
+                        const formattedSetupDate = formatSetupDateForHeader(savedSetup.setupDate);
+                        tableHTML += `<th style="background: #4CAF50; color: white; text-align: center;">Initial<br>(${formattedSetupDate})<br>Age ${col.age}</th>`;
                     } else if (col.isFI) {
-                        tableHTML += `<th style="background: #FF9800; color: white;">FI Target<br>(${col.year})<br>Age ${col.age}</th>`;
+                        tableHTML += `<th style="background: #FF9800; color: white; text-align: center;">FI Target<br>(${col.year})<br>Age ${col.age}</th>`;
                     } else if (col.isLifeExp) {
-                        tableHTML += `<th style="background: #9C27B0; color: white;">Life Exp.<br>(${col.year})<br>Age ${col.age}</th>`;
+                        tableHTML += `<th style="background: #9C27B0; color: white; text-align: center;">Life Exp.<br>(${col.year})<br>Age ${col.age}</th>`;
                     } else if (col.isBoth) {
-                        tableHTML += `<th style="background: #E91E63; color: white;">FI & Life Exp.<br>(${col.year})<br>Age ${col.age}</th>`;
+                        tableHTML += `<th style="background: #E91E63; color: white; text-align: center;">FI & Life Exp.<br>(${col.year})<br>Age ${col.age}</th>`;
                     } else {
-                        tableHTML += `<th>${col.year}<br>Age ${col.age}</th>`;
+                        tableHTML += `<th style="text-align: center;">${col.year}<br>Age ${col.age}</th>`;
                     }
                 } else { // actual data
-                    tableHTML += `<th style="background: #2196F3; color: white; font-size: 12px; position: sticky; top: 0; z-index: 4;">
-                        📊 ACTUAL<br>${col.displayDate}
+                    const hasNotes = col.entry && col.entry.notes && col.entry.notes.trim();
+                    const tooltipIcon = hasNotes ?
+                        `<span style="position: absolute; top: 2px; left: 2px; background: rgba(255,255,255,0.9); color: #666; border-radius: 50%; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; cursor: help; z-index: 5; border: 1px solid #ddd;" title="${col.entry.notes.replace(/"/g, '&quot;')}">i</span>` :
+                        '';
+
+                    tableHTML += `<th style="background: #2196F3; color: white; font-size: 12px; position: sticky; top: 0; z-index: 4; text-align: center;">
+                        ${tooltipIcon}
+                        📊 Actual<br>${col.displayDate}
                         <button onclick="deleteNetWorthEntry('${col.entryId}')"
                                 style="position: absolute; top: 2px; right: 2px; background: #f44336; color: white; border: none;
                                        border-radius: 50%; width: 20px; height: 20px; font-size: 12px; cursor: pointer;
@@ -2470,7 +2975,28 @@
             const result = userManager.addNetWorthEntry(entryData);
             
             if (result) {
-                alert('Net worth entry saved successfully!');
+                // Prompt user to update save file
+                const shouldExportSave = confirm(
+                    '✅ Net worth entry saved successfully!\n\n' +
+                    '💾 SAVE FILE RECOMMENDATION:\n' +
+                    'Would you like to update your save file with this new entry?\n\n' +
+                    'This ensures your progress is backed up and available if you need to reload your game later.'
+                );
+
+                if (shouldExportSave && userManager && userManager.currentPlayer) {
+                    try {
+                        // Create updated save file
+                        const exportData = userManager.exportAllUserData();
+                        const filename = CrossBrowserFileSaver.generateFilename(userManager.currentPlayer.playerName, true);
+                        CrossBrowserFileSaver.saveAs(exportData, filename, 'application/json');
+
+                        alert('✅ Save file updated successfully!\n\nYour net worth entry has been backed up to: ' + filename);
+                    } catch (error) {
+                        console.error('Error updating save file:', error);
+                        alert('⚠️ Net worth entry saved, but save file update failed.\nYou can manually update your save file from the Data Management page.');
+                    }
+                }
+
                 closeUpdateForm();
                 
                 // Debug: Check if entries exist immediately after save
@@ -2483,6 +3009,7 @@
                     buildTrackingTable(savedSetup);
                     updateSummaryCards(savedSetup);
                     createNetWorthChart(savedSetup);
+                    createAssetAllocationChart(savedSetup);
                 } else {
                     console.error('No saved setup found for table rebuild');
                 }
@@ -2530,6 +3057,7 @@
                         buildTrackingTable(savedSetup);
                         updateSummaryCards(savedSetup);
                         createNetWorthChart(savedSetup);
+                        createAssetAllocationChart(savedSetup);
                     }
                 } else {
                     alert('Error deleting net worth entry. Please try again.');

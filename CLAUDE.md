@@ -38,6 +38,7 @@ FIQuest is a financial independence tracking application that uses gamification 
 - Performs year-by-year financial projections with compound growth
 - Manages debt payoff schedules and their impact on contributions
 - Calculates FI achievement year and withdrawal sustainability
+- Uses conservative approach: applies withdrawals BEFORE growth for post-FI years
 - Supports up to 3 scenario comparisons with account-level detail
 
 **User Management System**: `UserManager` class at `user-manager.js:67`

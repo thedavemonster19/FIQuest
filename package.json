@@ -1,0 +1,11 @@
+{
+  "name": "fiquest-testing",
+  "version": "1.0.0",
+  "description": "Testing setup for FIQuest",
+  "scripts": {
+    "test": "echo \"No tests yet\""
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.0"
+  }
+}

@@ -123,6 +123,22 @@
             transform: scale(0.95);
         }
 
+        .continue-btn {
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%) !important;
+            margin-top: 20px;
+        }
+
+        .continue-btn:hover {
+            box-shadow: 0 15px 35px rgba(33, 150, 243, 0.4) !important;
+        }
+
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
 
 
         @media (max-width: 768px) {
@@ -155,42 +171,174 @@
         
         <!-- Game UI container positioned in lower portion -->
         <div class="game-container">
-            <button class="press-start-btn" onclick="proceedToMenu()" id="pressStartBtn">
-                Press Start
+            <button class="press-start-btn" onclick="startNewGame()" id="newGameBtn">
+                🎮 New Game
+            </button>
+            <button class="press-start-btn continue-btn" onclick="loadSaveFile()" id="loadGameBtn">
+                📁 Load Save File
             </button>
         </div>
     </div>
 
 
     <script>
-        // Add keyboard support for Enter key
+        // Add keyboard support
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Enter' || event.key === ' ') {
-                proceedToMenu();
+                startNewGame();
+            } else if (event.key === 'l' || event.key === 'L') {
+                loadSaveFile();
             }
         });
 
-        function proceedToMenu() {
+        function startNewGame() {
             // Add a nice transition effect
-            const btn = document.getElementById('pressStartBtn');
+            const btn = document.getElementById('newGameBtn');
             btn.style.transform = 'scale(0.9)';
-            btn.innerHTML = 'Loading...';
-            
+            btn.innerHTML = '🎮 Creating New Game...';
+
             setTimeout(() => {
-                window.location.href = 'menu.html';
+                window.location.href = 'create-player.html';
+            }, 800);
+        }
+
+        function loadSaveFile() {
+            // Add transition effect
+            const btn = document.getElementById('loadGameBtn');
+            btn.style.transform = 'scale(0.9)';
+            btn.innerHTML = '📁 Loading Save File...';
+
+            setTimeout(() => {
+                // Create file input for save file import
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.json';
+                input.style.display = 'none';
+
+                input.onchange = function(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        importSaveFile(file);
+                    } else {
+                        // Reset button if no file selected
+                        btn.innerHTML = '📁 Load Save File';
+                        btn.style.transform = 'scale(1)';
+                    }
+                };
+
+                document.body.appendChild(input);
+                input.click();
+                document.body.removeChild(input);
             }, 500);
+        }
+
+        function importSaveFile(file) {
+            const reader = new FileReader();
+            const loadBtn = document.getElementById('loadGameBtn');
+
+            loadBtn.innerHTML = '📁 Loading...';
+
+            reader.onload = function(e) {
+                try {
+                    const saveData = JSON.parse(e.target.result);
+
+                    // Validate save file structure
+                    if (!saveData.playerData || !saveData.playerData.playerName) {
+                        throw new Error('Invalid save file format');
+                    }
+
+                    // Clear any existing data first
+                    const keys = Object.keys(localStorage);
+                    keys.forEach(key => {
+                        if (key.startsWith('fiquest_')) {
+                            localStorage.removeItem(key);
+                        }
+                    });
+
+                    // Import player data
+                    const playerName = saveData.playerData.playerName;
+                    localStorage.setItem(`fiquest_player_${playerName.toLowerCase()}`, JSON.stringify(saveData.playerData));
+                    localStorage.setItem('fiquest_current_player', playerName);
+
+                    // Import game data
+                    if (saveData.gameData.scenarios) {
+                        localStorage.setItem('fiquest_scenarios', JSON.stringify(saveData.gameData.scenarios));
+                    }
+                    if (saveData.gameData.activeScenario) {
+                        localStorage.setItem('fiquest_active_scenario', JSON.stringify(saveData.gameData.activeScenario));
+                    }
+                    if (saveData.gameData.netWorthSetup) {
+                        localStorage.setItem('fiquest_net_worth_setup', JSON.stringify(saveData.gameData.netWorthSetup));
+                    }
+                    if (saveData.gameData.netWorthHistory) {
+                        localStorage.setItem('fiquest_net_worth_history', JSON.stringify(saveData.gameData.netWorthHistory));
+                    }
+                    if (saveData.gameData.currentNetWorth) {
+                        localStorage.setItem('fiquest_current_net_worth', JSON.stringify(saveData.gameData.currentNetWorth));
+                    }
+
+                    // Success feedback
+                    loadBtn.innerHTML = '✅ Save Loaded!';
+                    loadBtn.style.background = 'linear-gradient(135deg, #4CAF50 0%, #45a049 100%)';
+
+                    // Redirect based on game progress
+                    setTimeout(() => {
+                        if (saveData.gameData.netWorthSetup) {
+                            // Player has completed initial setup, go to tracking
+                            window.location.href = 'net-worth-tracking.html';
+                        } else if (saveData.gameData.scenarios && saveData.gameData.scenarios.length > 0) {
+                            // Player has scenarios, go to scenario page
+                            window.location.href = 'my-scenario.html';
+                        } else {
+                            // New player, go to FI calculator
+                            window.location.href = 'fi-calculator.html';
+                        }
+                    }, 1500);
+
+                } catch (error) {
+                    console.error('Error importing save file:', error);
+                    loadBtn.innerHTML = '❌ Invalid Save File';
+                    loadBtn.style.background = 'linear-gradient(135deg, #f44336 0%, #d32f2f 100%)';
+
+                    alert('Error loading save file:\n' + error.message + '\n\nPlease make sure you selected a valid FIQuest save file (.json).');
+
+                    // Reset button after error
+                    setTimeout(() => {
+                        loadBtn.innerHTML = '📁 Load Save File';
+                        loadBtn.style.background = 'linear-gradient(135deg, #2196F3 0%, #1976D2 100%)';
+                        loadBtn.style.transform = 'scale(1)';
+                    }, 3000);
+                }
+            };
+
+            reader.onerror = function() {
+                loadBtn.innerHTML = '❌ File Read Error';
+                alert('Error reading file. Please try again.');
+
+                setTimeout(() => {
+                    loadBtn.innerHTML = '📁 Load Save File';
+                    loadBtn.style.transform = 'scale(1)';
+                }, 3000);
+            };
+
+            reader.readAsText(file);
         }
 
         // Add some interactive hover effects
         document.addEventListener('DOMContentLoaded', function() {
-            const button = document.getElementById('pressStartBtn');
+            const newGameBtn = document.getElementById('newGameBtn');
+            const loadGameBtn = document.getElementById('loadGameBtn');
             
-            // Add click sound effect (visual feedback)
-            button.addEventListener('click', function() {
-                this.style.animation = 'none';
-                setTimeout(() => {
-                    this.style.animation = 'pulse 2s infinite';
-                }, 100);
+            // Add click sound effect (visual feedback) for both buttons
+            [newGameBtn, loadGameBtn].forEach(button => {
+                if (button) {
+                    button.addEventListener('click', function() {
+                        this.style.animation = 'none';
+                        setTimeout(() => {
+                            this.style.animation = 'pulse 2s infinite';
+                        }, 100);
+                    });
+                }
             });
         });
     </script>

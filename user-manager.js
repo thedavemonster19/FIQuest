@@ -171,20 +171,113 @@ class UserManager {
     }
 
     logout() {
-        // Save current data before logout
-        this.savePlayerData();
-        
-        // Clear current player
-        this.currentPlayer = null;
-        localStorage.removeItem('fiquest_current_player');
-        
-        // Clear game data from localStorage
-        localStorage.removeItem('fiquest_scenarios');
-        localStorage.removeItem('fiquest_active_scenario');
-        localStorage.removeItem('fiquest_net_worth_setup');
-        
-        // Redirect to game start screen
-        window.location.href = 'index.html';
+        // NEW FILE-BASED STORAGE: Clear ALL localStorage data on logout
+        // Users must import their save file to continue playing
+
+        try {
+            // Ask user if they want to create a final save file before logout
+            const playerName = this.currentPlayer ? this.currentPlayer.playerName : 'Unknown';
+            const shouldExport = confirm(
+                `🚨 LOGOUT WARNING 🚨\n\n` +
+                `Logging out will clear ALL data from this browser.\n` +
+                `To continue playing later, you'll need to import your save file.\n\n` +
+                `Would you like to create/update your save file before logging out?\n\n` +
+                `Click OK to create save file, or Cancel to logout without saving.`
+            );
+
+            if (shouldExport && this.currentPlayer) {
+                // Save current data first
+                this.savePlayerData();
+
+                // Create export data
+                const exportData = {
+                    version: '1.0.0',
+                    exportDate: DateTimeUtils.getUserLocalDate().iso,
+                    exportTimezone: DateTimeUtils.getUserLocalDate().timezone,
+                    playerData: { ...this.currentPlayer },
+                    gameData: {
+                        scenarios: this.getStoredData('fiquest_scenarios'),
+                        activeScenario: this.getStoredData('fiquest_active_scenario'),
+                        netWorthSetup: this.getStoredData('fiquest_net_worth_setup'),
+                        netWorthHistory: this.getStoredData('fiquest_net_worth_history'),
+                        currentNetWorth: this.getStoredData('fiquest_current_net_worth')
+                    },
+                    metadata: {
+                        exportedBy: 'FIQuest Web Application',
+                        playerName: this.currentPlayer.playerName,
+                        lastPlayedDate: this.currentPlayer.lastPlayedDate,
+                        exportTrigger: 'logout'
+                    }
+                };
+
+                // Remove sensitive data
+                if (exportData.playerData.password) {
+                    delete exportData.playerData.password;
+                }
+
+                // Generate save file
+                const filename = `fiquest_${playerName.toLowerCase().replace(/[^a-z0-9]/g, '')}_${DateTimeUtils.getFilenameDateFormat()}.json`;
+                const jsonData = JSON.stringify(exportData, null, 2);
+
+                // Try to save the file
+                if (window.CrossBrowserFileSaver) {
+                    window.CrossBrowserFileSaver.saveAs(jsonData, filename, 'application/json');
+                } else {
+                    // Fallback if FileSaver not available
+                    const blob = new Blob([jsonData], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = filename;
+                    link.click();
+                    URL.revokeObjectURL(url);
+                }
+
+                // Give user time to save the file
+                alert(`✅ Save file created: ${filename}\n\nMake sure to save this file - you'll need it to continue playing!\n\nLogging out in 3 seconds...`);
+
+                setTimeout(() => {
+                    this.clearAllData();
+                }, 3000);
+            } else {
+                // User chose not to save, or no player data
+                if (confirm('Are you sure you want to logout without saving? All progress will be lost unless you have a save file.')) {
+                    this.clearAllData();
+                }
+            }
+        } catch (error) {
+            console.error('Error during logout:', error);
+            // Fallback - clear data anyway
+            this.clearAllData();
+        }
+    }
+
+    clearAllData() {
+        try {
+            // Clear current player reference
+            this.currentPlayer = null;
+
+            // Clear ALL FIQuest data from localStorage
+            const keys = Object.keys(localStorage);
+            keys.forEach(key => {
+                if (key.startsWith('fiquest_')) {
+                    localStorage.removeItem(key);
+                }
+            });
+
+            console.log('All FIQuest data cleared from localStorage');
+
+            // Show confirmation message
+            alert('✅ Logged out successfully!\n\nAll data has been cleared from this browser.\nTo continue playing, you\'ll need to import your save file.');
+
+            // Redirect to start screen
+            window.location.href = 'index.html';
+
+        } catch (error) {
+            console.error('Error clearing data:', error);
+            // Force redirect even if cleanup fails
+            window.location.href = 'index.html';
+        }
     }
 
     requireLogin() {
@@ -538,15 +631,292 @@ class UserManager {
     // Check if user has completed initial setup (has saved net worth setup)
     hasCompletedInitialSetup() {
         if (!this.currentPlayer) return false;
-        
+
         // Check if player has netWorthSetup in their gameData
         if (this.currentPlayer.gameData && this.currentPlayer.gameData.netWorthSetup) {
             return true;
         }
-        
+
         // Fallback: check localStorage for setup data
         const savedSetup = localStorage.getItem('fiquest_net_worth_setup');
         return savedSetup && savedSetup !== 'null';
+    }
+
+    // Complete Data Export/Import System for Local Storage
+    exportAllUserData(format = 'json', includeEncryption = false) {
+        if (!this.currentPlayer) {
+            throw new Error('No user logged in to export data');
+        }
+
+        try {
+            // Ensure all current data is saved before export
+            this.savePlayerData();
+
+            // Collect all localStorage data related to current user
+            const exportData = {
+                version: '1.0.0',
+                exportDate: DateTimeUtils.getUserLocalDate().iso,
+                exportTimezone: DateTimeUtils.getUserLocalDate().timezone,
+                playerData: { ...this.currentPlayer },
+                gameData: {
+                    scenarios: this.getStoredData('fiquest_scenarios'),
+                    activeScenario: this.getStoredData('fiquest_active_scenario'),
+                    netWorthSetup: this.getStoredData('fiquest_net_worth_setup'),
+                    netWorthHistory: this.getStoredData('fiquest_net_worth_history'),
+                    currentNetWorth: this.getStoredData('fiquest_current_net_worth')
+                },
+                metadata: {
+                    exportedBy: 'FIQuest Web Application',
+                    dataIntegrity: this.generateDataHash(),
+                    playerName: this.currentPlayer.playerName,
+                    lastPlayedDate: this.currentPlayer.lastPlayedDate
+                }
+            };
+
+            // Remove sensitive/redundant data for security
+            if (exportData.playerData.password) {
+                delete exportData.playerData.password;
+            }
+
+            if (format === 'json') {
+                const jsonData = JSON.stringify(exportData, null, 2);
+                return includeEncryption ? this.encryptData(jsonData) : jsonData;
+            } else if (format === 'csv') {
+                return this.convertCompleteDataToCSV(exportData);
+            } else {
+                throw new Error('Unsupported export format: ' + format);
+            }
+        } catch (error) {
+            console.error('Error exporting user data:', error);
+            throw error;
+        }
+    }
+
+    getStoredData(key) {
+        try {
+            const data = localStorage.getItem(key);
+            return data ? JSON.parse(data) : null;
+        } catch (error) {
+            console.warn(`Error parsing stored data for ${key}:`, error);
+            return null;
+        }
+    }
+
+    generateDataHash() {
+        // Simple hash for data integrity checking
+        const dataString = JSON.stringify(this.currentPlayer);
+        let hash = 0;
+        for (let i = 0; i < dataString.length; i++) {
+            const char = dataString.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash; // Convert to 32-bit integer
+        }
+        return hash.toString(16);
+    }
+
+    encryptData(data) {
+        // Simple encryption for export files (base64 + simple cipher)
+        // Note: This is basic protection, not cryptographically secure
+        const encoded = btoa(data);
+        let encrypted = '';
+        const key = 'FIQuest2025';
+        for (let i = 0; i < encoded.length; i++) {
+            encrypted += String.fromCharCode(
+                encoded.charCodeAt(i) ^ key.charCodeAt(i % key.length)
+            );
+        }
+        return btoa(encrypted);
+    }
+
+    decryptData(encryptedData) {
+        try {
+            const encrypted = atob(encryptedData);
+            let decrypted = '';
+            const key = 'FIQuest2025';
+            for (let i = 0; i < encrypted.length; i++) {
+                decrypted += String.fromCharCode(
+                    encrypted.charCodeAt(i) ^ key.charCodeAt(i % key.length)
+                );
+            }
+            return atob(decrypted);
+        } catch (error) {
+            throw new Error('Failed to decrypt data - invalid encryption or corrupted file');
+        }
+    }
+
+    convertCompleteDataToCSV(exportData) {
+        let csv = '';
+
+        // Player Information Section
+        csv += '"FIQuest Data Export - Player Information"\n';
+        csv += '"Player Name","Export Date","Last Played","Timezone"\n';
+        csv += `"${exportData.playerData.playerName}","${exportData.exportDate}","${exportData.playerData.lastPlayedDate}","${exportData.exportTimezone}"\n\n`;
+
+        // Financial Scenarios Section
+        if (exportData.gameData.scenarios && exportData.gameData.scenarios.length > 0) {
+            csv += '"Financial Independence Scenarios"\n';
+            csv += '"Scenario Name","Target Amount","Annual Spending","Withdrawal Rate","Estimated FI Year"\n';
+            exportData.gameData.scenarios.forEach(scenario => {
+                csv += `"${scenario.name || 'Unnamed'}","${scenario.targetAmount || 0}","${scenario.annualSpending || 0}","${scenario.withdrawalRate || 4}","${scenario.fiYear || 'Not Calculated'}"\n`;
+            });
+            csv += '\n';
+        }
+
+        // Net Worth Tracking Section
+        if (exportData.playerData.gameData && exportData.playerData.gameData.netWorthTracking) {
+            csv += '"Net Worth Tracking History"\n';
+            csv += '"Date","Total Assets","Total Liabilities","Net Worth","Projected Net Worth","Variance","Notes"\n';
+            exportData.playerData.gameData.netWorthTracking.forEach(entry => {
+                csv += `"${entry.date}","${entry.totals.totalAssets}","${entry.totals.totalLiabilities}","${entry.totals.netWorth}","${entry.totals.projectedNetWorth || 0}","${entry.totals.netVariance || 0}","${entry.notes || ''}"\n`;
+            });
+        }
+
+        return csv;
+    }
+
+    importAllUserData(importData, isEncrypted = false) {
+        try {
+            // Decrypt if needed
+            let parsedData;
+            if (isEncrypted) {
+                const decryptedData = this.decryptData(importData);
+                parsedData = JSON.parse(decryptedData);
+            } else {
+                parsedData = typeof importData === 'string' ? JSON.parse(importData) : importData;
+            }
+
+            // Validate import data structure
+            if (!this.validateImportData(parsedData)) {
+                throw new Error('Invalid import data format');
+            }
+
+            // Backup current data before import
+            const backupData = this.exportAllUserData();
+            const backupKey = `fiquest_backup_${Date.now()}`;
+            localStorage.setItem(backupKey, backupData);
+
+            try {
+                // Import player data
+                this.currentPlayer = { ...parsedData.playerData };
+
+                // Restore game data to localStorage
+                if (parsedData.gameData.scenarios) {
+                    localStorage.setItem('fiquest_scenarios', JSON.stringify(parsedData.gameData.scenarios));
+                }
+                if (parsedData.gameData.activeScenario) {
+                    localStorage.setItem('fiquest_active_scenario', JSON.stringify(parsedData.gameData.activeScenario));
+                }
+                if (parsedData.gameData.netWorthSetup) {
+                    localStorage.setItem('fiquest_net_worth_setup', JSON.stringify(parsedData.gameData.netWorthSetup));
+                }
+                if (parsedData.gameData.netWorthHistory) {
+                    localStorage.setItem('fiquest_net_worth_history', JSON.stringify(parsedData.gameData.netWorthHistory));
+                }
+                if (parsedData.gameData.currentNetWorth) {
+                    localStorage.setItem('fiquest_current_net_worth', JSON.stringify(parsedData.gameData.currentNetWorth));
+                }
+
+                // Save imported player data
+                localStorage.setItem(
+                    `fiquest_player_${this.currentPlayer.playerName.toLowerCase()}`,
+                    JSON.stringify(this.currentPlayer)
+                );
+                localStorage.setItem('fiquest_current_player', this.currentPlayer.playerName);
+
+                // Clean up backup after successful import
+                localStorage.removeItem(backupKey);
+
+                console.log('User data imported successfully');
+                return {
+                    success: true,
+                    message: 'Data imported successfully',
+                    playerName: this.currentPlayer.playerName,
+                    importDate: parsedData.exportDate
+                };
+
+            } catch (importError) {
+                // Restore from backup if import fails
+                localStorage.setItem(backupKey.replace('backup_', 'restore_'), backupData);
+                throw importError;
+            }
+
+        } catch (error) {
+            console.error('Error importing user data:', error);
+            return {
+                success: false,
+                message: error.message || 'Unknown import error occurred'
+            };
+        }
+    }
+
+    validateImportData(data) {
+        // Check required structure
+        if (!data || typeof data !== 'object') return false;
+        if (!data.version || !data.playerData) return false;
+        if (!data.playerData.playerName) return false;
+
+        // Check version compatibility
+        const supportedVersions = ['1.0.0'];
+        if (!supportedVersions.includes(data.version)) {
+            console.warn('Import data version may not be fully compatible:', data.version);
+        }
+
+        return true;
+    }
+
+    downloadExportFile(data, filename, format = 'json') {
+        const mimeTypes = {
+            'json': 'application/json',
+            'csv': 'text/csv',
+            'txt': 'text/plain'
+        };
+
+        const blob = new Blob([data], { type: mimeTypes[format] || 'text/plain' });
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
+
+    generateExportFilename(format = 'json', includeEncryption = false) {
+        const date = DateTimeUtils.getFilenameDateFormat();
+        const playerName = this.currentPlayer.playerName.toLowerCase().replace(/[^a-z0-9]/g, '');
+        const encryptSuffix = includeEncryption ? '_encrypted' : '';
+        return `fiquest_${playerName}_${date}${encryptSuffix}.${format}`;
+    }
+
+    getDataManagementInfo() {
+        if (!this.currentPlayer) return null;
+
+        const scenarios = this.getStoredData('fiquest_scenarios') || [];
+        const netWorthEntries = this.getNetWorthEntries();
+
+        // Calculate storage usage (approximate)
+        const playerDataSize = JSON.stringify(this.currentPlayer).length;
+        const gameDataSize = JSON.stringify({
+            scenarios: scenarios,
+            netWorth: netWorthEntries
+        }).length;
+
+        return {
+            playerName: this.currentPlayer.playerName,
+            lastPlayed: this.currentPlayer.lastPlayedDate,
+            dataSize: {
+                player: Math.round(playerDataSize / 1024 * 100) / 100, // KB
+                game: Math.round(gameDataSize / 1024 * 100) / 100, // KB
+                total: Math.round((playerDataSize + gameDataSize) / 1024 * 100) / 100 // KB
+            },
+            counts: {
+                scenarios: scenarios.length,
+                netWorthEntries: netWorthEntries.length
+            },
+            hasSetup: this.hasCompletedInitialSetup()
+        };
     }
 }
 

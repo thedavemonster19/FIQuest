@@ -41,15 +41,19 @@
 
         .app-title {
             font-size: 24px;
-            font-weight: bold;
+            font-weight: 600;
             margin: 0;
             color: white;
+            text-align: left;
+            line-height: 1.3;
         }
 
         .user-info {
             font-size: 14px;
+            font-weight: 400;
             opacity: 0.8;
             margin-top: 5px;
+            line-height: 1.4;
         }
 
         .nav-menu {
@@ -63,6 +67,7 @@
             color: white;
             text-decoration: none;
             transition: background 0.3s ease;
+            font-size: 16px;
         }
 
         .nav-menu a:hover {
@@ -71,6 +76,7 @@
 
         .nav-menu a.active {
             background: rgba(255,255,255,0.2);
+            font-weight: bold;
         }
 
         .nav-icon {
@@ -123,7 +129,7 @@
             color: rgba(255,255,255,0.7);
             text-decoration: none;
             transition: all 0.3s ease;
-            font-size: 14px;
+            font-size: 16px;
         }
 
         .nav-subitem:hover {
@@ -135,30 +141,46 @@
             background: rgba(255,255,255,0.15);
             color: white;
             font-weight: bold;
+            border-right: 3px solid #fff;
         }
 
         .main-content {
             margin-left: 250px;
-            padding: 40px;
+            padding: 0;
+            background: #f8f9fa;
             min-height: 100vh;
         }
 
+        .page {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
         .page-header {
-            text-align: center;
-            margin-bottom: 40px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .page-title {
-            font-size: 36px;
+            font-size: 28px;
             color: #333;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             font-weight: 300;
+            text-align: center;
+            line-height: 1.2;
         }
 
         .page-subtitle {
-            font-size: 18px;
+            font-size: 16px;
             color: #6c757d;
-            margin-bottom: 20px;
+            margin: 0;
+            font-weight: 400;
+            text-align: center;
+            line-height: 1.4;
         }
 
         .container {
@@ -206,6 +228,104 @@
             background-color: #f8f9fa;
             color: #495057;
             font-weight: 500;
+        }
+
+        /* Tooltip Styles */
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .info-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: #2196F3;
+            color: white;
+            text-align: center;
+            line-height: 16px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 5px;
+            cursor: help;
+            vertical-align: top;
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            width: 300px;
+            background-color: #333;
+            color: #fff;
+            text-align: left;
+            border-radius: 8px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1000;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -150px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 13px;
+            line-height: 1.4;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #333 transparent transparent transparent;
+        }
+
+        .tooltip-container:hover .tooltip-text,
+        .tooltip-container.active .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .label-with-tooltip {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Compact layout styles */
+        .compact-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .compact-input-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .compact-accounts-debt {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .compact-section,
+            .compact-accounts-debt {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .tooltip-text {
+                width: 250px;
+                margin-left: -125px;
+            }
         }
 
         .account-list, .debt-list {
@@ -256,23 +376,20 @@
         .result-card {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 25px;
-            border-radius: 12px;
+            padding: 20px;
+            border-radius: 8px;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
         .result-card h3 {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            margin: 0 0 10px 0;
             opacity: 0.9;
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
         .result-card .value {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: bold;
             margin-bottom: 5px;
         }
@@ -407,6 +524,10 @@
                     <span class="nav-icon">📈</span>
                     Net Worth Tracking
                 </a>
+                <a href="data-management.html" id="nav-data-management">
+                    <span class="nav-icon">💾</span>
+                    Data Management
+                </a>
                 <!-- Collapsible Initial Setup Section -->
                 <div class="nav-section">
                     <a href="#" class="nav-section-toggle" onclick="toggleInitialSetup(event)">
@@ -430,12 +551,13 @@
 
         <!-- Main Content Area -->
         <main class="main-content">
-            <div class="page-header">
-                <h1 class="page-title">My Scenario</h1>
-                <p class="page-subtitle">Your selected financial independence scenario (read-only reference)</p>
-            </div>
+            <div class="page">
+                <div class="page-header">
+                    <h1 class="page-title">My Scenario</h1>
+                    <p class="page-subtitle">Your selected financial independence scenario</p>
+                </div>
 
-            <!-- Key Results -->
+                <!-- Key Results -->
             <div class="results-section">
                 <div class="key-results">
                     <div class="result-card">
@@ -453,69 +575,119 @@
                 </div>
             </div>
 
-            <!-- Basic Information -->
+            <!-- Consolidated Basic & Financial Information -->
             <div class="container">
-                <div class="section-title">📋 Basic Information</div>
-                <div class="input-section">
-                    <div class="input-group">
-                        <label>Current Age</label>
-                        <div class="readonly-input" id="currentAge">0</div>
+                <div class="section-title">📋 Basic & Financial Information</div>
+                <div class="compact-section">
+                    <!-- Basic Information Column -->
+                    <div>
+                        <h4 style="color: #495057; margin-bottom: 15px; font-size: 16px; font-weight: 600;">📊 Basic Information</h4>
+                        <div class="compact-input-section">
+                            <div class="input-group">
+                                <label>Initial Age</label>
+                                <div class="readonly-input" id="currentAge">0</div>
+                            </div>
+                            <div class="input-group">
+                                <label>Life Expectancy</label>
+                                <div class="readonly-input" id="lifeExpectancy">0</div>
+                            </div>
+                            <div class="input-group">
+                                <div class="label-with-tooltip">
+                                    <label>Active Until Age</label>
+                                    <div class="tooltip-container">
+                                        <span class="info-icon">i</span>
+                                        <span class="tooltip-text">What year do you think you may start to spend less, be less physically active. Think about your older relatives and how you think you would compare at their age in terms of activities, spending, desires, etc.</span>
+                                    </div>
+                                </div>
+                                <div class="readonly-input" id="activeUntilAge">0</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="input-group">
-                        <label>Life Expectancy</label>
-                        <div class="readonly-input" id="lifeExpectancy">0</div>
-                    </div>
-                    <div class="input-group">
-                        <label>Active Until Age</label>
-                        <div class="readonly-input" id="activeUntilAge">0</div>
+
+                    <!-- Financial Details Column -->
+                    <div>
+                        <h4 style="color: #495057; margin-bottom: 15px; font-size: 16px; font-weight: 600;">💰 Financial Details</h4>
+                        <div class="compact-input-section">
+                            <div class="input-group">
+                                <div class="label-with-tooltip">
+                                    <label>Active Annual Spending</label>
+                                    <div class="tooltip-container">
+                                        <span class="info-icon">i</span>
+                                        <span class="tooltip-text">What expenses do you want to have covered by your portfolio? As an example, you could take your current annual budget and exclude your mortgage payment (if you plan to have that paid off beforehand) or include rent if you don't plan on owning your primary residence, exclude kids activities, exclude RESP contributions, adjust travel spending, etc.</span>
+                                    </div>
+                                </div>
+                                <div class="readonly-input" id="activeSpending">$0</div>
+                            </div>
+                            <div class="input-group">
+                                <div class="label-with-tooltip">
+                                    <label>Inactive Annual Spending</label>
+                                    <div class="tooltip-container">
+                                        <span class="info-icon">i</span>
+                                        <span class="tooltip-text">Typically, people spend more money in the years they are more physically capable eg. travel more, go out for food/entertainment, take on expensive hobbies like skiing, pouring money into the latest fads like Labubus, etc. relative to when they hit their more inactive years later in life. How much do you think you'd spend in your less active years? When in doubt, you can try using 80% of your Annual Active Spending estimate.</span>
+                                    </div>
+                                </div>
+                                <div class="readonly-input" id="inactiveSpending">$0</div>
+                            </div>
+                            <div class="input-group">
+                                <div class="label-with-tooltip">
+                                    <label>Annual Rate of Return</label>
+                                    <div class="tooltip-container">
+                                        <span class="info-icon">i</span>
+                                        <span class="tooltip-text">The average annual return of the S&P 500 over the past century is generally cited as being around 10% (ticker codes: VFV.TO, TPU.TO are examples of low cost S&P500 Index ETFs available for puchase in Canadian dollars at most Canadian brokerages and banks.). When limited to non-ETF investment options, say within your company's group retirement plan, aim for funds with MER (Management Expense Ratios) that are 0.6% or lower.</span>
+                                    </div>
+                                </div>
+                                <div class="readonly-input" id="rateOfReturn">0%</div>
+                            </div>
+                            <div class="input-group">
+                                <label>Annual Contributions</label>
+                                <div class="readonly-input" id="annualContributions">$0</div>
+                            </div>
+                            <div class="input-group">
+                                <label>Inflation Rate</label>
+                                <div class="readonly-input" id="inflationRate">0%</div>
+                            </div>
+                            <div class="input-group">
+                                <div class="label-with-tooltip">
+                                    <label>Withdrawal Rate</label>
+                                    <div class="tooltip-container">
+                                        <span class="info-icon">i</span>
+                                        <span class="tooltip-text">The 4% rule is a guideline for retirement withdrawals, suggesting you can withdraw 4% of your initial investment portfolio in your first year of retirement, then adjust the dollar amount for inflation in subsequent years, with a high probability of your money lasting 30 years or more. Developed from Bill Bengen's 1990s research using historical market data, it serves as a starting point for planning retirement income, though it has limitations and newer research suggests potentially different withdrawal rates are necessary for modern retirement conditions. - Google Gemini.</span>
+                                    </div>
+                                </div>
+                                <div class="readonly-input" id="withdrawalRate">0%</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Financial Details -->
+            <!-- Investment Accounts & Debt Information -->
             <div class="container">
-                <div class="section-title">💰 Financial Details</div>
-                <div class="input-section">
-                    <div class="input-group">
-                        <label>Active Annual Spending</label>
-                        <div class="readonly-input" id="activeSpending">$0</div>
+                <div class="section-title">📈 Investment Accounts & Debt Information</div>
+                <div class="compact-accounts-debt">
+                    <!-- Investment Accounts Column -->
+                    <div>
+                        <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                            <h4 style="color: #495057; font-size: 16px; font-weight: 600; margin: 0;">📊 Investment Accounts</h4>
+                            <div class="label-with-tooltip" style="margin-left: 10px;">
+                                <div class="tooltip-container">
+                                    <span class="info-icon">i</span>
+                                    <span class="tooltip-text">Some general rules: 1) Prioritize paying down high interest debt (a loan with an interest rate greater than the value you inputted in Rate of Return). 2) During high income earning years, maximize contributions to RRSP accounts to lower your average tax rates (which in turn will give you a larger tax refund cheque). 3) Focus on building TFSA accounts during lower income years or when you may require more flexiibility in terms of capital liquidity (you can buy ETFs in your TFSA as well as other stocks and investments). 4) Non-registered aka Taxable Brokerage accounts can be another good option for building wealth once registered accounts are either fully/partially utilized, depending on the situation.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="accountsList" class="account-list">
+                            <div style="grid-column: 1/-1; text-align: center; color: #666; padding: 20px;">No investment accounts configured</div>
+                        </div>
                     </div>
-                    <div class="input-group">
-                        <label>Inactive Annual Spending</label>
-                        <div class="readonly-input" id="inactiveSpending">$0</div>
-                    </div>
-                    <div class="input-group">
-                        <label>Annual Rate of Return</label>
-                        <div class="readonly-input" id="rateOfReturn">0%</div>
-                    </div>
-                    <div class="input-group">
-                        <label>Annual Contributions</label>
-                        <div class="readonly-input" id="annualContributions">$0</div>
-                    </div>
-                    <div class="input-group">
-                        <label>Inflation Rate</label>
-                        <div class="readonly-input" id="inflationRate">0%</div>
-                    </div>
-                    <div class="input-group">
-                        <label>Withdrawal Rate</label>
-                        <div class="readonly-input" id="withdrawalRate">0%</div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Investment Accounts -->
-            <div class="container">
-                <div class="section-title">📈 Investment Accounts</div>
-                <div id="accountsList" class="account-list">
-                    <div style="grid-column: 1/-1; text-align: center; color: #666; padding: 20px;">No investment accounts configured</div>
-                </div>
-            </div>
-
-            <!-- Debt Information -->
-            <div class="container">
-                <div class="section-title">🏠 Debt Information</div>
-                <div id="debtsList" class="debt-list">
-                    <div style="grid-column: 1/-1; text-align: center; color: #666; padding: 20px;">No debts configured</div>
+                    <!-- Debt Information Column -->
+                    <div>
+                        <h4 style="color: #495057; margin-bottom: 15px; font-size: 16px; font-weight: 600;">🏠 Debt Information</h4>
+                        <div id="debtsList" class="debt-list">
+                            <div style="grid-column: 1/-1; text-align: center; color: #666; padding: 20px;">No debts configured</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -577,6 +749,7 @@
                     <h3>Disclaimer</h3>
                     <p>This material is provided for general informational purposes only and does not constitute financial, investment, tax, legal or accounting advice, it should not be relied upon in that regard or be considered predictive of any future market performance, nor does it constitute an offer or solicitation to buy or sell any securities referred to. Individual circumstances and current events are critical to sound investment planning; anyone wishing to act on this material should consult with their advisor. Before making any investment decisions, we encourage you to consider these and other factors carefully. Past performance may not be repeated and is not indicative of future results.</p>
                 </div>
+            </div>
             </div>
         </main>
     </div>
@@ -1028,10 +1201,10 @@
         // Toggle Initial Setup section
         function toggleInitialSetup(event) {
             event.preventDefault();
-            
+
             const section = document.getElementById('initial-setup-section');
             const arrow = document.getElementById('setup-arrow');
-            
+
             if (section.style.display === 'none') {
                 section.style.display = 'block';
                 arrow.classList.add('expanded');
@@ -1040,6 +1213,43 @@
                 arrow.classList.remove('expanded');
             }
         }
+
+        // Tooltip functionality for mobile devices
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click handlers for tooltip containers on mobile
+            const tooltipContainers = document.querySelectorAll('.tooltip-container');
+
+            tooltipContainers.forEach(container => {
+                container.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    // Close other active tooltips
+                    tooltipContainers.forEach(other => {
+                        if (other !== container) {
+                            other.classList.remove('active');
+                        }
+                    });
+
+                    // Toggle current tooltip
+                    container.classList.toggle('active');
+                });
+            });
+
+            // Close tooltips when clicking outside
+            document.addEventListener('click', function() {
+                tooltipContainers.forEach(container => {
+                    container.classList.remove('active');
+                });
+            });
+
+            // Prevent tooltip text clicks from closing the tooltip
+            document.querySelectorAll('.tooltip-text').forEach(text => {
+                text.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            });
+        });
     </script>
 </body>
 </html>

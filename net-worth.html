@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Net Worth Tracking - FIQuest</title>
+    <title>Net Worth Setup - FIQuest</title>
     <style>
         * {
             margin: 0;
@@ -13,8 +13,26 @@
 
         body {
             font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #333;
             background: #f8f9fa;
         }
+
+        /* Typography System */
+        h1, .text-xl { font-size: 28px; font-weight: 300; line-height: 1.2; }
+        h2, .text-lg { font-size: 24px; font-weight: 500; line-height: 1.3; }
+        h3, .text-md { font-size: 18px; font-weight: 500; line-height: 1.4; }
+        h4, .text-sm { font-size: 16px; font-weight: 500; line-height: 1.4; }
+        .text-xs { font-size: 14px; font-weight: 400; line-height: 1.4; }
+        .text-micro { font-size: 12px; font-weight: 400; line-height: 1.3; }
+
+        .font-light { font-weight: 300; }
+        .font-normal { font-weight: 400; }
+        .font-medium { font-weight: 500; }
+        .font-semibold { font-weight: 600; }
+        .font-bold { font-weight: 700; }
 
         .app-container {
             min-height: 100vh;
@@ -63,6 +81,7 @@
             color: white;
             text-decoration: none;
             transition: background 0.3s ease;
+            font-size: 16px;
         }
 
         .nav-menu a:hover {
@@ -71,6 +90,7 @@
 
         .nav-menu a.active {
             background: rgba(255,255,255,0.2);
+            font-weight: bold;
         }
 
         .nav-icon {
@@ -123,18 +143,20 @@
             color: rgba(255,255,255,0.7);
             text-decoration: none;
             transition: all 0.3s ease;
-            font-size: 14px;
+            font-size: 16px;
         }
 
         .nav-subitem:hover {
             background: rgba(255,255,255,0.1);
             color: white;
+            padding-left: 45px !important;
         }
 
         .nav-subitem.active {
             background: rgba(255,255,255,0.15);
             color: white;
             font-weight: bold;
+            border-right: 3px solid #fff;
         }
 
         .main-content {
@@ -162,12 +184,18 @@
             color: #333;
             font-size: 28px;
             margin-bottom: 8px;
+            text-align: center;
+            font-weight: 300;
+            line-height: 1.2;
         }
 
         .page-subtitle {
             color: #666;
             font-size: 16px;
             margin: 0;
+            text-align: center;
+            font-weight: 400;
+            line-height: 1.4;
         }
 
         .container {
@@ -190,20 +218,28 @@
         }
 
         label {
-            font-weight: bold;
+            font-weight: 500;
             margin-bottom: 5px;
             color: #555;
+            font-size: 14px;
         }
 
         input {
-            padding: 10px;
+            padding: 12px;
             border: 1px solid #ddd;
-            border-radius: 4px;
+            border-radius: 6px;
             font-size: 16px;
+            font-weight: 400;
+            box-sizing: border-box;
+            font-family: inherit;
         }
 
         input[readonly] {
             background-color: #f8f9fa;
+            color: #6c757d;
+            border: 1px solid #e9ecef;
+            cursor: not-allowed;
+            font-weight: 500;
         }
 
         .calculate-btn, .clear-btn {
@@ -270,7 +306,59 @@
             margin: 0;
             text-align: justify;
         }
+
+        /* Grid Layout Styles */
+        .item-grid {
+            display: grid;
+            grid-template-columns: 150px 150px;
+            gap: 10px;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+
+        .total-grid {
+            display: grid;
+            grid-template-columns: 150px 150px;
+            gap: 10px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+        }
+
+        /* Input Field Variants */
+        .asset-name-input {
+            border: 1px solid #ddd;
+            padding: 5px;
+            border-radius: 6px;
+            background: white;
+            font-size: 14px;
+        }
+
+        .asset-value-input {
+            border: 1px solid #ddd;
+            padding: 5px;
+            border-radius: 6px;
+            font-weight: 400;
+            font-size: 14px;
+        }
+
+        .readonly-total-input {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 5px;
+            border-radius: 6px;
+            font-weight: 400;
+            font-size: 14px;
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .total-label-span {
+            font-weight: 400;
+            font-size: 14px;
+        }
     </style>
+    <script src="file-saver.js"></script>
     <script src="user-manager.js"></script>
 </head>
 <body>
@@ -316,14 +404,15 @@
         <main class="main-content">
             <div class="page">
                 <div class="page-header">
-                    <h1 class="page-title">Net Worth Tracking</h1>
-                    <p class="page-subtitle">Track your actual net worth progress vs. projected values</p>
+                    <h1 class="page-title">Net Worth Setup</h1>
+                    <p class="page-subtitle">Complete your initial net worth setup by inputting your additional assets and liabilities</p>
                 </div>
                 <div class="container">
                     <!-- Scenario Display -->
                     <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin-bottom: 25px;">
                         <h3 style="margin: 0 0 10px 0; color: #2e7d32;">Selected FI Scenario</h3>
-                        <p id="scenarioNameDisplay" style="margin: 0; font-weight: bold; color: #1565c0;">Loading...</p>
+                        <p id="scenarioNameDisplay" style="margin: 0 0 5px 0; font-weight: bold; color: #1565c0;">Loading...</p>
+                        <p id="setupDateDisplay" style="margin: 0; color: #666; font-size: 14px;">Setup Date: Loading...</p>
                     </div>
 
                     <!-- Assets Section -->
@@ -334,9 +423,9 @@
                         <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
                             <h4 style="margin: 0 0 10px 0; color: #666;">Investment Accounts (from FI scenario)</h4>
                             <div id="investmentAccountsList"></div>
-                            <div style="display: grid; grid-template-columns: 150px 150px; gap: 10px; margin-top: 10px; padding-top: 10px; border-top: 1px solid #ddd;">
-                                <span style="font-weight: bold;">Total:</span>
-                                <input type="text" id="totalInvestmentAccounts" readonly style="background: #e9ecef; border: 1px solid #ddd; padding: 5px; border-radius: 4px; font-weight: bold;">
+                            <div class="total-grid">
+                                <span class="total-label-span">Total:</span>
+                                <input type="text" id="totalInvestmentAccounts" readonly class="readonly-total-input">
                             </div>
                         </div>
 
@@ -344,34 +433,29 @@
                         <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
                             <h4 style="margin: 0 0 15px 0; color: #666;">Additional Assets</h4>
                             <div id="additionalAssetsList">
-                                <div class="asset-item" style="display: grid; grid-template-columns: 150px 150px; gap: 10px; margin-bottom: 8px; align-items: center;">
-                                    <input type="text" id="asset1Name" value="Cash" style="border: 1px solid #ddd; padding: 5px; border-radius: 4px; background: white;">
-                                    <input type="text" id="asset1Value" value="15,000" oninput="updateNetWorth()" style="border: 1px solid #ddd; padding: 5px; border-radius: 4px; font-weight: bold;">
+                                <div class="asset-item item-grid">
+                                    <input type="text" id="asset1Name" value="Cash" class="asset-name-input">
+                                    <input type="text" id="asset1Value" value="15,000" oninput="updateNetWorth()" class="asset-value-input">
                                 </div>
-                                <div class="asset-item" style="display: grid; grid-template-columns: 150px 150px; gap: 10px; margin-bottom: 8px; align-items: center;">
-                                    <input type="text" id="asset2Name" value="Home" style="border: 1px solid #ddd; padding: 5px; border-radius: 4px; background: white;">
-                                    <input type="text" id="asset2Value" value="1,500,000" oninput="updateNetWorth()" style="border: 1px solid #ddd; padding: 5px; border-radius: 4px; font-weight: bold;">
+                                <div class="asset-item item-grid">
+                                    <input type="text" id="asset2Name" value="Home" class="asset-name-input">
+                                    <input type="text" id="asset2Value" value="1,500,000" oninput="updateNetWorth()" class="asset-value-input">
                                 </div>
-                                <div class="asset-item" style="display: grid; grid-template-columns: 150px 150px; gap: 10px; margin-bottom: 8px; align-items: center;">
-                                    <input type="text" id="asset3Name" value="Stock Options/RSUs" style="border: 1px solid #ddd; padding: 5px; border-radius: 4px; background: white;">
-                                    <input type="text" id="asset3Value" value="150,000" oninput="updateNetWorth()" style="border: 1px solid #ddd; padding: 5px; border-radius: 4px; font-weight: bold;">
+                                <div class="asset-item item-grid">
+                                    <input type="text" id="asset3Name" value="Stock Options/RSUs" class="asset-name-input">
+                                    <input type="text" id="asset3Value" value="150,000" oninput="updateNetWorth()" class="asset-value-input">
                                 </div>
-                                <div class="asset-item" style="display: grid; grid-template-columns: 150px 150px; gap: 10px; margin-bottom: 8px; align-items: center;">
-                                    <input type="text" id="asset4Name" value="Crypto" style="border: 1px solid #ddd; padding: 5px; border-radius: 4px; background: white;">
-                                    <input type="text" id="asset4Value" value="35,000" oninput="updateNetWorth()" style="border: 1px solid #ddd; padding: 5px; border-radius: 4px; font-weight: bold;">
+                                <div class="asset-item item-grid">
+                                    <input type="text" id="asset4Name" value="Crypto" class="asset-name-input">
+                                    <input type="text" id="asset4Value" value="35,000" oninput="updateNetWorth()" class="asset-value-input">
                                 </div>
-                                <div class="asset-item" style="display: grid; grid-template-columns: 150px 150px; gap: 10px; margin-bottom: 8px; align-items: center;">
-                                    <input type="text" id="asset5Name" value="Other" style="border: 1px solid #ddd; padding: 5px; border-radius: 4px; background: white;">
-                                    <input type="text" id="asset5Value" value="1,000" oninput="updateNetWorth()" style="border: 1px solid #ddd; padding: 5px; border-radius: 4px; font-weight: bold;">
+                                <div class="asset-item item-grid">
+                                    <input type="text" id="asset5Name" value="Other" class="asset-name-input">
+                                    <input type="text" id="asset5Value" value="1,000" oninput="updateNetWorth()" class="asset-value-input">
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Total Assets -->
-                        <div style="text-align: right; margin-top: 15px; padding-top: 15px; border-top: 2px solid #4CAF50;">
-                            <label style="font-size: 18px; font-weight: bold; color: #2e7d32;">Total Assets: </label>
-                            <input type="text" id="totalAssets" readonly style="font-size: 18px; font-weight: bold; background: #e8f5e8; border: 2px solid #4CAF50; padding: 8px; border-radius: 4px; color: #2e7d32; width: 150px;">
-                        </div>
                     </div>
 
                     <!-- Liabilities Section -->
@@ -382,9 +466,9 @@
                         <div style="background: #fff3e0; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
                             <h4 style="margin: 0 0 10px 0; color: #666;">Debts (from FI scenario)</h4>
                             <div id="scenarioDebtsList"></div>
-                            <div style="display: grid; grid-template-columns: 150px 150px; gap: 10px; margin-top: 10px; padding-top: 10px; border-top: 1px solid #ddd;">
-                                <span style="font-weight: bold;">Total:</span>
-                                <input type="text" id="totalScenarioDebts" readonly style="background: #e9ecef; border: 1px solid #ddd; padding: 5px; border-radius: 4px; font-weight: bold;">
+                            <div class="total-grid">
+                                <span class="total-label-span">Total:</span>
+                                <input type="text" id="totalScenarioDebts" readonly class="readonly-total-input">
                             </div>
                         </div>
 
@@ -392,28 +476,35 @@
                         <div style="background: #fff3e0; padding: 15px; border-radius: 8px;">
                             <h4 style="margin: 0 0 15px 0; color: #666;">Additional Liabilities</h4>
                             <div id="additionalLiabilitiesList">
-                                <div class="liability-item" style="display: grid; grid-template-columns: 150px 150px; gap: 10px; margin-bottom: 8px; align-items: center;">
-                                    <input type="text" id="liability1Name" value="HELOC" style="border: 1px solid #ddd; padding: 5px; border-radius: 4px; background: white;">
-                                    <input type="text" id="liability1Value" value="0" oninput="updateNetWorth()" style="border: 1px solid #ddd; padding: 5px; border-radius: 4px; font-weight: bold;">
+                                <div class="liability-item item-grid">
+                                    <input type="text" id="liability1Name" value="HELOC" class="asset-name-input">
+                                    <input type="text" id="liability1Value" value="0" oninput="updateNetWorth()" class="asset-value-input">
                                 </div>
-                                <div class="liability-item" style="display: grid; grid-template-columns: 150px 150px; gap: 10px; margin-bottom: 8px; align-items: center;">
-                                    <input type="text" id="liability2Name" value="Other" style="border: 1px solid #ddd; padding: 5px; border-radius: 4px; background: white;">
-                                    <input type="text" id="liability2Value" value="0" oninput="updateNetWorth()" style="border: 1px solid #ddd; padding: 5px; border-radius: 4px; font-weight: bold;">
+                                <div class="liability-item item-grid">
+                                    <input type="text" id="liability2Name" value="Other" class="asset-name-input">
+                                    <input type="text" id="liability2Value" value="0" oninput="updateNetWorth()" class="asset-value-input">
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Total Liabilities -->
-                        <div style="text-align: right; margin-top: 15px; padding-top: 15px; border-top: 2px solid #f44336;">
-                            <label style="font-size: 18px; font-weight: bold; color: #d32f2f;">Total Liabilities: </label>
-                            <input type="text" id="totalLiabilities" readonly style="font-size: 18px; font-weight: bold; background: #ffebee; border: 2px solid #f44336; padding: 8px; border-radius: 4px; color: #d32f2f; width: 150px;">
-                        </div>
                     </div>
 
-                    <!-- Net Worth Calculation -->
-                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 30px;">
-                        <h3 style="margin: 0 0 10px 0;">💰 Current Net Worth</h3>
-                        <input type="text" id="currentNetWorth" readonly style="font-size: 24px; font-weight: bold; background: rgba(255,255,255,0.9); border: none; padding: 10px; border-radius: 4px; color: #333; text-align: center; width: 200px;">
+                    <!-- Net Worth Totals Summary -->
+                    <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; border-left: 4px solid #2196F3; margin-bottom: 30px;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; text-align: center;">
+                            <div>
+                                <strong style="color: #2e7d32;">Total Assets</strong><br>
+                                <input type="text" id="totalAssets" readonly style="font-size: 18px; font-weight: bold; color: #2e7d32; border: none; background: transparent; text-align: center; width: 100%;">
+                            </div>
+                            <div>
+                                <strong style="color: #c62828;">Total Liabilities</strong><br>
+                                <input type="text" id="totalLiabilities" readonly style="font-size: 18px; font-weight: bold; color: #c62828; border: none; background: transparent; text-align: center; width: 100%;">
+                            </div>
+                            <div>
+                                <strong style="color: #1565c0;">Net Worth</strong><br>
+                                <input type="text" id="currentNetWorth" readonly style="font-size: 20px; font-weight: bold; color: #1565c0; border: none; background: transparent; text-align: center; width: 100%;">
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Asset Allocation Chart -->
@@ -454,9 +545,17 @@
                 // Debug: Log the scenario structure to console
                 console.log('Active Scenario Data:', activeScenario);
                 console.log('Debts Data:', activeScenario.inputs?.debts);
-                
+
                 // Display selected scenario info
                 document.getElementById('scenarioNameDisplay').textContent = activeScenario.name;
+
+                // Check if setup already exists and display setup date
+                const existingSetup = JSON.parse(localStorage.getItem('fiquest_net_worth_setup') || 'null');
+                if (existingSetup && existingSetup.setupDate) {
+                    document.getElementById('setupDateDisplay').textContent = `Setup Date: ${existingSetup.setupDate}`;
+                } else {
+                    document.getElementById('setupDateDisplay').textContent = 'Setup Date: Not yet saved';
+                }
                 
                 // Populate investment accounts from scenario
                 populateInvestmentAccounts(activeScenario);
@@ -466,10 +565,11 @@
             } else {
                 // No scenario selected - show default/empty state for testing
                 document.getElementById('scenarioNameDisplay').textContent = 'No Scenario Selected (Demo Mode)';
-                
+                document.getElementById('setupDateDisplay').textContent = 'Setup Date: Demo Mode';
+
                 // Populate with demo/default investment accounts
                 populateDefaultInvestmentAccounts();
-                
+
                 // Populate with demo/default debts
                 populateDefaultScenarioDebts();
             }
@@ -499,19 +599,23 @@
             defaultAccounts.forEach(account => {
                 const accountDiv = document.createElement('div');
                 accountDiv.style.cssText = 'display: grid; grid-template-columns: 150px 150px; gap: 10px; margin-bottom: 8px; align-items: center;';
-                
-                const nameSpan = document.createElement('span');
-                nameSpan.textContent = account.name;
-                nameSpan.style.color = '#666';
-                
-                const valueSpan = document.createElement('span');
-                valueSpan.textContent = '$' + formatNumber(account.value);
-                valueSpan.style.fontWeight = 'bold';
-                
-                accountDiv.appendChild(nameSpan);
-                accountDiv.appendChild(valueSpan);
+
+                const nameInput = document.createElement('input');
+                nameInput.type = 'text';
+                nameInput.value = account.name;
+                nameInput.readOnly = true;
+                nameInput.style.cssText = 'border: 1px solid #e9ecef; padding: 5px; border-radius: 6px; background: #f8f9fa; color: #6c757d; cursor: not-allowed; font-weight: 400; font-size: 14px;';
+
+                const valueInput = document.createElement('input');
+                valueInput.type = 'text';
+                valueInput.value = '$' + formatNumber(account.value);
+                valueInput.readOnly = true;
+                valueInput.style.cssText = 'border: 1px solid #e9ecef; padding: 5px; border-radius: 6px; background: #f8f9fa; color: #6c757d; cursor: not-allowed; font-weight: 400; font-size: 14px;';
+
+                accountDiv.appendChild(nameInput);
+                accountDiv.appendChild(valueInput);
                 accountsList.appendChild(accountDiv);
-                
+
                 totalInvestment += account.value;
             });
             
@@ -585,19 +689,23 @@
                 scenario.inputs.accounts.forEach(account => {
                     const accountDiv = document.createElement('div');
                     accountDiv.style.cssText = 'display: grid; grid-template-columns: 150px 150px; gap: 10px; margin-bottom: 8px; align-items: center;';
-                    
-                    const nameSpan = document.createElement('span');
-                    nameSpan.textContent = account.name;
-                    nameSpan.style.color = '#666';
-                    
-                    const valueSpan = document.createElement('span');
-                    valueSpan.textContent = '$' + formatNumber(account.value);
-                    valueSpan.style.fontWeight = 'bold';
-                    
-                    accountDiv.appendChild(nameSpan);
-                    accountDiv.appendChild(valueSpan);
+
+                    const nameInput = document.createElement('input');
+                    nameInput.type = 'text';
+                    nameInput.value = account.name;
+                    nameInput.readOnly = true;
+                    nameInput.style.cssText = 'border: 1px solid #e9ecef; padding: 5px; border-radius: 6px; background: #f8f9fa; color: #6c757d; cursor: not-allowed; font-weight: 400; font-size: 14px;';
+
+                    const valueInput = document.createElement('input');
+                    valueInput.type = 'text';
+                    valueInput.value = '$' + formatNumber(account.value);
+                    valueInput.readOnly = true;
+                    valueInput.style.cssText = 'border: 1px solid #e9ecef; padding: 5px; border-radius: 6px; background: #f8f9fa; color: #6c757d; cursor: not-allowed; font-weight: 400; font-size: 14px;';
+
+                    accountDiv.appendChild(nameInput);
+                    accountDiv.appendChild(valueInput);
                     accountsList.appendChild(accountDiv);
-                    
+
                     totalInvestment += account.value;
                 });
             } else {
@@ -624,19 +732,23 @@
                 const mortgageBalance = scenario.inputs.debts.mortgage.balance;
                 const debtDiv = document.createElement('div');
                 debtDiv.style.cssText = 'display: grid; grid-template-columns: 150px 150px; gap: 10px; margin-bottom: 8px; align-items: center;';
-                
-                const nameSpan = document.createElement('span');
-                nameSpan.textContent = 'Mortgage';
-                nameSpan.style.color = '#666';
-                
-                const valueSpan = document.createElement('span');
-                valueSpan.textContent = '$' + formatNumber(mortgageBalance);
-                valueSpan.style.fontWeight = 'bold';
-                
-                debtDiv.appendChild(nameSpan);
-                debtDiv.appendChild(valueSpan);
+
+                const nameInput = document.createElement('input');
+                nameInput.type = 'text';
+                nameInput.value = 'Mortgage';
+                nameInput.readOnly = true;
+                nameInput.style.cssText = 'border: 1px solid #e9ecef; padding: 5px; border-radius: 6px; background: #f8f9fa; color: #6c757d; cursor: not-allowed; font-weight: 400; font-size: 14px;';
+
+                const valueInput = document.createElement('input');
+                valueInput.type = 'text';
+                valueInput.value = '$' + formatNumber(mortgageBalance);
+                valueInput.readOnly = true;
+                valueInput.style.cssText = 'border: 1px solid #e9ecef; padding: 5px; border-radius: 6px; background: #f8f9fa; color: #6c757d; cursor: not-allowed; font-weight: 400; font-size: 14px;';
+
+                debtDiv.appendChild(nameInput);
+                debtDiv.appendChild(valueInput);
                 debtsList.appendChild(debtDiv);
-                
+
                 totalDebt += mortgageBalance;
             }
             
@@ -645,40 +757,48 @@
                 const vehicleBalance = scenario.inputs.debts.vehicle.balance;
                 const debtDiv = document.createElement('div');
                 debtDiv.style.cssText = 'display: grid; grid-template-columns: 150px 150px; gap: 10px; margin-bottom: 8px; align-items: center;';
-                
-                const nameSpan = document.createElement('span');
-                nameSpan.textContent = 'Vehicle Loan';
-                nameSpan.style.color = '#666';
-                
-                const valueSpan = document.createElement('span');
-                valueSpan.textContent = '$' + formatNumber(vehicleBalance);
-                valueSpan.style.fontWeight = 'bold';
-                
-                debtDiv.appendChild(nameSpan);
-                debtDiv.appendChild(valueSpan);
+
+                const nameInput = document.createElement('input');
+                nameInput.type = 'text';
+                nameInput.value = 'Vehicle Loan';
+                nameInput.readOnly = true;
+                nameInput.style.cssText = 'border: 1px solid #e9ecef; padding: 5px; border-radius: 6px; background: #f8f9fa; color: #6c757d; cursor: not-allowed; font-weight: 400; font-size: 14px;';
+
+                const valueInput = document.createElement('input');
+                valueInput.type = 'text';
+                valueInput.value = '$' + formatNumber(vehicleBalance);
+                valueInput.readOnly = true;
+                valueInput.style.cssText = 'border: 1px solid #e9ecef; padding: 5px; border-radius: 6px; background: #f8f9fa; color: #6c757d; cursor: not-allowed; font-weight: 400; font-size: 14px;';
+
+                debtDiv.appendChild(nameInput);
+                debtDiv.appendChild(valueInput);
                 debtsList.appendChild(debtDiv);
-                
+
                 totalDebt += vehicleBalance;
             }
-            
+
             // Check other debt from scenario data
             if (scenario.inputs?.debts?.other && scenario.inputs.debts.other.balance > 0) {
                 const otherBalance = scenario.inputs.debts.other.balance;
                 const debtDiv = document.createElement('div');
                 debtDiv.style.cssText = 'display: grid; grid-template-columns: 150px 150px; gap: 10px; margin-bottom: 8px; align-items: center;';
-                
-                const nameSpan = document.createElement('span');
-                nameSpan.textContent = 'Other Debt';
-                nameSpan.style.color = '#666';
-                
-                const valueSpan = document.createElement('span');
-                valueSpan.textContent = '$' + formatNumber(otherBalance);
-                valueSpan.style.fontWeight = 'bold';
-                
-                debtDiv.appendChild(nameSpan);
-                debtDiv.appendChild(valueSpan);
+
+                const nameInput = document.createElement('input');
+                nameInput.type = 'text';
+                nameInput.value = 'Other Debt';
+                nameInput.readOnly = true;
+                nameInput.style.cssText = 'border: 1px solid #e9ecef; padding: 5px; border-radius: 6px; background: #f8f9fa; color: #6c757d; cursor: not-allowed; font-weight: 400; font-size: 14px;';
+
+                const valueInput = document.createElement('input');
+                valueInput.type = 'text';
+                valueInput.value = '$' + formatNumber(otherBalance);
+                valueInput.readOnly = true;
+                valueInput.style.cssText = 'border: 1px solid #e9ecef; padding: 5px; border-radius: 6px; background: #f8f9fa; color: #6c757d; cursor: not-allowed; font-weight: 400; font-size: 14px;';
+
+                debtDiv.appendChild(nameInput);
+                debtDiv.appendChild(valueInput);
                 debtsList.appendChild(debtDiv);
-                
+
                 totalDebt += otherBalance;
             }
             
@@ -921,7 +1041,51 @@
             localStorage.setItem('fiquest_current_net_worth', JSON.stringify(simplifiedData));
             
             console.log('Saved net worth setup with individual accounts:', netWorthData);
-            alert('Net Worth Setup saved successfully! All data is now available across the FIQuest app.');
+
+            // Prompt user to update save file
+            const shouldExportSave = confirm(
+                '✅ Net Worth Setup saved successfully!\n\n' +
+                '💾 SAVE FILE RECOMMENDATION:\n' +
+                'Would you like to update your save file with this important progress?\n\n' +
+                'This ensures your net worth setup is backed up and available if you need to reload your game later.'
+            );
+
+            if (shouldExportSave) {
+                // Debug logging
+                console.log('userManager available:', !!userManager);
+                console.log('currentPlayer available:', !!(userManager && userManager.currentPlayer));
+
+                if (!userManager) {
+                    alert('⚠️ UserManager not available. Please refresh the page and try again.\nNet worth setup was saved successfully.');
+                    return;
+                }
+
+                if (!userManager.currentPlayer) {
+                    alert('⚠️ No player logged in. Please refresh the page and try again.\nNet worth setup was saved successfully.');
+                    return;
+                }
+
+                try {
+                    // Create updated save file
+                    console.log('Attempting to export data...');
+                    const exportData = userManager.exportAllUserData();
+                    console.log('Export data generated, length:', exportData.length);
+
+                    const filename = CrossBrowserFileSaver.generateFilename(userManager.currentPlayer.playerName, true);
+                    console.log('Generated filename:', filename);
+
+                    CrossBrowserFileSaver.saveAs(exportData, filename, 'application/json');
+                    console.log('Save file created successfully');
+
+                    alert('✅ Save file updated successfully!\n\nYour net worth setup has been backed up to: ' + filename);
+                } catch (error) {
+                    console.error('Error updating save file:', error);
+                    console.error('Error details:', error.message, error.stack);
+                    alert('⚠️ Net worth setup saved, but save file update failed.\n\nError: ' + error.message + '\n\nYou can manually update your save file from the Data Management page.');
+                }
+            } else {
+                alert('Net Worth Setup saved successfully! All data is now available across the FIQuest app.\n\n💡 Remember to update your save file later from the Data Management page.');
+            }
         }
 
         // Utility functions

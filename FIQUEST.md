@@ -10,7 +10,34 @@ Log - Vibe Coding started 8/22/25, Partially formed idea for FIQuest occured 9/0
 
 To Do ✅
 
-- fix disclaimer alignment
+- play with presentation -> text size and style consistency across all pages, remove excess emojis, enable dark mode in settings, change themes, etc
+
+- review where data is stored, local or cloud/secure?
+
+- clear personal data, push to github
+
+  🚀 Next Steps (Manual Actions Required)
+
+  To complete the GitHub Pages deployment, follow these steps:
+
+  1. Create GitHub Repository
+  # Go to https://github.com/new
+  # Create a new public repository named "FIQuest"
+  # Don't initialize with README (we already have one)
+  2. Push to GitHub
+  git remote add origin https://github.com/YOURUSERNAME/FIQuest.git
+  git branch -M main
+  git push -u origin main
+  3. Enable GitHub Pages
+    - Go to your repository → Settings → Pages
+    - Source: "Deploy from a branch"
+    - Branch: "main"
+    - Folder: "/ (root)"
+    - Click "Save"
+  4. Access Your Live App
+    - Your app will be available at: https://YOURUSERNAME.github.io/FIQuest
+    - GitHub will automatically serve index.html as the entry point
+    - Updates deploy automatically when you push to main branch
 
 
 - Explore reward system for entering Net Worth updates - animation, sound, motivational quote from Winky?, badges, prizes, objects, avatar items, etc
@@ -333,4 +360,7 @@ Updating index.html to use external chart.min.js… (esc to interrupt · ctrl+t 
      ☐ Update net-worth-tracking.html to use external chart.min.js
      ☐ Test all chart functionality
      ☐ Verify file size reductions
+
+
+✅- modify so you can enter initial setup as a backdated date
 
