@@ -1141,23 +1141,143 @@
                 return true;
             }
 
+            // iOS Detection Function
+            isIOSDevice() {
+                return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+                       (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+            }
+
+            // Show iOS-specific download guidance
+            showIOSDownloadGuidance(filename) {
+                const modal = document.createElement('div');
+                modal.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0,0,0,0.7);
+                    z-index: 10000;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 20px;
+                    box-sizing: border-box;
+                `;
+
+                const content = document.createElement('div');
+                content.style.cssText = `
+                    background: white;
+                    border-radius: 12px;
+                    padding: 20px;
+                    max-width: 400px;
+                    max-height: 90vh;
+                    overflow-y: auto;
+                    text-align: left;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                `;
+
+                content.innerHTML = `
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <h3 style="color: #4CAF50; margin: 0 0 10px 0;">📱 iPhone/iPad Download Guide</h3>
+                        <p style="color: #666; margin: 0; font-size: 14px;">Your save file: <strong>${filename}</strong></p>
+                    </div>
+
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                        <h4 style="color: #333; margin: 0 0 10px 0;">📥 After clicking "Download Now":</h4>
+                        <ol style="margin: 0; padding-left: 20px; color: #555;">
+                            <li style="margin: 8px 0;"><strong>Look for the download arrow (↓)</strong> in Safari's address bar at the top</li>
+                            <li style="margin: 8px 0;"><strong>Tap the download arrow</strong> to see your downloaded files</li>
+                            <li style="margin: 8px 0;"><strong>Tap "Save to Files"</strong> (recommended option)</li>
+                            <li style="margin: 8px 0;"><strong>Choose "Downloads" or "Documents"</strong> folder for easy access later</li>
+                        </ol>
+                    </div>
+
+                    <div style="background: #e8f5e8; padding: 12px; border-radius: 6px; margin-bottom: 20px;">
+                        <p style="margin: 0; font-size: 14px; color: #2e7d32;">
+                            <strong>💡 Tip:</strong> Saving to the Files app makes it much easier to import your save file later!
+                        </p>
+                    </div>
+
+                    <div style="text-align: center;">
+                        <button id="proceedDownload" style="
+                            background: #4CAF50;
+                            color: white;
+                            border: none;
+                            padding: 12px 24px;
+                            border-radius: 6px;
+                            font-size: 16px;
+                            cursor: pointer;
+                            margin-right: 10px;
+                        ">📥 Download Now</button>
+                        <button id="cancelDownload" style="
+                            background: #666;
+                            color: white;
+                            border: none;
+                            padding: 12px 24px;
+                            border-radius: 6px;
+                            font-size: 16px;
+                            cursor: pointer;
+                        ">Cancel</button>
+                    </div>
+                `;
+
+                modal.appendChild(content);
+                document.body.appendChild(modal);
+
+                return new Promise((resolve) => {
+                    content.querySelector('#proceedDownload').onclick = () => {
+                        document.body.removeChild(modal);
+                        resolve(true);
+                    };
+
+                    content.querySelector('#cancelDownload').onclick = () => {
+                        document.body.removeChild(modal);
+                        resolve(false);
+                    };
+
+                    // Close on backdrop click
+                    modal.onclick = (e) => {
+                        if (e.target === modal) {
+                            document.body.removeChild(modal);
+                            resolve(false);
+                        }
+                    };
+                });
+            }
+
             downloadExportFile(data, filename, format = 'json') {
-                const mimeTypes = {
-                    'json': 'application/json',
-                    'csv': 'text/csv',
-                    'txt': 'text/plain'
+                // Enhanced function with iOS detection and guidance
+                const performDownload = () => {
+                    const mimeTypes = {
+                        'json': 'application/json',
+                        'csv': 'text/csv',
+                        'txt': 'text/plain'
+                    };
+
+                    const blob = new Blob([data], { type: mimeTypes[format] || 'text/plain' });
+                    const url = URL.createObjectURL(blob);
+
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = filename;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
                 };
 
-                const blob = new Blob([data], { type: mimeTypes[format] || 'text/plain' });
-                const url = URL.createObjectURL(blob);
-
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = filename;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                URL.revokeObjectURL(url);
+                // Check if iOS device and show guidance
+                if (this.isIOSDevice()) {
+                    this.showIOSDownloadGuidance(filename).then((shouldProceed) => {
+                        if (shouldProceed) {
+                            performDownload();
+                        }
+                    });
+                } else {
+                    // Standard download for non-iOS devices
+                    performDownload();
+                }
             }
 
             generateExportFilename(format = 'json', includeEncryption = false) {
