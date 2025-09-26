@@ -784,7 +784,7 @@
             <!-- 1. Initial Age -->
             <div class="input-group">
                 <label for="currentAge">Initial Age</label>
-                <input type="number" id="currentAge" value="43" step="1">
+                <input type="number" id="currentAge" value="45" step="1">
             </div>
             
             <!-- 2. Active Until Age -->
@@ -815,7 +815,7 @@
                     </div>
                     <button type="button" id="toggleAccountDetails" onclick="toggleAccountView()" style="margin-left: 10px; padding: 4px 8px; font-size: 12px;">Hide Account Details</button>
                 </div>
-                <input type="text" id="startingCapital" value="1,000,000" readonly>
+                <input type="text" id="startingCapital" value="150,000" readonly>
                 
                 <!-- Account Details Section (showing by default) -->
                 <div id="accountDetailsSection" style="display: block; margin-top: 15px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9;">
@@ -825,42 +825,42 @@
                         <label style="display: inline-block; width: 140px; font-size: 14px; color: #555; margin-right: 10px;">
                             <input type="text" id="account1Name" value="RRSP1" onchange="syncAccountNames()" style="width: 150px; margin-right: 5px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
                         </label>
-                        <input type="text" id="account1Value" value="250,000" onchange="formatCurrencyInput(this); updateTotalStartingCapital()" style="width: 97px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
+                        <input type="text" id="account1Value" value="50,000" onchange="formatCurrencyInput(this); updateTotalStartingCapital()" style="width: 97px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
                     </div>
                     
                     <div class="account-item" style="margin-bottom: 15px;">
                         <label style="display: inline-block; width: 140px; font-size: 14px; color: #555; margin-right: 10px;">
                             <input type="text" id="account2Name" value="RRSP2" onchange="syncAccountNames()" style="width: 150px; margin-right: 5px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
                         </label>
-                        <input type="text" id="account2Value" value="150,000" onchange="formatCurrencyInput(this); updateTotalStartingCapital()" style="width: 97px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
+                        <input type="text" id="account2Value" value="40,000" onchange="formatCurrencyInput(this); updateTotalStartingCapital()" style="width: 97px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
                     </div>
 
                     <div class="account-item" style="margin-bottom: 15px;">
                         <label style="display: inline-block; width: 140px; font-size: 14px; color: #555; margin-right: 10px;">
                             <input type="text" id="account3Name" value="TFSA1" onchange="syncAccountNames()" style="width: 150px; margin-right: 5px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
                         </label>
-                        <input type="text" id="account3Value" value="300,000" onchange="formatCurrencyInput(this); updateTotalStartingCapital()" style="width: 97px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
+                        <input type="text" id="account3Value" value="30,000" onchange="formatCurrencyInput(this); updateTotalStartingCapital()" style="width: 97px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
                     </div>
 
                     <div class="account-item" style="margin-bottom: 15px;">
                         <label style="display: inline-block; width: 140px; font-size: 14px; color: #555; margin-right: 10px;">
                             <input type="text" id="account4Name" value="TFSA2" onchange="syncAccountNames()" style="width: 150px; margin-right: 5px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
                         </label>
-                        <input type="text" id="account4Value" value="200,000" onchange="formatCurrencyInput(this); updateTotalStartingCapital()" style="width: 97px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
+                        <input type="text" id="account4Value" value="20,000" onchange="formatCurrencyInput(this); updateTotalStartingCapital()" style="width: 97px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
                     </div>
 
                     <div class="account-item" style="margin-bottom: 15px;">
                         <label style="display: inline-block; width: 140px; font-size: 14px; color: #555; margin-right: 10px;">
                             <input type="text" id="account5Name" value="Taxable Brokerage" onchange="syncAccountNames()" style="width: 150px; margin-right: 5px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
                         </label>
-                        <input type="text" id="account5Value" value="100,000" onchange="formatCurrencyInput(this); updateTotalStartingCapital()" style="width: 97px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
+                        <input type="text" id="account5Value" value="10,000" onchange="formatCurrencyInput(this); updateTotalStartingCapital()" style="width: 97px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
                     </div>
                     
                     <div class="account-item" style="margin-bottom: 15px;">
                         <label style="display: inline-block; width: 140px; font-size: 14px; color: #555; margin-right: 10px;">
                             <input type="text" id="account6Name" value="Smith" onchange="syncAccountNames()" style="width: 150px; margin-right: 5px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
                         </label>
-                        <input type="text" id="account6Value" value="100,000" onchange="formatCurrencyInput(this); updateTotalStartingCapital()" style="width: 97px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
+                        <input type="text" id="account6Value" value="0" onchange="formatCurrencyInput(this); updateTotalStartingCapital()" style="width: 97px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
                     </div>
                 </div>
             </div>
@@ -874,7 +874,7 @@
                         <span class="tooltip-text">Some general rules: 1) Prioritize paying down high interest debt (a loan with an interest rate greater than the value you inputted in Rate of Return). 2) During high income earning years, maximize contributions to RRSP accounts to lower your average tax rates (which in turn will give you a larger tax refund cheque). 3) Focus on building TFSA accounts during lower income years or when you may require more flexiibility in terms of capital liquidity (you can buy ETFs in your TFSA as well as other stocks and investments). 4) Non-registered aka Taxable Brokerage accounts can be another good option for building wealth once registered accounts are either fully/partially utilized, depending on the situation.</span>
                     </div>
                 </div>
-                <input type="text" id="annualContributions" value="85,000" readonly>
+                <input type="text" id="annualContributions" value="71,000" readonly>
                 
                 <!-- Contributions Details Section (showing by default) -->
                 <div id="contributionsDetailsSection" style="display: block; margin-top: 15px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9;">
@@ -884,35 +884,35 @@
                         <label style="display: inline-block; width: 140px; font-size: 14px; color: #555; margin-right: 10px;">
                             <span id="contrib1NameLabel" style="display: inline-block; width: 150px; margin-right: 5px; padding: 8px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; font-size: 14px; font-weight: 400; font-family: inherit; color: #6c757d; box-sizing: border-box; line-height: normal;">RRSP1</span>
                         </label>
-                        <input type="text" id="contrib1Value" value="20,000" onchange="formatCurrencyInput(this); updateTotalContributions()" style="width: 97px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
+                        <input type="text" id="contrib1Value" value="30,000" onchange="formatCurrencyInput(this); updateTotalContributions()" style="width: 97px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
                     </div>
 
                     <div class="contribution-item" style="margin-bottom: 15px;">
                         <label style="display: inline-block; width: 140px; font-size: 14px; color: #555; margin-right: 10px;">
                             <span id="contrib2NameLabel" style="display: inline-block; width: 150px; margin-right: 5px; padding: 8px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; font-size: 14px; font-weight: 400; font-family: inherit; color: #6c757d; box-sizing: border-box; line-height: normal;">RRSP2</span>
                         </label>
-                        <input type="text" id="contrib2Value" value="10,000" onchange="formatCurrencyInput(this); updateTotalContributions()" style="width: 97px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
+                        <input type="text" id="contrib2Value" value="20,000" onchange="formatCurrencyInput(this); updateTotalContributions()" style="width: 97px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
                     </div>
 
                     <div class="contribution-item" style="margin-bottom: 15px;">
                         <label style="display: inline-block; width: 140px; font-size: 14px; color: #555; margin-right: 10px;">
                             <span id="contrib3NameLabel" style="display: inline-block; width: 150px; margin-right: 5px; padding: 8px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; font-size: 14px; font-weight: 400; font-family: inherit; color: #6c757d; box-sizing: border-box; line-height: normal;">TFSA1</span>
                         </label>
-                        <input type="text" id="contrib3Value" value="25,000" onchange="formatCurrencyInput(this); updateTotalContributions()" style="width: 97px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
+                        <input type="text" id="contrib3Value" value="10,000" onchange="formatCurrencyInput(this); updateTotalContributions()" style="width: 97px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
                     </div>
 
                     <div class="contribution-item" style="margin-bottom: 15px;">
                         <label style="display: inline-block; width: 140px; font-size: 14px; color: #555; margin-right: 10px;">
                             <span id="contrib4NameLabel" style="display: inline-block; width: 150px; margin-right: 5px; padding: 8px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; font-size: 14px; font-weight: 400; font-family: inherit; color: #6c757d; box-sizing: border-box; line-height: normal;">TFSA2</span>
                         </label>
-                        <input type="text" id="contrib4Value" value="20,000" onchange="formatCurrencyInput(this); updateTotalContributions()" style="width: 97px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
+                        <input type="text" id="contrib4Value" value="10,000" onchange="formatCurrencyInput(this); updateTotalContributions()" style="width: 97px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
                     </div>
 
                     <div class="contribution-item" style="margin-bottom: 15px;">
                         <label style="display: inline-block; width: 140px; font-size: 14px; color: #555; margin-right: 10px;">
                             <span id="contrib5NameLabel" style="display: inline-block; width: 150px; margin-right: 5px; padding: 8px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; font-size: 14px; font-weight: 400; font-family: inherit; color: #6c757d; box-sizing: border-box; line-height: normal;">Taxable Brokerage</span>
                         </label>
-                        <input type="text" id="contrib5Value" value="10,000" onchange="formatCurrencyInput(this); updateTotalContributions()" style="width: 97px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
+                        <input type="text" id="contrib5Value" value="1,000" onchange="formatCurrencyInput(this); updateTotalContributions()" style="width: 97px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
                     </div>
 
                     <div class="contribution-item" style="margin-bottom: 15px;">
@@ -934,7 +934,7 @@
                         <span class="tooltip-text">What expenses do you want to have covered by your portfolio? As an example, you could take your current annual budget and exclude your mortgage payment (if you plan to have that paid off beforehand) or include rent if you don't plan on owning your primary residence, exclude kids activities, exclude RESP contributions, adjust travel spending, etc.</span>
                     </div>
                 </div>
-                <input type="text" id="activeSpending" value="85,000">
+                <input type="text" id="activeSpending" value="70,000">
             </div>
             
             <!-- 7. Annual Inactive Spending -->
@@ -946,7 +946,7 @@
                         <span class="tooltip-text">Typically, people spend more money in the years they are more physically capable eg. travel more, go out for food/entertainment, take on expensive hobbies like skiing, pouring money into the latest fads like Labubus, etc. relative to when they hit their more inactive years later in life. How much do you think you'd spend in your less active years? When in doubt, you can try using 80% of your Annual Active Spending estimate.</span>
                     </div>
                 </div>
-                <input type="text" id="inactiveSpending" value="70,000">
+                <input type="text" id="inactiveSpending" value="60,000">
             </div>
             
             <!-- 8. Rate of Return -->
@@ -994,7 +994,7 @@
                     <div class="debt-inputs">
                         <div class="input-group">
                             <label for="mortgageBalance">Outstanding Balance ($)</label>
-                            <input type="text" id="mortgageBalance" value="270,000">
+                            <input type="text" id="mortgageBalance" value="500,000">
                         </div>
                         <div class="input-group">
                             <label for="mortgageRate">Interest Rate (%)</label>
@@ -1002,11 +1002,11 @@
                         </div>
                         <div class="input-group">
                             <label for="mortgagePayment">Total Monthly Payment ($)</label>
-                            <input type="text" id="mortgagePayment" value="1,898">
+                            <input type="text" id="mortgagePayment" value="2,000">
                         </div>
                         <div class="input-group">
                             <label for="mortgageExtraPayment">Additional Monthly Principal Payment ($)</label>
-                            <input type="text" id="mortgageExtraPayment" value="1,898">
+                            <input type="text" id="mortgageExtraPayment" value="0">
                         </div>
                         <div class="input-group">
                             <div class="label-with-tooltip">
