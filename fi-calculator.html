@@ -695,36 +695,35 @@
             cursor: pointer;
         }
 
-        /* TEMPORARILY DISABLED RESPONSIVE CSS FOR DEBUGGING
+        /* Mobile Responsive CSS */
         @media (max-width: 480px) {
             .sidebar {
                 transform: translateX(-250px);
                 transition: transform 0.3s ease;
                 z-index: 1000;
             }
-            
+
             .sidebar.mobile-open {
                 transform: translateX(0);
             }
-            
+
             .main-content {
                 margin-left: 0;
                 width: 100%;
             }
-            
+
             .mobile-menu-btn {
                 display: block;
             }
-            
+
             .page {
                 padding: 20px 10px 20px 10px;
             }
-            
+
             .scenario-info-full-width {
                 grid-column: auto;
             }
         }
-        */
     </style>
     <script src="user-manager.js"></script>
 </head>
