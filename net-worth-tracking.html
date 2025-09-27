@@ -1741,7 +1741,65 @@
                 }
             });
             
-            
+
+            // Helper function to get all unique additional asset names from setup and entries
+            function getAllAdditionalAssetNames(savedSetup, netWorthEntries) {
+                const assetNames = new Set();
+
+                // Add assets from setup
+                if (savedSetup.assets && savedSetup.assets.additionalAssets) {
+                    Object.keys(savedSetup.assets.additionalAssets).forEach(name => {
+                        if (name && name.trim() !== '') {
+                            assetNames.add(name);
+                        }
+                    });
+                }
+
+                // Add assets from all tracking entries
+                if (netWorthEntries && netWorthEntries.length > 0) {
+                    netWorthEntries.forEach(entry => {
+                        if (entry.assets && entry.assets.additionalAssets) {
+                            Object.keys(entry.assets.additionalAssets).forEach(name => {
+                                if (name && name.trim() !== '') {
+                                    assetNames.add(name);
+                                }
+                            });
+                        }
+                    });
+                }
+
+                return Array.from(assetNames);
+            }
+
+            // Helper function to get all unique additional liability names from setup and entries
+            function getAllAdditionalLiabilityNames(savedSetup, netWorthEntries) {
+                const liabilityNames = new Set();
+
+                // Add liabilities from setup
+                if (savedSetup.liabilities && savedSetup.liabilities.additionalLiabilities) {
+                    Object.keys(savedSetup.liabilities.additionalLiabilities).forEach(name => {
+                        if (name && name.trim() !== '') {
+                            liabilityNames.add(name);
+                        }
+                    });
+                }
+
+                // Add liabilities from all tracking entries
+                if (netWorthEntries && netWorthEntries.length > 0) {
+                    netWorthEntries.forEach(entry => {
+                        if (entry.liabilities && entry.liabilities.additionalLiabilities) {
+                            Object.keys(entry.liabilities.additionalLiabilities).forEach(name => {
+                                if (name && name.trim() !== '') {
+                                    liabilityNames.add(name);
+                                }
+                            });
+                        }
+                    });
+                }
+
+                return Array.from(liabilityNames);
+            }
+
             // Build table structure
             const table = document.getElementById('netWorthTrackingTable');
             let tableHTML = '';
@@ -1811,26 +1869,24 @@
                 });
             }
             
-            // Additional assets (remain static - no growth applied)
-            if (savedSetup.assets && savedSetup.assets.additionalAssets) {
-                Object.entries(savedSetup.assets.additionalAssets).forEach(([name, value]) => {
-                    if (value > 0) {
-                        tableHTML += `<tr><td>&nbsp;&nbsp;&nbsp;${name}</td>`;
-                        allColumns.forEach(col => {
-                            if (col.type === 'projection') {
-                                // Custom assets remain static - no growth applied
-                                tableHTML += `<td>$${formatNumber(Math.round(value))}</td>`;
-                            } else { // actual data
-                                const actualValue = getActualAccountValue(col.entry, name, 'asset');
-                                const cellClass = actualValue !== null ? 'actual-value' : 'no-data';
-                                const displayValue = actualValue !== null ? `$${formatNumber(Math.round(actualValue))}` : '-';
-                                tableHTML += `<td class="${cellClass}" style="background: #e3f2fd; font-weight: bold;">${displayValue}</td>`;
-                            }
-                        });
-                        tableHTML += '</tr>';
+            // Additional assets (remain static - no growth applied) - show all from setup and entries
+            const allAdditionalAssetNames = getAllAdditionalAssetNames(savedSetup, netWorthEntries);
+            allAdditionalAssetNames.forEach(name => {
+                tableHTML += `<tr><td>&nbsp;&nbsp;&nbsp;${name}</td>`;
+                allColumns.forEach(col => {
+                    if (col.type === 'projection') {
+                        // For setup-based assets, show the setup value; for entry-only assets, show 0 in projections
+                        const setupValue = (savedSetup.assets && savedSetup.assets.additionalAssets && savedSetup.assets.additionalAssets[name]) || 0;
+                        tableHTML += `<td>$${formatNumber(Math.round(setupValue))}</td>`;
+                    } else { // actual data
+                        const actualValue = getActualAccountValue(col.entry, name, 'asset');
+                        const cellClass = actualValue !== null ? 'actual-value' : 'no-data';
+                        const displayValue = actualValue !== null ? `$${formatNumber(Math.round(actualValue))}` : '-';
+                        tableHTML += `<td class="${cellClass}" style="background: #e3f2fd; font-weight: bold;">${displayValue}</td>`;
                     }
                 });
-            }
+                tableHTML += '</tr>';
+            });
             
             // Total assets row
             tableHTML += '<tr class="total-row"><td><strong>Total Assets</strong></td>';
@@ -1877,26 +1933,24 @@
                 });
             }
             
-            // Additional liabilities (remain static - no amortization)
-            if (savedSetup.liabilities && savedSetup.liabilities.additionalLiabilities) {
-                Object.entries(savedSetup.liabilities.additionalLiabilities).forEach(([name, value]) => {
-                    if (value > 0) {
-                        tableHTML += `<tr><td>&nbsp;&nbsp;&nbsp;${name}</td>`;
-                        allColumns.forEach(col => {
-                            if (col.type === 'projection') {
-                                // Additional liabilities remain static (no amortization schedule)
-                                tableHTML += `<td>$${formatNumber(Math.round(value))}</td>`;
-                            } else { // actual data
-                                const actualValue = getActualAccountValue(col.entry, name, 'liability');
-                                const cellClass = actualValue !== null ? 'actual-value' : 'no-data';
-                                const displayValue = actualValue !== null ? `$${formatNumber(Math.round(actualValue))}` : '-';
-                                tableHTML += `<td class="${cellClass}" style="background: #ffebee; font-weight: bold;">${displayValue}</td>`;
-                            }
-                        });
-                        tableHTML += '</tr>';
+            // Additional liabilities (remain static - no amortization) - show all from setup and entries
+            const allAdditionalLiabilityNames = getAllAdditionalLiabilityNames(savedSetup, netWorthEntries);
+            allAdditionalLiabilityNames.forEach(name => {
+                tableHTML += `<tr><td>&nbsp;&nbsp;&nbsp;${name}</td>`;
+                allColumns.forEach(col => {
+                    if (col.type === 'projection') {
+                        // For setup-based liabilities, show the setup value; for entry-only liabilities, show 0 in projections
+                        const setupValue = (savedSetup.liabilities && savedSetup.liabilities.additionalLiabilities && savedSetup.liabilities.additionalLiabilities[name]) || 0;
+                        tableHTML += `<td>$${formatNumber(Math.round(setupValue))}</td>`;
+                    } else { // actual data
+                        const actualValue = getActualAccountValue(col.entry, name, 'liability');
+                        const cellClass = actualValue !== null ? 'actual-value' : 'no-data';
+                        const displayValue = actualValue !== null ? `$${formatNumber(Math.round(actualValue))}` : '-';
+                        tableHTML += `<td class="${cellClass}" style="background: #ffebee; font-weight: bold;">${displayValue}</td>`;
                     }
                 });
-            }
+                tableHTML += '</tr>';
+            });
             
             // Total liabilities row
             tableHTML += '<tr class="total-row"><td><strong>Total Liabilities</strong></td>';
@@ -2538,19 +2592,57 @@
                 }
             };
             
-            // Capture additional asset data
-            for (let i = 1; i <= 5; i++) {
-                const name = document.getElementById(`asset${i}Name`).value;
-                const value = parseFloat(document.getElementById(`asset${i}Value`).value.replace(/[$,]/g, '')) || 0;
-                trackingData.assets.additionalAssets[name] = value;
-            }
-            
-            // Capture additional liability data
-            for (let i = 1; i <= 2; i++) {
-                const name = document.getElementById(`liability${i}Name`).value;
-                const value = parseFloat(document.getElementById(`liability${i}Value`).value.replace(/[$,]/g, '')) || 0;
-                trackingData.liabilities.additionalLiabilities[name] = value;
-            }
+            // Capture additional asset data from existing and new inputs
+            const additionalAssetInputs = document.querySelectorAll('#additionalAssetInputs input[data-account-id]');
+            additionalAssetInputs.forEach(input => {
+                const accountId = input.getAttribute('data-account-id');
+                const isNew = input.getAttribute('data-is-new') === 'true';
+                let name = '';
+                let value = 0;
+
+                if (isNew) {
+                    // For new inputs, get name from the name input field
+                    const nameInput = document.getElementById(`${accountId}_name`);
+                    name = nameInput ? nameInput.value.trim() : '';
+                    value = parseFloat(input.value.replace(/[$,]/g, '')) || 0;
+                } else {
+                    // For existing inputs, name is in the span element next to the input
+                    const inputRow = input.closest('div[style*="grid"]');
+                    const nameSpan = inputRow ? inputRow.querySelector('span') : null;
+                    name = nameSpan ? nameSpan.textContent.trim() : '';
+                    value = parseFloat(input.value.replace(/[$,]/g, '')) || 0;
+                }
+
+                if (name && value > 0) {
+                    trackingData.assets.additionalAssets[name] = value;
+                }
+            });
+
+            // Capture additional liability data from existing and new inputs
+            const additionalLiabilityInputs = document.querySelectorAll('#additionalLiabilityInputs input[data-account-id]');
+            additionalLiabilityInputs.forEach(input => {
+                const accountId = input.getAttribute('data-account-id');
+                const isNew = input.getAttribute('data-is-new') === 'true';
+                let name = '';
+                let value = 0;
+
+                if (isNew) {
+                    // For new inputs, get name from the name input field
+                    const nameInput = document.getElementById(`${accountId}_name`);
+                    name = nameInput ? nameInput.value.trim() : '';
+                    value = parseFloat(input.value.replace(/[$,]/g, '')) || 0;
+                } else {
+                    // For existing inputs, name is in the span element next to the input
+                    const inputRow = input.closest('div[style*="grid"]');
+                    const nameSpan = inputRow ? inputRow.querySelector('span') : null;
+                    name = nameSpan ? nameSpan.textContent.trim() : '';
+                    value = parseFloat(input.value.replace(/[$,]/g, '')) || 0;
+                }
+
+                if (name && value > 0) {
+                    trackingData.liabilities.additionalLiabilities[name] = value;
+                }
+            });
             
             // Get existing tracking history
             const existingHistory = JSON.parse(localStorage.getItem('fiquest_net_worth_history') || '[]');
@@ -2586,23 +2678,57 @@
                 netWorth: parseFloat(document.getElementById('currentNetWorth').value.replace(/[$,]/g, ''))
             };
             
-            // Capture additional asset data
-            for (let i = 1; i <= 5; i++) {
-                const name = document.getElementById(`asset${i}Name`).value;
-                const value = parseFloat(document.getElementById(`asset${i}Value`).value.replace(/[$,]/g, ''));
+            // Capture additional asset data from existing and new inputs
+            const additionalAssetInputs = document.querySelectorAll('#additionalAssetInputs input[data-account-id]');
+            additionalAssetInputs.forEach(input => {
+                const accountId = input.getAttribute('data-account-id');
+                const isNew = input.getAttribute('data-is-new') === 'true';
+                let name = '';
+                let value = 0;
+
+                if (isNew) {
+                    // For new inputs, get name from the name input field
+                    const nameInput = document.getElementById(`${accountId}_name`);
+                    name = nameInput ? nameInput.value.trim() : '';
+                    value = parseFloat(input.value.replace(/[$,]/g, '')) || 0;
+                } else {
+                    // For existing inputs, name is in the span element next to the input
+                    const inputRow = input.closest('div[style*="grid"]');
+                    const nameSpan = inputRow ? inputRow.querySelector('span') : null;
+                    name = nameSpan ? nameSpan.textContent.trim() : '';
+                    value = parseFloat(input.value.replace(/[$,]/g, '')) || 0;
+                }
+
                 if (name && value > 0) {
                     netWorthData.assets.additionalAssets[name] = value;
                 }
-            }
-            
-            // Capture additional liability data
-            for (let i = 1; i <= 2; i++) {
-                const name = document.getElementById(`liability${i}Name`).value;
-                const value = parseFloat(document.getElementById(`liability${i}Value`).value.replace(/[$,]/g, ''));
+            });
+
+            // Capture additional liability data from existing and new inputs
+            const additionalLiabilityInputs = document.querySelectorAll('#additionalLiabilityInputs input[data-account-id]');
+            additionalLiabilityInputs.forEach(input => {
+                const accountId = input.getAttribute('data-account-id');
+                const isNew = input.getAttribute('data-is-new') === 'true';
+                let name = '';
+                let value = 0;
+
+                if (isNew) {
+                    // For new inputs, get name from the name input field
+                    const nameInput = document.getElementById(`${accountId}_name`);
+                    name = nameInput ? nameInput.value.trim() : '';
+                    value = parseFloat(input.value.replace(/[$,]/g, '')) || 0;
+                } else {
+                    // For existing inputs, name is in the span element next to the input
+                    const inputRow = input.closest('div[style*="grid"]');
+                    const nameSpan = inputRow ? inputRow.querySelector('span') : null;
+                    name = nameSpan ? nameSpan.textContent.trim() : '';
+                    value = parseFloat(input.value.replace(/[$,]/g, '')) || 0;
+                }
+
                 if (name && value > 0) {
                     netWorthData.liabilities.additionalLiabilities[name] = value;
                 }
-            }
+            });
             
             localStorage.setItem('fiquest_net_worth_setup', JSON.stringify(netWorthData));
             alert('Net worth setup saved successfully!');
@@ -2794,20 +2920,29 @@
         function populateAdditionalAssetInputs(savedSetup) {
             const container = document.getElementById('additionalAssetInputs');
             let html = '';
+            let existingAssetCount = 0;
 
             // Access additionalAssets object from assets structure
             if (savedSetup.assets && savedSetup.assets.additionalAssets) {
-                let index = 0;
                 Object.entries(savedSetup.assets.additionalAssets).forEach(([name, value]) => {
                     if (name && name.trim() !== '' && value > 0) {
                         // Get entry date for prorated calculations
                         const entryDate = document.getElementById('entryDate').value;
                         // Calculate prorated projected value based on entry date (additional assets don't grow)
                         const projectedValue = calculateProratedProjectedValue({name, value}, entryDate, savedSetup, 'additional');
-                        html += createAccountInput(`additional_asset_${index}`, name, projectedValue, value);
-                        index++;
+                        html += createAccountInput(`additional_asset_${existingAssetCount}`, name, projectedValue, value);
+                        existingAssetCount++;
                     }
                 });
+            }
+
+            // Ensure minimum of 5 total additional asset slots
+            const minimumSlots = 5;
+            const emptySlots = Math.max(0, minimumSlots - existingAssetCount);
+
+            for (let i = 0; i < emptySlots; i++) {
+                const slotIndex = existingAssetCount + i;
+                html += createEmptyAccountInput(`new_additional_asset_${slotIndex}`, `New Asset ${slotIndex + 1}`, 'asset');
             }
 
             container.innerHTML = html;
@@ -2838,20 +2973,29 @@
         function populateAdditionalLiabilityInputs(savedSetup) {
             const container = document.getElementById('additionalLiabilityInputs');
             let html = '';
+            let existingLiabilityCount = 0;
 
             // Access additionalLiabilities object from liabilities structure
             if (savedSetup.liabilities && savedSetup.liabilities.additionalLiabilities) {
-                let index = 0;
                 Object.entries(savedSetup.liabilities.additionalLiabilities).forEach(([name, value]) => {
                     if (name && name.trim() !== '' && value > 0) {
                         // Get entry date for prorated calculations
                         const entryDate = document.getElementById('entryDate').value;
                         // Calculate prorated projected value based on entry date (additional liabilities don't change)
                         const projectedValue = calculateProratedProjectedValue({name, value}, entryDate, savedSetup, 'additional');
-                        html += createAccountInput(`additional_liability_${index}`, name, projectedValue, value);
-                        index++;
+                        html += createAccountInput(`additional_liability_${existingLiabilityCount}`, name, projectedValue, value);
+                        existingLiabilityCount++;
                     }
                 });
+            }
+
+            // Ensure minimum of 5 total additional liability slots
+            const minimumSlots = 5;
+            const emptySlots = Math.max(0, minimumSlots - existingLiabilityCount);
+
+            for (let i = 0; i < emptySlots; i++) {
+                const slotIndex = existingLiabilityCount + i;
+                html += createEmptyAccountInput(`new_additional_liability_${slotIndex}`, `New Liability ${slotIndex + 1}`, 'liability');
             }
 
             container.innerHTML = html;
@@ -2970,6 +3114,36 @@
                     <div style="text-align: right;">
                         <small style="color: #666;">Variance:</small><br>
                         <span id="${id}_variance" style="font-weight: bold;">$0</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createEmptyAccountInput(id, label, type) {
+            const placeholderText = type === 'asset' ? 'e.g., Car, Jewelry, Other Property' : 'e.g., Credit Card, Personal Loan';
+            return `
+                <div style="display: grid; grid-template-columns: 1fr 120px 120px 120px; gap: 10px; margin-bottom: 8px; align-items: center; padding: 8px; background: #f9f9f9; border-radius: 4px; border: 1px dashed #ddd;">
+                    <div>
+                        <input type="text" id="${id}_name" placeholder="${placeholderText}"
+                               style="width: 100%; padding: 4px 6px; border: 1px solid #ddd; border-radius: 3px; font-style: italic; color: #666;"
+                               onInput="updateTotals();">
+                    </div>
+                    <div style="text-align: right;">
+                        <small style="color: #666;">Projected:</small><br>
+                        <strong style="color: #999;">--</strong>
+                    </div>
+                    <div>
+                        <small style="color: #333;">Actual:</small><br>
+                        <input type="text" id="${id}_actual" value="" placeholder="$0"
+                               data-projected="0"
+                               data-account-id="${id}"
+                               data-is-new="true"
+                               style="width: 100%; padding: 4px 6px; border: 1px solid #ddd; border-radius: 3px; text-align: right;"
+                               onInput="formatInputValue(this); updateTotals(); updateVariances();">
+                    </div>
+                    <div style="text-align: right;">
+                        <small style="color: #666;">Variance:</small><br>
+                        <span id="${id}_variance" style="font-weight: bold; color: #999;">--</span>
                     </div>
                 </div>
             `;
