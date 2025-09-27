@@ -16,8 +16,8 @@
             font-size: 16px;
             font-weight: 400;
             line-height: 1.5;
-            color: #333;
-            background: #f8f9fa;
+            color: #ffffff;
+            background: #1a1a2e;
         }
 
         /* Typography System */
@@ -161,7 +161,7 @@
         .main-content {
             margin-left: 250px;
             padding: 0;
-            background: #f8f9fa;
+            background: #1a1a2e;
             min-height: 100vh;
         }
 
@@ -172,7 +172,7 @@
         }
 
         .page-header {
-            background: white;
+            background: #16213e;
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
@@ -180,7 +180,7 @@
         }
 
         .page-title {
-            color: #333;
+            color: #ffffff;
             font-size: 28px;
             margin-bottom: 8px;
             font-weight: 300;
@@ -198,7 +198,7 @@
         }
 
         .container {
-            background: white;
+            background: #16213e;
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -230,7 +230,7 @@
         }
 
         input[readonly] {
-            background-color: #f8f9fa;
+            background-color: #1a1a2e;
         }
 
         .calculate-btn, .clear-btn {
@@ -256,7 +256,7 @@
         /* Tracking Table Styles */
         #trackingTableWrapper {
             position: relative;
-            background: white;
+            background: #16213e;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             overflow: hidden;
@@ -266,7 +266,7 @@
             position: sticky;
             top: 0;
             z-index: 5;
-            background: white;
+            background: #16213e;
             border-bottom: 2px solid #ddd;
         }
 
@@ -291,9 +291,9 @@
         }
 
         #netWorthTrackingTable thead th {
-            background: #f8f9fa;
+            background: #1a1a2e;
             font-weight: bold;
-            color: #333;
+            color: #ffffff;
             position: sticky;
             top: 0;
             z-index: 4;
@@ -304,7 +304,7 @@
             text-align: left;
             position: sticky;
             left: 0;
-            background: white;
+            background: #16213e;
             z-index: 3;
             font-weight: bold;
             min-width: 200px;
@@ -447,7 +447,7 @@
                 min-width: 120px;
                 position: sticky;
                 left: 0;
-                background: white;
+                background: #16213e;
                 z-index: 2;
                 box-shadow: 2px 0 4px rgba(0,0,0,0.1);
             }
@@ -513,13 +513,13 @@
         .disclaimer {
             margin: 40px 0;
             padding: 30px;
-            background-color: #f8f9fa;
+            background-color: #1a1a2e;
             border-radius: 10px;
             border: 1px solid #dee2e6;
         }
 
         .disclaimer h3 {
-            color: #333;
+            color: #ffffff;
             margin-top: 0;
             margin-bottom: 15px;
             font-size: 18px;
@@ -620,7 +620,7 @@
 
                     <!-- Net Worth Tracking Table -->
                     <div style="margin-bottom: 30px;">
-                        <h3 style="color: #333; border-bottom: 2px solid #0E0E55; padding-bottom: 10px; margin-bottom: 20px;">📊 Net Worth Projection by Year</h3>
+                        <h3 style="color: #ffffff; border-bottom: 2px solid #0E0E55; padding-bottom: 10px; margin-bottom: 20px;">📊 Net Worth Projection by Year</h3>
 
                         <div id="trackingTableWrapper">
                             <!-- Table Container with Horizontal Scroll -->
@@ -633,15 +633,15 @@
                     </div>
 
                     <!-- Update Current Values Form (Hidden by default) -->
-                    <div id="updateValuesForm" style="display: none; background: #f8f9fa; border: 2px solid #0E0E55; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
+                    <div id="updateValuesForm" style="display: none; background: #1a1a2e; border: 2px solid #0E0E55; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                            <h3 style="color: #333; margin: 0;">📝 Add Net Worth Entry</h3>
+                            <h3 style="color: #ffffff; margin: 0;">📝 Add Net Worth Entry</h3>
                             <button onclick="closeUpdateForm()" style="background: #dc3545; color: white; border: none; border-radius: 4px; padding: 6px 12px; cursor: pointer;">✕ Close</button>
                         </div>
 
                         <!-- Date Input Section -->
-                        <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                            <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">Entry Date:</label>
+                        <div style="background: #16213e; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                            <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #ffffff;">Entry Date:</label>
                             <input type="date" id="entryDate" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
                             <small style="display: block; color: #666; margin-top: 5px;">Defaults to today's date. You can enter any past date to add historical net worth data.</small>
                         </div>
@@ -652,8 +652,8 @@
                         </div>
 
                         <!-- Notes Section -->
-                        <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                            <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">Notes (Optional):</label>
+                        <div style="background: #16213e; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                            <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #ffffff;">Notes (Optional):</label>
                             <textarea id="entryNotes" placeholder="Add any notes about this entry..." style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; height: 80px; resize: vertical;"></textarea>
                         </div>
 
@@ -666,16 +666,16 @@
 
                     <!-- Net Worth Chart -->
                     <div style="margin-bottom: 30px;">
-                        <h3 style="color: #333; border-bottom: 2px solid #0E0E55; padding-bottom: 10px; margin-bottom: 20px;">📈 Net Worth & Portfolio Progress Chart</h3>
-                        <div id="chartContainer" style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); height: 600px;">
+                        <h3 style="color: #ffffff; border-bottom: 2px solid #0E0E55; padding-bottom: 10px; margin-bottom: 20px;">📈 Net Worth & Portfolio Progress Chart</h3>
+                        <div id="chartContainer" style="background: #16213e; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); height: 600px;">
                             <canvas id="netWorthChart" style="height: 100%; width: 100%;"></canvas>
                         </div>
                     </div>
 
                     <!-- Asset Allocation Chart -->
                     <div style="margin-bottom: 30px;">
-                        <h3 style="color: #333; border-bottom: 2px solid #0E0E55; padding-bottom: 10px; margin-bottom: 20px;">📊 Asset Allocation Over Time</h3>
-                        <div id="assetAllocationContainer" style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); height: 500px;">
+                        <h3 style="color: #ffffff; border-bottom: 2px solid #0E0E55; padding-bottom: 10px; margin-bottom: 20px;">📊 Asset Allocation Over Time</h3>
+                        <div id="assetAllocationContainer" style="background: #16213e; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); height: 500px;">
                             <canvas id="assetAllocationChart" style="height: 100%; width: 100%;"></canvas>
                         </div>
                     </div>
@@ -2832,7 +2832,7 @@
             }
 
             const accountsHTML = `
-                <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                <div style="background: #16213e; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
                     <h4 style="color: #8B6914; margin-bottom: 15px; border-bottom: 2px solid #D3AF37; padding-bottom: 8px;">📈 Assets</h4>
                     
                     <!-- Investment Accounts -->
@@ -2848,7 +2848,7 @@
                     </div>
                 </div>
 
-                <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                <div style="background: #16213e; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
                     <h4 style="color: #c62828; margin-bottom: 15px; border-bottom: 2px solid #f44336; padding-bottom: 8px;">🏠 Liabilities</h4>
                     
                     <!-- Scenario Debts -->
@@ -3097,14 +3097,14 @@
 
         function createAccountInput(id, name, projectedValue, defaultActual = 0) {
             return `
-                <div style="display: grid; grid-template-columns: 1fr 120px 120px 120px; gap: 10px; margin-bottom: 8px; align-items: center; padding: 8px; background: #f8f9fa; border-radius: 4px;">
+                <div style="display: grid; grid-template-columns: 1fr 120px 120px 120px; gap: 10px; margin-bottom: 8px; align-items: center; padding: 8px; background: #1a1a2e; border-radius: 4px;">
                     <span style="font-weight: 500;">${name}</span>
                     <div style="text-align: right;">
                         <small style="color: #666;">Projected:</small><br>
                         <strong style="color: #666;">$${formatNumber(projectedValue)}</strong>
                     </div>
                     <div>
-                        <small style="color: #333;">Actual:</small><br>
+                        <small style="color: #ffffff;">Actual:</small><br>
                         <input type="text" id="${id}_actual" value="$${formatNumber(defaultActual)}" 
                                data-projected="${projectedValue}"
                                data-account-id="${id}"
@@ -3133,7 +3133,7 @@
                         <strong style="color: #999;">--</strong>
                     </div>
                     <div>
-                        <small style="color: #333;">Actual:</small><br>
+                        <small style="color: #ffffff;">Actual:</small><br>
                         <input type="text" id="${id}_actual" value="" placeholder="$0"
                                data-projected="0"
                                data-account-id="${id}"
@@ -3260,7 +3260,7 @@
                     isAsset = false;
                 } else {
                     // Fallback: check if we're in the assets or liabilities section of the form
-                    const assetsSection = input.closest('div').closest('div[style*="background: white"]');
+                    const assetsSection = input.closest('div').closest('div[style*="background: #16213e"]');
                     const sectionHeader = assetsSection ? assetsSection.querySelector('h4') : null;
                     const headerText = sectionHeader ? sectionHeader.textContent : '';
                     isAsset = headerText.includes('ASSETS') || headerText.includes('📈');
