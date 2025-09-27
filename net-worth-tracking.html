@@ -40,7 +40,7 @@
 
         .sidebar {
             width: 250px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0E0E55 0%, #0E0E55 100%);
             color: white;
             padding: 0;
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
@@ -234,7 +234,7 @@
         }
 
         .calculate-btn, .clear-btn {
-            background: #667eea;
+            background: #0E0E55;
             color: white;
             border: none;
             padding: 12px 24px;
@@ -312,7 +312,7 @@
         }
 
         #netWorthTrackingTable thead th:first-child {
-            background: #667eea;
+            background: #0E0E55;
             color: white;
             z-index: 5;
         }
@@ -336,7 +336,7 @@
         }
 
         .net-worth-row {
-            background: #667eea !important;
+            background: #0E0E55 !important;
             color: white !important;
             font-weight: bold;
             font-size: 16px;
@@ -603,7 +603,7 @@
                             <h4 style="margin: 0 0 10px 0;">Initial Net Worth</h4>
                             <div id="initialNetWorthDisplay" style="font-size: 24px; font-weight: bold;">Loading...</div>
                         </div>
-                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+                        <div style="background: linear-gradient(135deg, #0E0E55 0%, #0E0E55 100%); color: white; padding: 20px; border-radius: 8px; text-align: center;">
                             <h4 style="margin: 0 0 10px 0;">FI Target Net Worth</h4>
                             <div id="fiTargetNetWorthDisplay" style="font-size: 24px; font-weight: bold;">Loading...</div>
                         </div>
@@ -615,12 +615,12 @@
 
                     <!-- Update Current Values Button -->
                     <div style="margin-bottom: 20px;">
-                        <button class="calculate-btn" onclick="showUpdateForm()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold;">📝 Add Net Worth Entry</button>
+                        <button class="calculate-btn" onclick="showUpdateForm()" style="background: linear-gradient(135deg, #0E0E55 0%, #0E0E55 100%); color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold;">📝 Add Net Worth Entry</button>
                     </div>
 
                     <!-- Net Worth Tracking Table -->
                     <div style="margin-bottom: 30px;">
-                        <h3 style="color: #333; border-bottom: 2px solid #667eea; padding-bottom: 10px; margin-bottom: 20px;">📊 Net Worth Projection by Year</h3>
+                        <h3 style="color: #333; border-bottom: 2px solid #0E0E55; padding-bottom: 10px; margin-bottom: 20px;">📊 Net Worth Projection by Year</h3>
 
                         <div id="trackingTableWrapper">
                             <!-- Table Container with Horizontal Scroll -->
@@ -633,7 +633,7 @@
                     </div>
 
                     <!-- Update Current Values Form (Hidden by default) -->
-                    <div id="updateValuesForm" style="display: none; background: #f8f9fa; border: 2px solid #667eea; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
+                    <div id="updateValuesForm" style="display: none; background: #f8f9fa; border: 2px solid #0E0E55; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                             <h3 style="color: #333; margin: 0;">📝 Add Net Worth Entry</h3>
                             <button onclick="closeUpdateForm()" style="background: #dc3545; color: white; border: none; border-radius: 4px; padding: 6px 12px; cursor: pointer;">✕ Close</button>
@@ -666,7 +666,7 @@
 
                     <!-- Net Worth Chart -->
                     <div style="margin-bottom: 30px;">
-                        <h3 style="color: #333; border-bottom: 2px solid #667eea; padding-bottom: 10px; margin-bottom: 20px;">📈 Net Worth & Portfolio Progress Chart</h3>
+                        <h3 style="color: #333; border-bottom: 2px solid #0E0E55; padding-bottom: 10px; margin-bottom: 20px;">📈 Net Worth & Portfolio Progress Chart</h3>
                         <div id="chartContainer" style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); height: 600px;">
                             <canvas id="netWorthChart" style="height: 100%; width: 100%;"></canvas>
                         </div>
@@ -674,7 +674,7 @@
 
                     <!-- Asset Allocation Chart -->
                     <div style="margin-bottom: 30px;">
-                        <h3 style="color: #333; border-bottom: 2px solid #667eea; padding-bottom: 10px; margin-bottom: 20px;">📊 Asset Allocation Over Time</h3>
+                        <h3 style="color: #333; border-bottom: 2px solid #0E0E55; padding-bottom: 10px; margin-bottom: 20px;">📊 Asset Allocation Over Time</h3>
                         <div id="assetAllocationContainer" style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); height: 500px;">
                             <canvas id="assetAllocationChart" style="height: 100%; width: 100%;"></canvas>
                         </div>
@@ -747,7 +747,7 @@
                         <td colspan="100%" style="text-align: center; padding: 40px; color: #666;">
                             <h3>Net Worth Setup Required</h3>
                             <p>Please complete your initial Net Worth Setup first to see projections.</p>
-                            <button onclick="window.location.href='net-worth.html'" style="margin-top: 15px; padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                            <button onclick="window.location.href='net-worth.html'" style="margin-top: 15px; padding: 10px 20px; background: #0E0E55; color: white; border: none; border-radius: 4px; cursor: pointer;">
                                 Go to Net Worth Setup →
                             </button>
                         </td>
