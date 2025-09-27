@@ -367,65 +367,14 @@
                 localStorage.setItem(`fiquest_player_${playerName.toLowerCase()}`, JSON.stringify(newPlayer));
                 localStorage.setItem('fiquest_current_player', playerName);
                 
-                // Force initial save file creation
-                createBtn.textContent = 'Creating Save File...';
-                showSuccess(`Welcome ${playerName}! Creating your save file...`);
+                // Welcome user and redirect to start their journey
+                createBtn.textContent = 'Player Created!';
+                showSuccess(`Welcome ${playerName}! Starting your financial independence journey...`);
 
-                // Create initial save file export
+                // Redirect to FI calculator to begin
                 setTimeout(() => {
-                    try {
-                        // Generate export data for the new player
-                        const exportData = {
-                            version: '1.0.0',
-                            exportDate: new Date().toISOString(),
-                            exportTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-                            playerData: newPlayer,
-                            gameData: {
-                                scenarios: [],
-                                activeScenario: null,
-                                netWorthSetup: null,
-                                netWorthHistory: null,
-                                currentNetWorth: null
-                            },
-                            metadata: {
-                                exportedBy: 'FIQuest Web Application',
-                                playerName: playerName,
-                                isInitialSave: true,
-                                lastPlayedDate: newPlayer.lastPlayedDate
-                            }
-                        };
-
-                        // Generate filename
-                        const filename = CrossBrowserFileSaver.generateFilename(playerName, true);
-                        const jsonData = JSON.stringify(exportData, null, 2);
-
-                        // Save the file
-                        CrossBrowserFileSaver.saveAs(jsonData, filename, 'application/json');
-
-                        // Show save instructions
-                        const instructions = CrossBrowserFileSaver.showSaveInstructions(filename);
-
-                        // Update UI
-                        createBtn.textContent = 'Save File Created!';
-                        showSuccess(`✅ Save file created: ${filename}\n\n${instructions}\n\nIMPORTANT: You will need this file to continue your game later!`);
-
-                        // Redirect to FI calculator after user acknowledges save
-                        setTimeout(() => {
-                            if (confirm('Your save file has been created. Click OK to start your financial independence journey!\n\nRemember: Keep your save file safe - you\'ll need it to continue playing later.')) {
-                                window.location.href = 'fi-calculator.html';
-                            }
-                        }, 3000);
-
-                    } catch (error) {
-                        console.error('Error creating save file:', error);
-                        showError('Player created but save file creation failed. You can create a save file later from the Data Management page.');
-
-                        // Still allow user to continue
-                        setTimeout(() => {
-                            window.location.href = 'fi-calculator.html';
-                        }, 3000);
-                    }
-                }, 1000);
+                    window.location.href = 'fi-calculator.html';
+                }, 2000);
                 
             } catch (error) {
                 console.error('Error creating player:', error);

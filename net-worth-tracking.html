@@ -3296,28 +3296,8 @@
             const result = userManager.addNetWorthEntry(entryData);
             
             if (result) {
-                // Prompt user to update save file
-                const shouldExportSave = confirm(
-                    '✅ Net worth entry saved successfully!\n\n' +
-                    '💾 SAVE FILE RECOMMENDATION:\n' +
-                    'Would you like to update your save file with this new entry?\n\n' +
-                    'This ensures your progress is backed up and available if you need to reload your game later.'
-                );
-
-                if (shouldExportSave && userManager && userManager.currentPlayer) {
-                    try {
-                        // Create updated save file
-                        const exportData = userManager.exportAllUserData();
-                        const filename = CrossBrowserFileSaver.generateFilename(userManager.currentPlayer.playerName, true);
-                        CrossBrowserFileSaver.saveAs(exportData, filename, 'application/json');
-
-                        alert('✅ Save file updated successfully!\n\nYour net worth entry has been backed up to: ' + filename);
-                    } catch (error) {
-                        console.error('Error updating save file:', error);
-                        alert('⚠️ Net worth entry saved, but save file update failed.\nYou can manually update your save file from the Data Management page.');
-                    }
-                }
-
+                // Entry saved successfully - close form and refresh display
+                alert('✅ Net worth entry saved successfully!');
                 closeUpdateForm();
                 
                 // Debug: Check if entries exist immediately after save
