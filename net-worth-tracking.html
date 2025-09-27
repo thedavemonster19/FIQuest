@@ -321,7 +321,7 @@
         .section-header {
             background: #e8f5e8 !important;
             font-weight: bold;
-            color: #2e7d32 !important;
+            color: #8B6914 !important;
         }
 
         .liability-section-header {
@@ -342,7 +342,7 @@
             font-size: 16px;
         }
         .net-worth-row td:first-child {
-            color: #4CAF50 !important;
+            color: #D3AF37 !important;
         }
 
         /* Mobile Menu Button */
@@ -352,7 +352,7 @@
             top: 20px;
             right: 20px;
             z-index: 1001;
-            background: #4CAF50;
+            background: #D3AF37;
             color: white;
             border: none;
             padding: 10px 15px;
@@ -363,7 +363,7 @@
         }
 
         .mobile-menu-btn:hover {
-            background: #45a049;
+            background: #B8941E;
         }
 
         /* Enhanced Mobile Styles */
@@ -592,14 +592,14 @@
                 <div class="container">
                     <!-- Scenario Display -->
                     <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin-bottom: 25px;">
-                        <h3 style="margin: 0 0 10px 0; color: #2e7d32;">FI Scenario & Initial Setup</h3>
+                        <h3 style="margin: 0 0 10px 0; color: #8B6914;">FI Scenario & Initial Setup</h3>
                         <p id="scenarioNameDisplay" style="margin: 0 0 5px 0; font-weight: bold; color: #1565c0;">Loading...</p>
                         <p id="setupDateDisplay" style="margin: 0; color: #666; font-size: 14px;">Setup Date: Loading...</p>
                     </div>
 
                     <!-- Summary Cards -->
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
-                        <div style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+                        <div style="background: linear-gradient(135deg, #D3AF37 0%, #B8941E 100%); color: white; padding: 20px; border-radius: 8px; text-align: center;">
                             <h4 style="margin: 0 0 10px 0;">Initial Net Worth</h4>
                             <div id="initialNetWorthDisplay" style="font-size: 24px; font-weight: bold;">Loading...</div>
                         </div>
@@ -1431,8 +1431,8 @@
             const assetCategories = [
                 {
                     name: 'Investment Portfolio',
-                    color: 'rgba(76, 175, 80, 0.8)',    // Green
-                    borderColor: 'rgba(76, 175, 80, 1)',
+                    color: 'rgba(211, 175, 55, 0.8)',    // Green
+                    borderColor: 'rgba(211, 175, 55, 1)',
                     accounts: ['RRSP1', 'RRSP2', 'TFSA1', 'TFSA2', 'Taxable Brokerage']
                 },
                 {
@@ -1810,7 +1810,7 @@
                 if (col.type === 'projection') {
                     if (col.isInitial) {
                         const formattedSetupDate = formatSetupDateForHeader(savedSetup.setupDate);
-                        tableHTML += `<th style="background: #4CAF50; color: white; text-align: center;">Initial<br>(${formattedSetupDate})<br>Age ${col.age}</th>`;
+                        tableHTML += `<th style="background: #D3AF37; color: white; text-align: center;">Initial<br>(${formattedSetupDate})<br>Age ${col.age}</th>`;
                     } else if (col.isFI) {
                         tableHTML += `<th style="background: #FF9800; color: white; text-align: center;">FI Target<br>(${col.year})<br>Age ${col.age}</th>`;
                     } else if (col.isLifeExp) {
@@ -2517,7 +2517,7 @@
             // Gather data for chart
             const data = [];
             const labels = [];
-            const colors = ['#4CAF50', '#2196F3', '#FF9800', '#9C27B0', '#607D8B', '#795548', '#E91E63', '#00BCD4'];
+            const colors = ['#D3AF37', '#2196F3', '#FF9800', '#9C27B0', '#607D8B', '#795548', '#E91E63', '#00BCD4'];
             
             // Investment accounts (combined as "Stocks")
             const investmentTotal = unformatNumber(document.getElementById('totalInvestmentAccounts').value.replace('$', ''));
@@ -2833,7 +2833,7 @@
 
             const accountsHTML = `
                 <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-                    <h4 style="color: #2e7d32; margin-bottom: 15px; border-bottom: 2px solid #4CAF50; padding-bottom: 8px;">📈 Assets</h4>
+                    <h4 style="color: #8B6914; margin-bottom: 15px; border-bottom: 2px solid #D3AF37; padding-bottom: 8px;">📈 Assets</h4>
                     
                     <!-- Investment Accounts -->
                     <div style="margin-bottom: 20px;">
@@ -2868,8 +2868,8 @@
                 <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; border-left: 4px solid #2196F3;">
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; text-align: center;">
                         <div>
-                            <strong style="color: #2e7d32;">Total Assets</strong><br>
-                            <span id="totalAssetsDisplay" style="font-size: 18px; font-weight: bold; color: #2e7d32;">$0</span>
+                            <strong style="color: #8B6914;">Total Assets</strong><br>
+                            <span id="totalAssetsDisplay" style="font-size: 18px; font-weight: bold; color: #8B6914;">$0</span>
                         </div>
                         <div>
                             <strong style="color: #c62828;">Total Liabilities</strong><br>
@@ -3203,7 +3203,7 @@
                 const varianceElement = document.getElementById(accountId + '_variance');
                 if (varianceElement) {
                     varianceElement.textContent = '$' + formatNumber(variance);
-                    varianceElement.style.color = variance >= 0 ? '#2e7d32' : '#c62828';
+                    varianceElement.style.color = variance >= 0 ? '#8B6914' : '#c62828';
                 }
                 
                 // Track totals for overall variance
@@ -3216,7 +3216,7 @@
             const varianceDisplay = document.getElementById('varianceDisplay');
             if (varianceDisplay) {
                 varianceDisplay.textContent = '$' + formatNumber(overallVariance);
-                varianceDisplay.style.color = overallVariance >= 0 ? '#2e7d32' : '#c62828';
+                varianceDisplay.style.color = overallVariance >= 0 ? '#8B6914' : '#c62828';
             }
         }
 

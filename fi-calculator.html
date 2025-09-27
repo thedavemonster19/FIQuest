@@ -83,7 +83,7 @@
         }
         
         .calculate-btn {
-            background-color: #4CAF50;
+            background-color: #D3AF37;
             color: white;
             padding: 15px 30px;
             border: none;
@@ -103,7 +103,7 @@
         }
         
         .calculate-btn:hover {
-            background-color: #45a049;
+            background-color: #B8941E;
         }
         
         .results-section {
@@ -122,7 +122,7 @@
             padding: 20px;
             border-radius: 8px;
             text-align: center;
-            border-left: 4px solid #4CAF50;
+            border-left: 4px solid #D3AF37;
         }
         
         .result-card h3 {
@@ -133,7 +133,7 @@
         .result-card .value {
             font-size: 18px;
             font-weight: bold;
-            color: #4CAF50;
+            color: #D3AF37;
         }
         
         .chart-container {
@@ -171,7 +171,7 @@
         }
         
         .status-fi {
-            color: #4CAF50;
+            color: #D3AF37;
             font-weight: bold;
         }
         
@@ -261,7 +261,7 @@
             color: #333;
             text-align: center;
             font-size: 18px;
-            border-bottom: 2px solid #4CAF50;
+            border-bottom: 2px solid #D3AF37;
             padding-bottom: 10px;
         }
         
@@ -331,7 +331,7 @@
             border-radius: 4px;
         }
         
-        .scenario-1 { background-color: rgba(76, 175, 80, 0.1); border-left: 4px solid #4CAF50; }
+        .scenario-1 { background-color: rgba(211, 175, 55, 0.1); border-left: 4px solid #D3AF37; }
         .scenario-2 { background-color: rgba(33, 150, 243, 0.1); border-left: 4px solid #2196F3; }
         .scenario-3 { background-color: rgba(255, 152, 0, 0.1); border-left: 4px solid #FF9800; }
         
@@ -687,7 +687,7 @@
             top: 20px;
             right: 20px;
             z-index: 1001;
-            background: #4CAF50;
+            background: #D3AF37;
             color: white;
             border: none;
             padding: 10px 15px;
@@ -698,7 +698,7 @@
         }
 
         .mobile-menu-btn:hover {
-            background: #45a049;
+            background: #B8941E;
         }
 
         /* Mobile Responsive CSS */
@@ -1117,14 +1117,14 @@
             </div>
             
             <!-- Scenario Selection for App Progression -->
-            <div id="scenarioSelection" class="scenario-selection" style="display: none; margin-top: 20px; padding: 20px; border: 2px solid #4CAF50; border-radius: 8px; background-color: #f1f8e9;">
-                <h4 style="margin: 0 0 15px 0; color: #2e7d32;">Ready to Continue Your FI Journey?</h4>
+            <div id="scenarioSelection" class="scenario-selection" style="display: none; margin-top: 20px; padding: 20px; border: 2px solid #D3AF37; border-radius: 8px; background-color: #f1f8e9;">
+                <h4 style="margin: 0 0 15px 0; color: #8B6914;">Ready to Continue Your FI Journey?</h4>
                 <p style="margin: 0 0 15px 0; color: #555;">Select one of your calculated scenarios to proceed with net worth tracking, budgeting, and other FI Quest features:</p>
                 <div style="display: flex; gap: 15px; align-items: center;">
-                    <select id="progressScenarioSelect" style="flex: 1; padding: 15px; border: 1px solid #4CAF50; border-radius: 6px; font-size: 16px; font-weight: 400; font-family: inherit;">
+                    <select id="progressScenarioSelect" style="flex: 1; padding: 15px; border: 1px solid #D3AF37; border-radius: 6px; font-size: 16px; font-weight: 400; font-family: inherit;">
                         <option value="">Choose a scenario to continue with...</option>
                     </select>
-                    <button onclick="proceedWithSelectedScenario()" style="padding: 15px 30px; background-color: #4CAF50; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 16px; font-family: inherit;">Continue Journey →</button>
+                    <button onclick="proceedWithSelectedScenario()" style="padding: 15px 30px; background-color: #D3AF37; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 16px; font-family: inherit;">Continue Journey →</button>
                 </div>
             </div>
         </div>
@@ -1318,7 +1318,7 @@
         let debtChartInstance = null;
         
         let scenarios = [];
-        const scenarioColors = ['#4CAF50', '#2196F3', '#FF9800'];
+        const scenarioColors = ['#D3AF37', '#2196F3', '#FF9800'];
         
         // Load saved scenarios from user data
         function loadSavedScenarios() {
@@ -2008,7 +2008,7 @@
             // Gather data for chart
             const data = [];
             const labels = [];
-            const colors = ['#4CAF50', '#2196F3', '#FF9800', '#9C27B0', '#607D8B', '#795548', '#E91E63', '#00BCD4'];
+            const colors = ['#D3AF37', '#2196F3', '#FF9800', '#9C27B0', '#607D8B', '#795548', '#E91E63', '#00BCD4'];
             
             // Investment accounts (combined as "Stocks")
             const investmentTotal = unformatNumber(document.getElementById('totalInvestmentAccounts').value.replace('$', ''));

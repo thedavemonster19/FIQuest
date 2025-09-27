@@ -365,7 +365,7 @@
             top: 20px;
             right: 20px;
             z-index: 1001;
-            background: #4CAF50;
+            background: #D3AF37;
             color: white;
             border: none;
             padding: 10px 15px;
@@ -376,7 +376,7 @@
         }
 
         .mobile-menu-btn:hover {
-            background: #45a049;
+            background: #B8941E;
         }
 
         /* Enhanced Mobile Styles */
@@ -580,14 +580,14 @@
                 <div class="container">
                     <!-- Scenario Display -->
                     <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin-bottom: 25px;">
-                        <h3 style="margin: 0 0 10px 0; color: #2e7d32;">Selected FI Scenario</h3>
+                        <h3 style="margin: 0 0 10px 0; color: #8B6914;">Selected FI Scenario</h3>
                         <p id="scenarioNameDisplay" style="margin: 0 0 5px 0; font-weight: bold; color: #1565c0;">Loading...</p>
                         <p id="setupDateDisplay" style="margin: 0; color: #666; font-size: 14px;">Setup Date: Loading...</p>
                     </div>
 
                     <!-- Assets Section -->
                     <div style="margin-bottom: 30px;">
-                        <h3 style="color: #2e7d32; border-bottom: 2px solid #4CAF50; padding-bottom: 10px; margin-bottom: 20px;">📈 Assets</h3>
+                        <h3 style="color: #8B6914; border-bottom: 2px solid #D3AF37; padding-bottom: 10px; margin-bottom: 20px;">📈 Assets</h3>
                         
                         <!-- Investment Accounts from Scenario -->
                         <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
@@ -663,8 +663,8 @@
                     <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; border-left: 4px solid #2196F3; margin-bottom: 30px;">
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; text-align: center;">
                             <div>
-                                <strong style="color: #2e7d32;">Total Assets</strong><br>
-                                <input type="text" id="totalAssets" readonly style="font-size: 18px; font-weight: bold; color: #2e7d32; border: none; background: transparent; text-align: center; width: 100%;">
+                                <strong style="color: #8B6914;">Total Assets</strong><br>
+                                <input type="text" id="totalAssets" readonly style="font-size: 18px; font-weight: bold; color: #8B6914; border: none; background: transparent; text-align: center; width: 100%;">
                             </div>
                             <div>
                                 <strong style="color: #c62828;">Total Liabilities</strong><br>
@@ -1051,7 +1051,7 @@
             // Gather data for chart
             const data = [];
             const labels = [];
-            const colors = ['#4CAF50', '#2196F3', '#FF9800', '#9C27B0', '#607D8B', '#795548', '#E91E63', '#00BCD4'];
+            const colors = ['#D3AF37', '#2196F3', '#FF9800', '#9C27B0', '#607D8B', '#795548', '#E91E63', '#00BCD4'];
             
             // Investment accounts (combined as "Stocks")
             const investmentTotal = unformatNumber(document.getElementById('totalInvestmentAccounts').value.replace('$', ''));
