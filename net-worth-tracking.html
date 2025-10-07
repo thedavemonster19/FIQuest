@@ -189,7 +189,7 @@
         }
 
         .page-subtitle {
-            color: #666;
+            color: #b0b0b0;
             font-size: 16px;
             margin: 0;
             font-weight: 400;
@@ -515,7 +515,7 @@
             padding: 30px;
             background-color: #222222;
             border-radius: 10px;
-            border: 1px solid #dee2e6;
+            border: 1px solid #757575;
         }
 
         .disclaimer h3 {
@@ -526,7 +526,7 @@
         }
 
         .disclaimer p {
-            color: #666;
+            color: #b0b0b0;
             font-size: 14px;
             line-height: 1.6;
             margin: 0;
@@ -594,7 +594,7 @@
                     <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin-bottom: 25px;">
                         <h3 style="margin: 0 0 10px 0; color: #8B6914;">FI Scenario & Initial Setup</h3>
                         <p id="scenarioNameDisplay" style="margin: 0 0 5px 0; font-weight: bold; color: #1565c0;">Loading...</p>
-                        <p id="setupDateDisplay" style="margin: 0; color: #666; font-size: 14px;">Setup Date: Loading...</p>
+                        <p id="setupDateDisplay" style="margin: 0; color: #b0b0b0; font-size: 14px;">Setup Date: Loading...</p>
                     </div>
 
                     <!-- Summary Cards -->
@@ -643,7 +643,7 @@
                         <div style="background: #16213e; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
                             <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #ffffff;">Entry Date:</label>
                             <input type="date" id="entryDate" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
-                            <small style="display: block; color: #666; margin-top: 5px;">Defaults to today's date. You can enter any past date to add historical net worth data.</small>
+                            <small style="display: block; color: #b0b0b0; margin-top: 5px;">Defaults to today's date. You can enter any past date to add historical net worth data.</small>
                         </div>
 
                         <!-- Account Values Input Section -->
@@ -744,7 +744,7 @@
                 const table = document.getElementById('netWorthTrackingTable');
                 table.innerHTML = `
                     <tr>
-                        <td colspan="100%" style="text-align: center; padding: 40px; color: #666;">
+                        <td colspan="100%" style="text-align: center; padding: 40px; color: #b0b0b0;">
                             <h3>Net Worth Setup Required</h3>
                             <p>Please complete your initial Net Worth Setup first to see projections.</p>
                             <button onclick="window.location.href='net-worth.html'" style="margin-top: 15px; padding: 10px 20px; background: #0E0E55; color: white; border: none; border-radius: 4px; cursor: pointer;">
@@ -760,7 +760,7 @@
                 document.getElementById('setupDateDisplay').textContent = 'No setup data found';
                 
                 const table = document.getElementById('netWorthTrackingTable');
-                table.innerHTML = '<tr><td style="text-align: center; padding: 40px; color: #666;">No data available. Please start with the FI Calculator.</td></tr>';
+                table.innerHTML = '<tr><td style="text-align: center; padding: 40px; color: #b0b0b0;">No data available. Please start with the FI Calculator.</td></tr>';
             }
         }
 
@@ -1100,7 +1100,7 @@
                         {
                             label: 'Projected Net Worth',
                             data: chartData.projectedNetWorth,
-                            borderColor: '#2196F3',
+                            borderColor: '#D3AF37',
                             backgroundColor: 'rgba(33, 150, 243, 0.1)',
                             borderWidth: 3,
                             fill: false,
@@ -1122,8 +1122,8 @@
                         {
                             label: 'Actual Net Worth',
                             data: chartData.actualNetWorth,
-                            borderColor: '#2196F3',
-                            backgroundColor: '#2196F3',
+                            borderColor: '#D3AF37',
+                            backgroundColor: '#D3AF37',
                             borderWidth: 0,
                             pointRadius: 8,
                             pointHoverRadius: 10,
@@ -1823,10 +1823,10 @@
                 } else { // actual data
                     const hasNotes = col.entry && col.entry.notes && col.entry.notes.trim();
                     const tooltipIcon = hasNotes ?
-                        `<span style="position: absolute; top: 2px; left: 2px; background: rgba(255,255,255,0.9); color: #666; border-radius: 50%; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; cursor: help; z-index: 5; border: 1px solid #ddd;" title="${col.entry.notes.replace(/"/g, '&quot;')}">i</span>` :
+                        `<span style="position: absolute; top: 2px; left: 2px; background: rgba(255,255,255,0.9); color: #b0b0b0; border-radius: 50%; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; cursor: help; z-index: 5; border: 1px solid #ddd;" title="${col.entry.notes.replace(/"/g, '&quot;')}">i</span>` :
                         '';
 
-                    tableHTML += `<th style="background: #2196F3; color: white; font-size: 12px; position: sticky; top: 0; z-index: 4; text-align: center;">
+                    tableHTML += `<th style="background: #D3AF37; color: white; font-size: 12px; position: sticky; top: 0; z-index: 4; text-align: center;">
                         ${tooltipIcon}
                         📊 Actual<br>${col.displayDate}
                         <button onclick="deleteNetWorthEntry('${col.entryId}')"
@@ -2441,7 +2441,7 @@
             // If no debts found, show a message
             if (totalDebt === 0) {
                 const noDebtsDiv = document.createElement('div');
-                noDebtsDiv.style.cssText = 'color: #666; font-style: italic; text-align: center; padding: 10px;';
+                noDebtsDiv.style.cssText = 'color: #b0b0b0; font-style: italic; text-align: center; padding: 10px;';
                 noDebtsDiv.textContent = 'No debts from FI scenario';
                 debtsList.appendChild(noDebtsDiv);
             }
@@ -2517,7 +2517,7 @@
             // Gather data for chart
             const data = [];
             const labels = [];
-            const colors = ['#D3AF37', '#2196F3', '#FF9800', '#9C27B0', '#607D8B', '#795548', '#E91E63', '#00BCD4'];
+            const colors = ['#D3AF37', '#D3AF37', '#FF9800', '#9C27B0', '#607D8B', '#795548', '#E91E63', '#00BCD4'];
             
             // Investment accounts (combined as "Stocks")
             const investmentTotal = unformatNumber(document.getElementById('totalInvestmentAccounts').value.replace('$', ''));
@@ -2837,13 +2837,13 @@
                     
                     <!-- Investment Accounts -->
                     <div style="margin-bottom: 20px;">
-                        <h5 style="color: #666; margin-bottom: 10px;">Investment Accounts</h5>
+                        <h5 style="color: #b0b0b0; margin-bottom: 10px;">Investment Accounts</h5>
                         <div id="investmentAccountInputs"></div>
                     </div>
                     
                     <!-- Additional Assets -->
                     <div>
-                        <h5 style="color: #666; margin-bottom: 10px;">Additional Assets</h5>
+                        <h5 style="color: #b0b0b0; margin-bottom: 10px;">Additional Assets</h5>
                         <div id="additionalAssetInputs"></div>
                     </div>
                 </div>
@@ -2853,19 +2853,19 @@
                     
                     <!-- Scenario Debts -->
                     <div style="margin-bottom: 20px;">
-                        <h5 style="color: #666; margin-bottom: 10px;">Scenario Debts</h5>
+                        <h5 style="color: #b0b0b0; margin-bottom: 10px;">Scenario Debts</h5>
                         <div id="scenarioDebtInputs"></div>
                     </div>
                     
                     <!-- Additional Liabilities -->
                     <div>
-                        <h5 style="color: #666; margin-bottom: 10px;">Additional Liabilities</h5>
+                        <h5 style="color: #b0b0b0; margin-bottom: 10px;">Additional Liabilities</h5>
                         <div id="additionalLiabilityInputs"></div>
                     </div>
                 </div>
 
                 <!-- Real-time Totals -->
-                <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; border-left: 4px solid #2196F3;">
+                <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; border-left: 4px solid #D3AF37;">
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; text-align: center;">
                         <div>
                             <strong style="color: #8B6914;">Total Assets</strong><br>
@@ -3100,8 +3100,8 @@
                 <div style="display: grid; grid-template-columns: 1fr 120px 120px 120px; gap: 10px; margin-bottom: 8px; align-items: center; padding: 8px; background: #222222; border-radius: 4px;">
                     <span style="font-weight: 500;">${name}</span>
                     <div style="text-align: right;">
-                        <small style="color: #666;">Projected:</small><br>
-                        <strong style="color: #666;">$${formatNumber(projectedValue)}</strong>
+                        <small style="color: #b0b0b0;">Projected:</small><br>
+                        <strong style="color: #b0b0b0;">$${formatNumber(projectedValue)}</strong>
                     </div>
                     <div>
                         <small style="color: #ffffff;">Actual:</small><br>
@@ -3112,7 +3112,7 @@
                                onInput="formatInputValue(this); updateTotals(); updateVariances();">
                     </div>
                     <div style="text-align: right;">
-                        <small style="color: #666;">Variance:</small><br>
+                        <small style="color: #b0b0b0;">Variance:</small><br>
                         <span id="${id}_variance" style="font-weight: bold;">$0</span>
                     </div>
                 </div>
@@ -3125,11 +3125,11 @@
                 <div style="display: grid; grid-template-columns: 1fr 120px 120px 120px; gap: 10px; margin-bottom: 8px; align-items: center; padding: 8px; background: #f9f9f9; border-radius: 4px; border: 1px dashed #ddd;">
                     <div>
                         <input type="text" id="${id}_name" placeholder="${placeholderText}"
-                               style="width: 100%; padding: 4px 6px; border: 1px solid #ddd; border-radius: 3px; font-style: italic; color: #666;"
+                               style="width: 100%; padding: 4px 6px; border: 1px solid #ddd; border-radius: 3px; font-style: italic; color: #b0b0b0;"
                                onInput="updateTotals();">
                     </div>
                     <div style="text-align: right;">
-                        <small style="color: #666;">Projected:</small><br>
+                        <small style="color: #b0b0b0;">Projected:</small><br>
                         <strong style="color: #999;">--</strong>
                     </div>
                     <div>
@@ -3142,7 +3142,7 @@
                                onInput="formatInputValue(this); updateTotals(); updateVariances();">
                     </div>
                     <div style="text-align: right;">
-                        <small style="color: #666;">Variance:</small><br>
+                        <small style="color: #b0b0b0;">Variance:</small><br>
                         <span id="${id}_variance" style="font-weight: bold; color: #999;">--</span>
                     </div>
                 </div>
