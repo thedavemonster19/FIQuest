@@ -365,7 +365,7 @@
             top: 20px;
             right: 20px;
             z-index: 1001;
-            background: #4CAF50;
+            background: #D3AF37;
             color: white;
             border: none;
             padding: 10px 15px;
@@ -376,7 +376,7 @@
         }
 
         .mobile-menu-btn:hover {
-            background: #45a049;
+            background: #B8941E;
         }
 
         /* Enhanced Mobile Styles */
@@ -1214,50 +1214,8 @@
             
             console.log('Saved net worth setup with individual accounts:', netWorthData);
 
-            // Prompt user to update save file
-            const shouldExportSave = confirm(
-                '✅ Net Worth Setup saved successfully!\n\n' +
-                '💾 SAVE FILE RECOMMENDATION:\n' +
-                'Would you like to update your save file with this important progress?\n\n' +
-                'This ensures your net worth setup is backed up and available if you need to reload your game later.'
-            );
-
-            if (shouldExportSave) {
-                // Debug logging
-                console.log('userManager available:', !!userManager);
-                console.log('currentPlayer available:', !!(userManager && userManager.currentPlayer));
-
-                if (!userManager) {
-                    alert('⚠️ UserManager not available. Please refresh the page and try again.\nNet worth setup was saved successfully.');
-                    return;
-                }
-
-                if (!userManager.currentPlayer) {
-                    alert('⚠️ No player logged in. Please refresh the page and try again.\nNet worth setup was saved successfully.');
-                    return;
-                }
-
-                try {
-                    // Create updated save file
-                    console.log('Attempting to export data...');
-                    const exportData = userManager.exportAllUserData();
-                    console.log('Export data generated, length:', exportData.length);
-
-                    const filename = CrossBrowserFileSaver.generateFilename(userManager.currentPlayer.playerName, true);
-                    console.log('Generated filename:', filename);
-
-                    CrossBrowserFileSaver.saveAs(exportData, filename, 'application/json');
-                    console.log('Save file created successfully');
-
-                    alert('✅ Save file updated successfully!\n\nYour net worth setup has been backed up to: ' + filename);
-                } catch (error) {
-                    console.error('Error updating save file:', error);
-                    console.error('Error details:', error.message, error.stack);
-                    alert('⚠️ Net worth setup saved, but save file update failed.\n\nError: ' + error.message + '\n\nYou can manually update your save file from the Data Management page.');
-                }
-            } else {
-                alert('Net Worth Setup saved successfully! All data is now available across the FIQuest app.\n\n💡 Remember to update your save file later from the Data Management page.');
-            }
+            // Simple success message - no file download
+            alert('Net Worth Setup saved successfully! All data is now available across the FIQuest app.\n\n💡 Remember to update your save file later from the Data Management page or use "Save & Logout" when you\'re ready to backup your progress.');
         }
 
         // Utility functions

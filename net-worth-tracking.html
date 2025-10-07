@@ -352,7 +352,7 @@
             top: 20px;
             right: 20px;
             z-index: 1001;
-            background: #4CAF50;
+            background: #D3AF37;
             color: white;
             border: none;
             padding: 10px 15px;
@@ -363,7 +363,7 @@
         }
 
         .mobile-menu-btn:hover {
-            background: #45a049;
+            background: #B8941E;
         }
 
         /* Enhanced Mobile Styles */
@@ -831,40 +831,87 @@
 
         function getActualAccountValue(entry, accountName, accountType) {
             // Helper function to extract actual values from saved entry
-            if (!entry || !entry.accounts) {
+            if (!entry) {
                 return null;
             }
-            
+
+            // Special handling for additional liabilities - they're stored in entry.liabilities.additionalLiabilities
+            if (accountType === 'liability') {
+                // First check for additional liabilities
+                if (entry.liabilities && entry.liabilities.additionalLiabilities) {
+                    // Direct name match for additional liabilities
+                    if (entry.liabilities.additionalLiabilities[accountName] !== undefined) {
+                        return entry.liabilities.additionalLiabilities[accountName];
+                    }
+                }
+
+                // Fallback to standard debt structure if not found in additional liabilities
+                if (entry.accounts && entry.accounts.liabilities) {
+                    const searchIn = entry.accounts.liabilities;
+
+                    // PRIORITY: First look for _actual entries specifically (they have the correct values)
+                    for (const [key, accountData] of Object.entries(searchIn)) {
+                        if (key.includes('_actual') && accountData.accountName && accountData.accountName === accountName) {
+                            return accountData.actual || 0;
+                        }
+                    }
+
+                    // SECONDARY: Try to find by stored accountName (excluding _name entries)
+                    for (const [key, accountData] of Object.entries(searchIn)) {
+                        if (!key.endsWith('_name') && accountData.accountName && accountData.accountName === accountName) {
+                            return accountData.actual || 0;
+                        }
+                    }
+
+                    // FALLBACK: Try to match by key or partial name (excluding _name entries)
+                    for (const [key, accountData] of Object.entries(searchIn)) {
+                        if (!key.endsWith('_name') &&
+                            (key.includes(accountName.toLowerCase()) ||
+                             accountName.toLowerCase().includes(key) ||
+                             (accountData.accountName && accountData.accountName.toLowerCase().includes(accountName.toLowerCase())))) {
+                            return accountData.actual || 0;
+                        }
+                    }
+                }
+
+                return null;
+            }
+
+            // Standard handling for other account types
+            if (!entry.accounts) {
+                return null;
+            }
+
             const accounts = entry.accounts;
-            
+
             let searchIn = null;
-            
+
             if (accountType === 'investment' || accountType === 'asset') {
                 searchIn = accounts.assets;
-            } else if (accountType === 'debt' || accountType === 'liability') {
+            } else if (accountType === 'debt') {
                 searchIn = accounts.liabilities;
             }
-            
+
             if (!searchIn) {
                 return null;
             }
-            
+
             // Try to find by stored accountName first, then fallback to key matching
             for (const [key, accountData] of Object.entries(searchIn)) {
-                
+
                 // Check if the stored accountName matches
                 if (accountData.accountName && accountData.accountName === accountName) {
                     return accountData.actual || 0;
                 }
-                
+
                 // Fallback: try to match by key or partial name
-                if (key.includes(accountName.toLowerCase()) || 
+                if (key.includes(accountName.toLowerCase()) ||
                     accountName.toLowerCase().includes(key) ||
                     (accountData.accountName && accountData.accountName.toLowerCase().includes(accountName.toLowerCase()))) {
                     return accountData.actual || 0;
                 }
             }
-            
+
             return null;
         }
 
@@ -1779,7 +1826,16 @@
                 if (savedSetup.liabilities && savedSetup.liabilities.additionalLiabilities) {
                     Object.keys(savedSetup.liabilities.additionalLiabilities).forEach(name => {
                         if (name && name.trim() !== '') {
-                            liabilityNames.add(name);
+                            const trimmedName = name.trim();
+
+                            // Enhanced filtering to exclude unwanted entries
+                            const isNumericOnly = !isNaN(parseFloat(trimmedName)) && isFinite(trimmedName);
+                            const isFieldId = trimmedName.includes('additional_liability') || trimmedName.includes('new_');
+
+                            // Only add legitimate liability names (not numeric values or field IDs)
+                            if (!isNumericOnly && !isFieldId) {
+                                liabilityNames.add(trimmedName);
+                            }
                         }
                     });
                 }
@@ -1787,10 +1843,42 @@
                 // Add liabilities from all tracking entries
                 if (netWorthEntries && netWorthEntries.length > 0) {
                     netWorthEntries.forEach(entry => {
+                        // Check entry.liabilities.additionalLiabilities (legacy structure)
                         if (entry.liabilities && entry.liabilities.additionalLiabilities) {
                             Object.keys(entry.liabilities.additionalLiabilities).forEach(name => {
                                 if (name && name.trim() !== '') {
-                                    liabilityNames.add(name);
+                                    const trimmedName = name.trim();
+
+                                    // Enhanced filtering to exclude unwanted entries
+                                    const isNumericOnly = !isNaN(parseFloat(trimmedName)) && isFinite(trimmedName);
+                                    const isFieldId = trimmedName.includes('additional_liability') || trimmedName.includes('new_');
+
+                                    // Only add legitimate liability names (not numeric values or field IDs)
+                                    if (!isNumericOnly && !isFieldId) {
+                                        liabilityNames.add(trimmedName);
+                                    }
+                                }
+                            });
+                        }
+
+                        // Check entry.accounts.liabilities for additional liabilities added during tracking
+                        if (entry.accounts && entry.accounts.liabilities) {
+                            Object.entries(entry.accounts.liabilities).forEach(([key, accountData]) => {
+                                // Look for additional liability entries (exclude the _name entries, prefer the value entries)
+                                if (key.includes('additional_liability') && !key.endsWith('_name') &&
+                                    accountData.accountName && accountData.accountName.trim() !== '' &&
+                                    accountData.accountName !== '--') {
+
+                                    const trimmedName = accountData.accountName.trim();
+
+                                    // Additional filtering to exclude unwanted entries
+                                    const isNumericOnly = !isNaN(parseFloat(trimmedName)) && isFinite(trimmedName);
+                                    const isFieldId = trimmedName.includes('additional_liability') || trimmedName.includes('new_');
+
+                                    // Only add legitimate liability names (not numeric values or field IDs)
+                                    if (!isNumericOnly && !isFieldId) {
+                                        liabilityNames.add(trimmedName);
+                                    }
                                 }
                             });
                         }
@@ -3247,7 +3335,16 @@
                 // Get the actual account name from the row
                 const accountRow = input.closest('div[style*="grid-template-columns"]');
                 const accountNameElement = accountRow ? accountRow.querySelector('span') : null;
-                const accountName = accountNameElement ? accountNameElement.textContent.trim() : id;
+                let accountName = accountNameElement ? accountNameElement.textContent.trim() : id;
+
+                // Special handling for new additional liabilities - get name from corresponding _name input
+                if (input.id.includes('additional_liability') && input.id.endsWith('_actual')) {
+                    const nameInputId = input.id.replace('_actual', '_name');
+                    const nameInput = document.getElementById(nameInputId);
+                    if (nameInput && nameInput.value.trim() !== '') {
+                        accountName = nameInput.value.trim();
+                    }
+                }
                 
                 // Determine if it's an asset or liability based on the section
                 const section = input.closest('[id*="Input"]').id;
