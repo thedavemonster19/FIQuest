@@ -17,7 +17,7 @@
             font-weight: 400;
             line-height: 1.5;
             color: #ffffff;
-            background: #1a1a2e;
+            background: #222222;
         }
 
         /* Typography System */
@@ -162,7 +162,7 @@
         .main-content {
             margin-left: 250px;
             padding: 0;
-            background: #1a1a2e;
+            background: #222222;
             min-height: 100vh;
         }
 
@@ -235,8 +235,8 @@
         }
 
         input[readonly] {
-            background-color: #1a1a2e;
-            color: #6c757d;
+            background-color: #222222;
+            color: #e0e0e0;
             border: 1px solid #e9ecef;
             cursor: not-allowed;
             font-weight: 500;
@@ -287,7 +287,7 @@
         .disclaimer {
             margin: 40px 0;
             padding: 30px;
-            background-color: #1a1a2e;
+            background-color: #222222;
             border-radius: 10px;
             border: 1px solid #dee2e6;
         }
@@ -343,13 +343,13 @@
         }
 
         .readonly-total-input {
-            background: #1a1a2e;
+            background: #222222;
             border: 1px solid #e9ecef;
             padding: 5px;
             border-radius: 6px;
             font-weight: 400;
             font-size: 14px;
-            color: #6c757d;
+            color: #e0e0e0;
             cursor: not-allowed;
         }
 
@@ -532,7 +532,7 @@
         <!-- Sidebar Navigation -->
         <nav class="sidebar">
             <div class="sidebar-header">
-                <h1 class="app-title">FIQuest</h1>
+                <h1 class="app-title"><span style="color: #D3AF37;">FI</span>Quest</h1>
                 <p class="user-info">Financial Independence Journey</p>
             </div>
             
@@ -590,7 +590,7 @@
                         <h3 style="color: #8B6914; border-bottom: 2px solid #D3AF37; padding-bottom: 10px; margin-bottom: 20px;">📈 Assets</h3>
                         
                         <!-- Investment Accounts from Scenario -->
-                        <div style="background: #1a1a2e; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                        <div style="background: #222222; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
                             <h4 style="margin: 0 0 10px 0; color: #666;">Investment Accounts (from FI scenario)</h4>
                             <div id="investmentAccountsList"></div>
                             <div class="total-grid">
@@ -600,7 +600,7 @@
                         </div>
 
                         <!-- Additional Assets -->
-                        <div style="background: #1a1a2e; padding: 15px; border-radius: 8px;">
+                        <div style="background: #222222; padding: 15px; border-radius: 8px;">
                             <h4 style="margin: 0 0 15px 0; color: #666;">Additional Assets</h4>
                             <div id="additionalAssetsList">
                                 <div class="asset-item item-grid">
@@ -774,13 +774,13 @@
                 nameInput.type = 'text';
                 nameInput.value = account.name;
                 nameInput.readOnly = true;
-                nameInput.style.cssText = 'border: 1px solid #e9ecef; padding: 5px; border-radius: 6px; background: #1a1a2e; color: #6c757d; cursor: not-allowed; font-weight: 400; font-size: 14px;';
+                nameInput.style.cssText = 'border: 1px solid #e9ecef; padding: 5px; border-radius: 6px; background: #222222; color: #e0e0e0; cursor: not-allowed; font-weight: 400; font-size: 14px;';
 
                 const valueInput = document.createElement('input');
                 valueInput.type = 'text';
                 valueInput.value = '$' + formatNumber(account.value);
                 valueInput.readOnly = true;
-                valueInput.style.cssText = 'border: 1px solid #e9ecef; padding: 5px; border-radius: 6px; background: #1a1a2e; color: #6c757d; cursor: not-allowed; font-weight: 400; font-size: 14px;';
+                valueInput.style.cssText = 'border: 1px solid #e9ecef; padding: 5px; border-radius: 6px; background: #222222; color: #e0e0e0; cursor: not-allowed; font-weight: 400; font-size: 14px;';
 
                 accountDiv.appendChild(nameInput);
                 accountDiv.appendChild(valueInput);
@@ -864,13 +864,13 @@
                     nameInput.type = 'text';
                     nameInput.value = account.name;
                     nameInput.readOnly = true;
-                    nameInput.style.cssText = 'border: 1px solid #e9ecef; padding: 5px; border-radius: 6px; background: #1a1a2e; color: #6c757d; cursor: not-allowed; font-weight: 400; font-size: 14px;';
+                    nameInput.style.cssText = 'border: 1px solid #e9ecef; padding: 5px; border-radius: 6px; background: #222222; color: #e0e0e0; cursor: not-allowed; font-weight: 400; font-size: 14px;';
 
                     const valueInput = document.createElement('input');
                     valueInput.type = 'text';
                     valueInput.value = '$' + formatNumber(account.value);
                     valueInput.readOnly = true;
-                    valueInput.style.cssText = 'border: 1px solid #e9ecef; padding: 5px; border-radius: 6px; background: #1a1a2e; color: #6c757d; cursor: not-allowed; font-weight: 400; font-size: 14px;';
+                    valueInput.style.cssText = 'border: 1px solid #e9ecef; padding: 5px; border-radius: 6px; background: #222222; color: #e0e0e0; cursor: not-allowed; font-weight: 400; font-size: 14px;';
 
                     accountDiv.appendChild(nameInput);
                     accountDiv.appendChild(valueInput);
@@ -907,13 +907,13 @@
                 nameInput.type = 'text';
                 nameInput.value = 'Mortgage';
                 nameInput.readOnly = true;
-                nameInput.style.cssText = 'border: 1px solid #e9ecef; padding: 5px; border-radius: 6px; background: #1a1a2e; color: #6c757d; cursor: not-allowed; font-weight: 400; font-size: 14px;';
+                nameInput.style.cssText = 'border: 1px solid #e9ecef; padding: 5px; border-radius: 6px; background: #222222; color: #e0e0e0; cursor: not-allowed; font-weight: 400; font-size: 14px;';
 
                 const valueInput = document.createElement('input');
                 valueInput.type = 'text';
                 valueInput.value = '$' + formatNumber(mortgageBalance);
                 valueInput.readOnly = true;
-                valueInput.style.cssText = 'border: 1px solid #e9ecef; padding: 5px; border-radius: 6px; background: #1a1a2e; color: #6c757d; cursor: not-allowed; font-weight: 400; font-size: 14px;';
+                valueInput.style.cssText = 'border: 1px solid #e9ecef; padding: 5px; border-radius: 6px; background: #222222; color: #e0e0e0; cursor: not-allowed; font-weight: 400; font-size: 14px;';
 
                 debtDiv.appendChild(nameInput);
                 debtDiv.appendChild(valueInput);
@@ -932,13 +932,13 @@
                 nameInput.type = 'text';
                 nameInput.value = 'Vehicle Loan';
                 nameInput.readOnly = true;
-                nameInput.style.cssText = 'border: 1px solid #e9ecef; padding: 5px; border-radius: 6px; background: #1a1a2e; color: #6c757d; cursor: not-allowed; font-weight: 400; font-size: 14px;';
+                nameInput.style.cssText = 'border: 1px solid #e9ecef; padding: 5px; border-radius: 6px; background: #222222; color: #e0e0e0; cursor: not-allowed; font-weight: 400; font-size: 14px;';
 
                 const valueInput = document.createElement('input');
                 valueInput.type = 'text';
                 valueInput.value = '$' + formatNumber(vehicleBalance);
                 valueInput.readOnly = true;
-                valueInput.style.cssText = 'border: 1px solid #e9ecef; padding: 5px; border-radius: 6px; background: #1a1a2e; color: #6c757d; cursor: not-allowed; font-weight: 400; font-size: 14px;';
+                valueInput.style.cssText = 'border: 1px solid #e9ecef; padding: 5px; border-radius: 6px; background: #222222; color: #e0e0e0; cursor: not-allowed; font-weight: 400; font-size: 14px;';
 
                 debtDiv.appendChild(nameInput);
                 debtDiv.appendChild(valueInput);
@@ -957,13 +957,13 @@
                 nameInput.type = 'text';
                 nameInput.value = 'Other Debt';
                 nameInput.readOnly = true;
-                nameInput.style.cssText = 'border: 1px solid #e9ecef; padding: 5px; border-radius: 6px; background: #1a1a2e; color: #6c757d; cursor: not-allowed; font-weight: 400; font-size: 14px;';
+                nameInput.style.cssText = 'border: 1px solid #e9ecef; padding: 5px; border-radius: 6px; background: #222222; color: #e0e0e0; cursor: not-allowed; font-weight: 400; font-size: 14px;';
 
                 const valueInput = document.createElement('input');
                 valueInput.type = 'text';
                 valueInput.value = '$' + formatNumber(otherBalance);
                 valueInput.readOnly = true;
-                valueInput.style.cssText = 'border: 1px solid #e9ecef; padding: 5px; border-radius: 6px; background: #1a1a2e; color: #6c757d; cursor: not-allowed; font-weight: 400; font-size: 14px;';
+                valueInput.style.cssText = 'border: 1px solid #e9ecef; padding: 5px; border-radius: 6px; background: #222222; color: #e0e0e0; cursor: not-allowed; font-weight: 400; font-size: 14px;';
 
                 debtDiv.appendChild(nameInput);
                 debtDiv.appendChild(valueInput);

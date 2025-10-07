@@ -13,7 +13,7 @@
             color: #ffffff;
             margin: 0;
             padding: 20px;
-            background-color: #1a1a2e;
+            background-color: #222222;
         }
 
         /* Typography System */
@@ -75,8 +75,8 @@
         }
 
         input[readonly] {
-            background-color: #1a1a2e;
-            color: #6c757d;
+            background-color: #222222;
+            color: #e0e0e0;
             border: 1px solid #3a3a5a;
             cursor: not-allowed;
             font-weight: 500;
@@ -160,7 +160,7 @@
         }
         
         th {
-            background-color: #1a1a2e;
+            background-color: #222222;
             font-weight: bold;
             color: #ffffff;
         }
@@ -186,7 +186,7 @@
         .debt-section {
             margin: 30px 0;
             padding: 20px;
-            background: #1a1a2e;
+            background: #222222;
             border-radius: 10px;
         }
         
@@ -404,7 +404,7 @@
             max-width: 1200px;
             margin: 40px auto;
             padding: 30px;
-            background-color: #1a1a2e;
+            background-color: #222222;
             border-radius: 10px;
             border: 1px solid #dee2e6;
         }
@@ -627,7 +627,7 @@
         .main-content {
             margin-left: 250px;
             padding: 0;
-            background: #1a1a2e;
+            background: #222222;
             min-height: 100vh;
         }
 
@@ -666,7 +666,7 @@
         }
 
         .page-subtitle {
-            color: #6c757d;
+            color: #e0e0e0;
             margin: 8px 0 0 0;
             font-size: 16px;
             font-weight: 400;
@@ -741,7 +741,7 @@
         <!-- Sidebar Navigation -->
         <nav class="sidebar">
             <div class="sidebar-header">
-                <h1 class="app-title">FIQuest</h1>
+                <h1 class="app-title"><span style="color: #D3AF37;">FI</span>Quest</h1>
                 <div class="user-info">Financial Independence Journey</div>
             </div>
             <div class="nav-menu">
@@ -891,42 +891,42 @@
                     
                     <div class="contribution-item" style="margin-bottom: 15px;">
                         <label style="display: inline-block; width: 140px; font-size: 14px; color: #555; margin-right: 10px;">
-                            <span id="contrib1NameLabel" style="display: inline-block; width: 150px; margin-right: 5px; padding: 8px; background: #f8f9fa; border: 1px solid #3a3a5a; border-radius: 6px; font-size: 14px; font-weight: 400; font-family: inherit; color: #6c757d; box-sizing: border-box; line-height: normal;">RRSP1</span>
+                            <span id="contrib1NameLabel" style="display: inline-block; width: 150px; margin-right: 5px; padding: 8px; background: #f8f9fa; border: 1px solid #3a3a5a; border-radius: 6px; font-size: 14px; font-weight: 400; font-family: inherit; color: #e0e0e0; box-sizing: border-box; line-height: normal;">RRSP1</span>
                         </label>
                         <input type="text" id="contrib1Value" value="30,000" onchange="formatCurrencyInput(this); updateTotalContributions()" style="width: 97px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
                     </div>
 
                     <div class="contribution-item" style="margin-bottom: 15px;">
                         <label style="display: inline-block; width: 140px; font-size: 14px; color: #555; margin-right: 10px;">
-                            <span id="contrib2NameLabel" style="display: inline-block; width: 150px; margin-right: 5px; padding: 8px; background: #f8f9fa; border: 1px solid #3a3a5a; border-radius: 6px; font-size: 14px; font-weight: 400; font-family: inherit; color: #6c757d; box-sizing: border-box; line-height: normal;">RRSP2</span>
+                            <span id="contrib2NameLabel" style="display: inline-block; width: 150px; margin-right: 5px; padding: 8px; background: #f8f9fa; border: 1px solid #3a3a5a; border-radius: 6px; font-size: 14px; font-weight: 400; font-family: inherit; color: #e0e0e0; box-sizing: border-box; line-height: normal;">RRSP2</span>
                         </label>
                         <input type="text" id="contrib2Value" value="20,000" onchange="formatCurrencyInput(this); updateTotalContributions()" style="width: 97px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
                     </div>
 
                     <div class="contribution-item" style="margin-bottom: 15px;">
                         <label style="display: inline-block; width: 140px; font-size: 14px; color: #555; margin-right: 10px;">
-                            <span id="contrib3NameLabel" style="display: inline-block; width: 150px; margin-right: 5px; padding: 8px; background: #f8f9fa; border: 1px solid #3a3a5a; border-radius: 6px; font-size: 14px; font-weight: 400; font-family: inherit; color: #6c757d; box-sizing: border-box; line-height: normal;">TFSA1</span>
+                            <span id="contrib3NameLabel" style="display: inline-block; width: 150px; margin-right: 5px; padding: 8px; background: #f8f9fa; border: 1px solid #3a3a5a; border-radius: 6px; font-size: 14px; font-weight: 400; font-family: inherit; color: #e0e0e0; box-sizing: border-box; line-height: normal;">TFSA1</span>
                         </label>
                         <input type="text" id="contrib3Value" value="10,000" onchange="formatCurrencyInput(this); updateTotalContributions()" style="width: 97px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
                     </div>
 
                     <div class="contribution-item" style="margin-bottom: 15px;">
                         <label style="display: inline-block; width: 140px; font-size: 14px; color: #555; margin-right: 10px;">
-                            <span id="contrib4NameLabel" style="display: inline-block; width: 150px; margin-right: 5px; padding: 8px; background: #f8f9fa; border: 1px solid #3a3a5a; border-radius: 6px; font-size: 14px; font-weight: 400; font-family: inherit; color: #6c757d; box-sizing: border-box; line-height: normal;">TFSA2</span>
+                            <span id="contrib4NameLabel" style="display: inline-block; width: 150px; margin-right: 5px; padding: 8px; background: #f8f9fa; border: 1px solid #3a3a5a; border-radius: 6px; font-size: 14px; font-weight: 400; font-family: inherit; color: #e0e0e0; box-sizing: border-box; line-height: normal;">TFSA2</span>
                         </label>
                         <input type="text" id="contrib4Value" value="10,000" onchange="formatCurrencyInput(this); updateTotalContributions()" style="width: 97px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
                     </div>
 
                     <div class="contribution-item" style="margin-bottom: 15px;">
                         <label style="display: inline-block; width: 140px; font-size: 14px; color: #555; margin-right: 10px;">
-                            <span id="contrib5NameLabel" style="display: inline-block; width: 150px; margin-right: 5px; padding: 8px; background: #f8f9fa; border: 1px solid #3a3a5a; border-radius: 6px; font-size: 14px; font-weight: 400; font-family: inherit; color: #6c757d; box-sizing: border-box; line-height: normal;">Taxable Brokerage</span>
+                            <span id="contrib5NameLabel" style="display: inline-block; width: 150px; margin-right: 5px; padding: 8px; background: #f8f9fa; border: 1px solid #3a3a5a; border-radius: 6px; font-size: 14px; font-weight: 400; font-family: inherit; color: #e0e0e0; box-sizing: border-box; line-height: normal;">Taxable Brokerage</span>
                         </label>
                         <input type="text" id="contrib5Value" value="1,000" onchange="formatCurrencyInput(this); updateTotalContributions()" style="width: 97px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
                     </div>
 
                     <div class="contribution-item" style="margin-bottom: 15px;">
                         <label style="display: inline-block; width: 140px; font-size: 14px; color: #555; margin-right: 10px;">
-                            <span id="contrib6NameLabel" style="display: inline-block; width: 150px; margin-right: 5px; padding: 8px; background: #f8f9fa; border: 1px solid #3a3a5a; border-radius: 6px; font-size: 14px; font-weight: 400; font-family: inherit; color: #6c757d; box-sizing: border-box; line-height: normal;">Other</span>
+                            <span id="contrib6NameLabel" style="display: inline-block; width: 150px; margin-right: 5px; padding: 8px; background: #f8f9fa; border: 1px solid #3a3a5a; border-radius: 6px; font-size: 14px; font-weight: 400; font-family: inherit; color: #e0e0e0; box-sizing: border-box; line-height: normal;">Other</span>
                         </label>
                         <input type="text" id="contrib6Value" value="0" onchange="formatCurrencyInput(this); updateTotalContributions()" style="width: 97px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">
                     </div>
@@ -2755,7 +2755,7 @@
                     <p class="page-subtitle">View and manage your saved FI scenarios</p>
                 </div>
                 <div class="container" style="max-width: none; margin: 0; padding: 20px; background: #16213e; border-radius: 8px;">
-                    <p style="color: #6c757d; text-align: center; padding: 40px;">
+                    <p style="color: #e0e0e0; text-align: center; padding: 40px;">
                         🎯 <strong>Coming Soon!</strong><br><br>
                         This page will show your saved FI calculation scenarios.<br>
                         You'll be able to compare different plans and choose one to continue with.
@@ -2789,7 +2789,7 @@
                     <p class="page-subtitle">Manage your income, expenses, and cash flow</p>
                 </div>
                 <div class="container" style="max-width: none; margin: 0; padding: 20px; background: #16213e; border-radius: 8px;">
-                    <p style="color: #6c757d; text-align: center; padding: 40px;">
+                    <p style="color: #e0e0e0; text-align: center; padding: 40px;">
                         📋 <strong>Coming Soon!</strong><br><br>
                         This page will help you track monthly income and expenses.<br>
                         Monitor your actual spending vs. your FI plan targets.
@@ -2804,7 +2804,7 @@
                     <p class="page-subtitle">Visualize your journey to financial independence</p>
                 </div>
                 <div class="container" style="max-width: none; margin: 0; padding: 20px; background: #16213e; border-radius: 8px;">
-                    <p style="color: #6c757d; text-align: center; padding: 40px;">
+                    <p style="color: #e0e0e0; text-align: center; padding: 40px;">
                         📈 <strong>Coming Soon!</strong><br><br>
                         This page will show detailed charts and reports.<br>
                         Track your progress with beautiful visualizations and insights.
@@ -2819,7 +2819,7 @@
                     <p class="page-subtitle">Customize your FIQuest experience</p>
                 </div>
                 <div class="container" style="max-width: none; margin: 0; padding: 20px; background: #16213e; border-radius: 8px;">
-                    <p style="color: #6c757d; text-align: center; padding: 40px;">
+                    <p style="color: #e0e0e0; text-align: center; padding: 40px;">
                         ⚙️ <strong>Coming Soon!</strong><br><br>
                         This page will let you customize account names, preferences, and more.<br>
                         Export your data and manage your FIQuest settings.
