@@ -128,6 +128,37 @@ class UserManager {
         } else {
             localStorage.removeItem('fiquest_net_worth_setup');
         }
+
+        // Load net worth tracking history from localStorage into UserManager
+        const netWorthHistory = localStorage.getItem('fiquest_net_worth_history');
+        if (netWorthHistory) {
+            try {
+                const parsedHistory = JSON.parse(netWorthHistory);
+                if (!this.currentPlayer.gameData.netWorthTracking) {
+                    this.currentPlayer.gameData.netWorthTracking = [];
+                }
+                // Merge localStorage data with existing player data, avoiding duplicates
+                parsedHistory.forEach(entry => {
+                    const existingIndex = this.currentPlayer.gameData.netWorthTracking.findIndex(existing =>
+                        existing.date === entry.date && existing.dateCreated === entry.dateCreated
+                    );
+                    if (existingIndex === -1) {
+                        this.currentPlayer.gameData.netWorthTracking.push(entry);
+                    }
+                });
+                // Sort by date (newest first)
+                this.currentPlayer.gameData.netWorthTracking.sort((a, b) => new Date(b.date) - new Date(a.date));
+            } catch (error) {
+                console.warn('Error parsing net worth history from localStorage:', error);
+                if (!this.currentPlayer.gameData.netWorthTracking) {
+                    this.currentPlayer.gameData.netWorthTracking = [];
+                }
+            }
+        } else {
+            if (!this.currentPlayer.gameData.netWorthTracking) {
+                this.currentPlayer.gameData.netWorthTracking = [];
+            }
+        }
     }
 
     savePlayerData() {
@@ -311,7 +342,7 @@ class UserManager {
             const logoutItem = document.createElement('li');
             logoutItem.innerHTML = `
                 <a href="#" onclick="userManager.logout(); return false;" id="logoutBtn">
-                    <span class="icon">🚪</span>Logout
+                    <span class="icon">💾</span>Save & Logout
                 </a>
             `;
             sidebar.appendChild(logoutItem);
