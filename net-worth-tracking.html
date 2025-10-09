@@ -331,9 +331,13 @@
         }
 
         .total-row {
-            background: #3b3b3b !important;
+            background: #222222 !important;
             font-weight: 700;
             border-top: 2px solid #000000 !important;
+        }
+
+        .total-row td {
+            background: #222222 !important;
         }
 
         .net-worth-row {
@@ -342,6 +346,11 @@
             font-weight: 700;
             font-size: 16px;
         }
+
+        .net-worth-row td {
+            background: #222222 !important;
+        }
+
         .net-worth-row td:first-child {
             color: #D3AF37 !important;
         }
@@ -1898,7 +1907,7 @@
                 } else { // actual data
                     const actualTotal = calculateActualTotalAssets(col.entry);
                     const displayValue = actualTotal !== null ? `$${formatNumber(actualTotal)}` : '-';
-                    tableHTML += `<td style="background: #3b3b3b; font-weight: bold;"><strong>${displayValue}</strong></td>`;
+                    tableHTML += `<td style="background: #222222; font-weight: bold;"><strong>${displayValue}</strong></td>`;
                 }
             });
             tableHTML += '</tr>';
@@ -1962,7 +1971,7 @@
                 } else { // actual data
                     const actualTotal = calculateActualTotalLiabilities(col.entry);
                     const displayValue = actualTotal !== null ? `$${formatNumber(actualTotal)}` : '-';
-                    tableHTML += `<td style="background: #3b3b3b; font-weight: bold;"><strong>${displayValue}</strong></td>`;
+                    tableHTML += `<td style="background: #222222; font-weight: bold;"><strong>${displayValue}</strong></td>`;
                 }
             });
             tableHTML += '</tr>';
