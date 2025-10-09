@@ -212,7 +212,94 @@ If switching fonts in future:
 
 ---
 
+## Component Typography Standards
+
+### Page Structure Components
+
+| Component | Font Size | Weight | Color | Additional Styles |
+|-----------|-----------|--------|-------|-------------------|
+| **Page Title** `.page-title` | 28px | 400 | #ffffff | text-align: center, line-height: 1.2 |
+| **Page Subtitle** `.page-subtitle` | 16px | 400 | #e0e0e0 | text-align: center, line-height: 1.4 |
+| **Section Title** `.section-title` | 20px | 700 | #ffffff | border-bottom: 2px solid #757575 |
+| **Subsection Headers** (h4 inline) | 16px | 600 | #ffffff | margin-bottom: 15px |
+
+### Data Display Components
+
+| Component | Font Size | Weight | Color | Notes |
+|-----------|-----------|--------|-------|-------|
+| **Labels** `label` | 14px | 600 | #ffffff | Standard form labels |
+| **Input/Data Values** `.readonly-input` | 16px | 600 | #ffffff | Read-only data display |
+| **Account Names** `.account-name` | 16px | 600 | #ffffff | Asset labels |
+| **Debt Names** `.debt-name` | 16px | 600 | #ffffff | Liability labels |
+| **Account Values** `.account-value` | 16px | 700 | #28a745 | Green for assets |
+| **Debt Values** `.debt-value` | 16px | 700 | #dc3545 | Red for liabilities |
+
+### Result Card Components
+
+| Component | Font Size | Weight | Color | Additional Styles |
+|-----------|-----------|--------|-------|-------------------|
+| **Card Title** `.result-card h3` | 16px | 600 | white | margin: 0 0 10px 0, opacity: 0.9 |
+| **Card Value** `.result-card .value` | 20px | 700 | white | Main numeric display |
+| **Card Label** `.result-card .label` | 12px | - | white | opacity: 0.8 |
+
+### Table Components
+
+| Component | Font Size | Weight | Color | Padding |
+|-----------|-----------|--------|-------|---------|
+| **Table Headers** `.data-table th` | 14px | 600 | #ffffff | 15px 12px |
+| **Table Data** `.data-table td` | - | - | #ffffff | 15px 12px |
+| **Status: Building** `.status-building` | - | 700 | #ff9800 | - |
+| **Status: FI** `.status-fi` | - | 700 | #D3AF37 | - |
+
+### Chart Components
+
+| Component | Font Size | Weight | Color | Notes |
+|-----------|-----------|--------|-------|-------|
+| **Chart Title** `.chart-title` | 18px | 600 | #ffffff | text-align: center |
+| **Chart Labels** | - | - | - | Configured in Chart.js |
+| **Chart Tooltips** | - | - | - | Configured in Chart.js |
+
+### Interactive Components
+
+| Component | Font Size | Weight | Color | Notes |
+|-----------|-----------|--------|-------|-------|
+| **Tooltip Text** `.tooltip-text` | 12px | - | #ffffff | Background: #3b3b3b |
+| **Info Icon** `.info-icon` | 12px | 700 | white | Background: #D3AF37 |
+| **Nav Links** `.nav-menu a` | 16px | - | white | Active: weight 700 |
+| **Nav Subitems** `.nav-subitem` | 16px | - | rgba(255,255,255,0.7) | Active: weight 700 |
+
+### Disclaimer Component
+
+| Component | Font Size | Weight | Color | Notes |
+|-----------|-----------|--------|-------|-------|
+| **Disclaimer Title** `.disclaimer h3` | 18px | - | #ffffff | - |
+| **Disclaimer Text** `.disclaimer p` | 14px | - | #b0b0b0 | line-height: 1.6 |
+
+## Standard Spacing Patterns
+
+### Padding Standards
+- **Cells/Inputs**: `12px 16px` (vertical horizontal)
+- **Page Headers**: `20px` (equal all sides)
+- **Containers**: `30px` (equal all sides)
+- **Result Cards**: `20px` (equal all sides)
+- **Table Cells**: `15px 12px` (vertical horizontal)
+
+### Border Radius Standards
+- **Standard Elements**: `8px` (inputs, cards, buttons)
+- **Large Containers**: `12px` (main content containers)
+- **Circular Elements**: `50%` (info icons)
+
+### Margin Patterns
+- **Section Spacing**: `margin-bottom: 20px` (standard)
+- **Container Spacing**: `margin-bottom: 30px` (large containers)
+- **Label Spacing**: `margin-bottom: 8px` (labels above inputs)
+- **Title Spacing**: `margin-bottom: 8px` (page titles)
+
+---
+
 **Documentation Created**: October 6, 2025
+**Last Updated**: October 6, 2025
 **Project**: FIQuest Financial Independence Application
 **Branch**: dark-mode-implementation
-**Status**: my-scenario.html complete - other pages pending
+**Reference Page**: my-scenario.html (complete implementation)
+**Status**: Ready for application to other 8 pages

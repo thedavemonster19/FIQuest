@@ -93,8 +93,98 @@ All 9 pages now use the consistent color scheme:
 - Professional dark mode appearance
 - Gold "FI" branding consistently applied
 
+## Component-Specific Color Applications
+
+### Page Structure
+- **Page Headers** (`.page-header`)
+  - Background: `#16213e` (secondary dark)
+  - Border: `1px solid #757575` (medium grey)
+  - Border radius: `8px`
+  - Box shadow: `0 2px 4px rgba(0,0,0,0.1)`
+
+- **Containers** (`.container`)
+  - Background: `#16213e` (secondary dark)
+  - Border: `1px solid #757575` (medium grey)
+  - Border radius: `12px`
+  - Box shadow: `0 4px 15px rgba(0,0,0,0.1)`
+
+- **Section Titles** (`.section-title`)
+  - Text color: `#ffffff` (primary text)
+  - Border-bottom: `2px solid #757575` (medium grey)
+
+### Data Display Elements
+
+- **Input/Data Cells** (`.readonly-input`, `.account-item`, `.debt-item`)
+  - Background: `#3b3b3b` (dark grey)
+  - Border: `2px solid #757575` (medium grey)
+  - Border radius: `8px`
+  - Text color: `#ffffff` (primary text)
+
+- **Result Cards** (`.result-card`)
+  - Background: `linear-gradient(135deg, #D3AF37 0%, #B8941E 100%)` (gold gradient)
+  - Text color: `white`
+  - Border radius: `8px`
+
+- **Data Tables** (`.data-table`)
+  - Table background: `#16213e` (secondary dark)
+  - Header background: `#222222` (darker grey)
+  - Grid lines: `#000000` (black) - IMPORTANT for visibility
+  - Header border: `2px solid #000000`
+  - Cell border: `1px solid #000000`
+  - Hover background: `#222222` (darker grey)
+
+### Interactive Elements
+
+- **Tooltips** (`.tooltip-text`)
+  - Background: `#3b3b3b` (dark grey)
+  - Text color: `#ffffff` (primary text)
+  - Border color (arrow): `#3b3b3b`
+  - Box shadow: `0 4px 8px rgba(0,0,0,0.3)`
+
+- **Info Icons** (`.info-icon`)
+  - Background: `#D3AF37` (primary gold)
+  - Text color: `white`
+
+### Charts (Chart.js)
+
+- **Chart Containers** (`.chart-container`)
+  - Background: `#16213e` (secondary dark)
+  - Border radius: `12px`
+  - Box shadow: `0 2px 10px rgba(0,0,0,0.1)`
+
+- **Chart Grid Lines**
+  - Color: `#000000` (black) - configured in Chart.js options
+  - Applied to both x and y axes
+  - CRITICAL: Default Chart.js colors too light - must explicitly set to black
+
+### Semantic Colors
+
+- **Status Indicators**
+  - Building status: `#ff9800` (orange)
+  - FI Achieved: `#D3AF37` (primary gold)
+
+- **Financial Values**
+  - Assets/Positive: `#28a745` (green)
+  - Debts/Negative: `#dc3545` (red)
+
+- **Disclaimer**
+  - Background: `#3b3b3b` (dark grey)
+  - Text: `#b0b0b0` (muted text)
+  - Border: `1px solid #757575` (medium grey)
+
+### Mobile Menu Button
+
+- **Default State**
+  - Background: `#D3AF37` (primary gold)
+  - Text color: `white`
+  - Box shadow: `0 2px 10px rgba(0,0,0,0.3)`
+
+- **Hover State**
+  - Background: `#B8941E` (hover gold)
+
 ---
 **Documentation Created**: October 1, 2025
+**Last Updated**: October 6, 2025
 **Project**: FIQuest Financial Independence Application
 **Branch**: dark-mode-implementation
-**Status**: Complete - All 9 pages using consistent color scheme
+**Reference Page**: my-scenario.html (fully updated)
