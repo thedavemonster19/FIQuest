@@ -514,7 +514,7 @@
         .disclaimer {
             margin: 40px 0;
             padding: 30px;
-            background-color: #222222;
+            background-color: #3b3b3b;
             border-radius: 10px;
             border: 1px solid #757575;
         }
@@ -592,8 +592,8 @@
                 </div>
                 <div class="container">
                     <!-- Scenario Display -->
-                    <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin-bottom: 25px;">
-                        <h3 style="margin: 0 0 10px 0; color: #8B6914;">FI Scenario & Initial Setup</h3>
+                    <div style="background: #3b3b3b; padding: 15px; border-radius: 8px; margin-bottom: 25px;">
+                        <h3 style="margin: 0 0 10px 0; color: #ffffff;">FI Scenario & Initial Setup</h3>
                         <p id="scenarioNameDisplay" style="margin: 0 0 5px 0; font-weight: bold; color: #1565c0;">Loading...</p>
                         <p id="setupDateDisplay" style="margin: 0; color: #b0b0b0; font-size: 14px;">Setup Date: Loading...</p>
                     </div>
@@ -1290,7 +1290,7 @@
                             },
                             grid: {
                                 display: true,
-                                color: 'rgba(0, 0, 0, 0.1)'
+                                color: '#000000'
                             },
                             min: Math.floor(allocationData.years[0]),
                             max: Math.ceil(allocationData.years[allocationData.years.length - 1]),
@@ -1318,7 +1318,7 @@
                                 text: 'Asset Value ($)'
                             },
                             grid: {
-                                color: 'rgba(0, 0, 0, 0.1)'
+                                color: '#000000'
                             },
                             ticks: {
                                 callback: function(value, index, ticks) {
@@ -1863,7 +1863,7 @@
                             const actualValue = getActualAccountValue(col.entry, account.name, 'investment');
                             const cellClass = actualValue !== null ? 'actual-value' : 'no-data';
                             const displayValue = actualValue !== null ? `$${formatNumber(Math.round(actualValue))}` : '-';
-                            tableHTML += `<td class="${cellClass}" style="background: #e3f2fd; font-weight: bold;">${displayValue}</td>`;
+                            tableHTML += `<td class="${cellClass}" style="background: #3b3b3b; font-weight: bold;">${displayValue}</td>`;
                         }
                     });
                     tableHTML += '</tr>';
@@ -1883,7 +1883,7 @@
                         const actualValue = getActualAccountValue(col.entry, name, 'asset');
                         const cellClass = actualValue !== null ? 'actual-value' : 'no-data';
                         const displayValue = actualValue !== null ? `$${formatNumber(Math.round(actualValue))}` : '-';
-                        tableHTML += `<td class="${cellClass}" style="background: #e3f2fd; font-weight: bold;">${displayValue}</td>`;
+                        tableHTML += `<td class="${cellClass}" style="background: #3b3b3b; font-weight: bold;">${displayValue}</td>`;
                     }
                 });
                 tableHTML += '</tr>';
@@ -1926,7 +1926,7 @@
                                 const actualValue = getActualAccountValue(col.entry, debtName, 'debt');
                                 const cellClass = actualValue !== null ? 'actual-value' : 'no-data';
                                 const displayValue = actualValue !== null ? `$${formatNumber(Math.round(actualValue))}` : '-';
-                                tableHTML += `<td class="${cellClass}" style="background: #ffebee; font-weight: bold;">${displayValue}</td>`;
+                                tableHTML += `<td class="${cellClass}" style="background: #3b3b3b; font-weight: bold;">${displayValue}</td>`;
                             }
                         });
                         tableHTML += '</tr>';
@@ -1947,7 +1947,7 @@
                         const actualValue = getActualAccountValue(col.entry, name, 'liability');
                         const cellClass = actualValue !== null ? 'actual-value' : 'no-data';
                         const displayValue = actualValue !== null ? `$${formatNumber(Math.round(actualValue))}` : '-';
-                        tableHTML += `<td class="${cellClass}" style="background: #ffebee; font-weight: bold;">${displayValue}</td>`;
+                        tableHTML += `<td class="${cellClass}" style="background: #3b3b3b; font-weight: bold;">${displayValue}</td>`;
                     }
                 });
                 tableHTML += '</tr>';
