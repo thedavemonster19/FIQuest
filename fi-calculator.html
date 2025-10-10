@@ -341,8 +341,8 @@
         }
         
         .scenario-1 { background-color: rgba(59, 59, 59, 1.0); border-left: 4px solid #4CAF50; color: #ffffff; }
-        .scenario-2 { background-color: rgba(59, 59, 59, 0.7); border-left: 4px solid #2196F3; color: #ffffff; }
-        .scenario-3 { background-color: rgba(59, 59, 59, 0.5); border-left: 4px solid #FF9800; color: #ffffff; }
+        .scenario-2 { background-color: rgba(59, 59, 59, 1.0); border-left: 4px solid #2196F3; color: #ffffff; }
+        .scenario-3 { background-color: rgba(59, 59, 59, 1.0); border-left: 4px solid #FF9800; color: #ffffff; }
         
         /* Tooltip Styles */
         .tooltip-container {
@@ -2442,21 +2442,27 @@
                         x: {
                             title: {
                                 display: true,
-                                text: 'Age'
-                            },
-                            grid: {
-                                color: '#000000'
-                            }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'Portfolio Value ($)'
+                                text: 'Age',
+                                color: '#ffffff'
                             },
                             grid: {
                                 color: '#000000'
                             },
                             ticks: {
+                                color: '#ffffff'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Portfolio Value ($)',
+                                color: '#ffffff'
+                            },
+                            grid: {
+                                color: '#000000'
+                            },
+                            ticks: {
+                                color: '#ffffff',
                                 callback: function(value) {
                                     return '$' + value.toLocaleString();
                                 }
@@ -2525,21 +2531,27 @@
                         x: {
                             title: {
                                 display: true,
-                                text: 'Age'
-                            },
-                            grid: {
-                                color: '#000000'
-                            }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'Amount ($)'
+                                text: 'Age',
+                                color: '#ffffff'
                             },
                             grid: {
                                 color: '#000000'
                             },
                             ticks: {
+                                color: '#ffffff'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Amount ($)',
+                                color: '#ffffff'
+                            },
+                            grid: {
+                                color: '#000000'
+                            },
+                            ticks: {
+                                color: '#ffffff',
                                 callback: function(value) {
                                     return '$' + value.toLocaleString();
                                 }
@@ -2611,21 +2623,27 @@
                         x: {
                             title: {
                                 display: true,
-                                text: 'Age'
-                            },
-                            grid: {
-                                color: '#000000'
-                            }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'Remaining Debt ($)'
+                                text: 'Age',
+                                color: '#ffffff'
                             },
                             grid: {
                                 color: '#000000'
                             },
                             ticks: {
+                                color: '#ffffff'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Remaining Debt ($)',
+                                color: '#ffffff'
+                            },
+                            grid: {
+                                color: '#000000'
+                            },
+                            ticks: {
+                                color: '#ffffff',
                                 callback: function(value) {
                                     return '$' + value.toLocaleString();
                                 }

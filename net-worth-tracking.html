@@ -1191,6 +1191,7 @@
                             title: {
                                 display: true,
                                 text: 'Year',
+                                color: '#ffffff',
                                 font: {
                                     size: 14,
                                     weight: 'bold'
@@ -1204,6 +1205,7 @@
                             max: Math.ceil(chartData.years[chartData.years.length - 1]),
                             ticks: {
                                 stepSize: 1,
+                                color: '#ffffff',
                                 callback: function(value, index, ticks) {
                                     // Only show whole year labels
                                     if (value % 1 === 0) {
@@ -1222,6 +1224,7 @@
                             title: {
                                 display: true,
                                 text: 'Value ($)',
+                                color: '#ffffff',
                                 font: {
                                     size: 14,
                                     weight: 'bold'
@@ -1237,6 +1240,7 @@
                             ticks: {
                                 stepSize: stepSize,
                                 autoSkip: false,
+                                color: '#ffffff',
                                 font: {
                                     size: 12
                                 },
@@ -1292,6 +1296,7 @@
                             title: {
                                 display: true,
                                 text: 'Year',
+                                color: '#ffffff',
                                 font: {
                                     size: 14,
                                     weight: 'bold'
@@ -1305,6 +1310,7 @@
                             max: Math.ceil(allocationData.years[allocationData.years.length - 1]),
                             ticks: {
                                 stepSize: 1,
+                                color: '#ffffff',
                                 callback: function(value, index, ticks) {
                                     // Only show whole year labels
                                     if (value % 1 === 0) {
@@ -1324,12 +1330,14 @@
                             stacked: true,
                             title: {
                                 display: true,
-                                text: 'Asset Value ($)'
+                                text: 'Asset Value ($)',
+                                color: '#ffffff'
                             },
                             grid: {
                                 color: '#000000'
                             },
                             ticks: {
+                                color: '#ffffff',
                                 callback: function(value, index, ticks) {
                                     return '$' + (value >= 1000000 ?
                                         (value / 1000000).toFixed(1) + 'M' :
