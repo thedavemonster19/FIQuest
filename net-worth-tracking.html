@@ -1162,16 +1162,7 @@
                     },
                     plugins: {
                         title: {
-                            display: true,
-                            text: 'Net Worth & Portfolio Progress Over Time',
-                            font: {
-                                size: window.innerWidth <= 480 ? 14 : 18,
-                                weight: 'bold'
-                            },
-                            padding: {
-                                top: 10,
-                                bottom: 20
-                            }
+                            display: false
                         },
                         legend: {
                             display: true,
@@ -1179,6 +1170,7 @@
                             labels: {
                                 usePointStyle: true,
                                 padding: 20,
+                                color: '#ffffff',
                                 font: {
                                     size: 14
                                 }
@@ -1356,7 +1348,8 @@
                             position: 'top',
                             labels: {
                                 usePointStyle: true,
-                                padding: 20
+                                padding: 20,
+                                color: '#ffffff'
                             }
                         },
                         tooltip: {
@@ -2573,6 +2566,7 @@
                         legend: {
                             position: window.innerWidth <= 480 ? 'bottom' : 'right',
                             labels: {
+                                color: '#ffffff',
                                 font: {
                                     size: window.innerWidth <= 480 ? 11 : 12
                                 },
