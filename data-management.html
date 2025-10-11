@@ -910,50 +910,110 @@
 
                 // Financial Independence Scenarios - Detailed
                 if (exportData.gameData.scenarios && exportData.gameData.scenarios.length > 0) {
-                    csv += '"=== FINANCIAL INDEPENDENCE SCENARIOS ==="\n';
-                    csv += '"Scenario Name","Initial Age","Active Until Age","Life Expectancy","Starting Capital","Annual Contributions","Annual Active Spending","Annual Inactive Spending","Rate of Return %","Inflation Rate %","Withdrawal Rate %","Target Amount","FI Year","Final Portfolio Value","Monthly Savings Required","Created Date","Last Modified"\n';
+                    csv += '"=== FINANCIAL INDEPENDENCE SCENARIOS - SUMMARY ==="\n';
+                    csv += '"Scenario Name","Initial Age","Active Until Age","Life Expectancy","Starting Capital","Annual Contributions","Annual Active Spending","Annual Inactive Spending","Rate of Return %","Inflation Rate %","Withdrawal Rate %","FI Year","FI Age","Final Portfolio Value","Monthly Savings Required"\n';
 
-                    exportData.gameData.scenarios.forEach(scenario => {
+                    exportData.gameData.scenarios.forEach((scenario, scenarioIndex) => {
+                        // Read from nested inputs structure if available, otherwise fall back to flat structure
+                        const inputs = scenario.inputs || scenario;
+                        const results = scenario.results || {};
+
                         csv += `"${scenario.name || 'Unnamed Scenario'}",`;
-                        csv += `"${scenario.initialAge || 'N/A'}",`;
-                        csv += `"${scenario.activeUntilAge || 'N/A'}",`;
-                        csv += `"${scenario.lifeExpectancy || 'N/A'}",`;
-                        csv += `"${scenario.startingCapital || 0}",`;
-                        csv += `"${scenario.annualContributions || 0}",`;
-                        csv += `"${scenario.annualActiveSpending || 0}",`;
-                        csv += `"${scenario.annualInactiveSpending || scenario.annualSpending || 0}",`;
-                        csv += `"${scenario.rateOfReturn || 7}",`;
-                        csv += `"${scenario.inflationRate || 2}",`;
-                        csv += `"${scenario.withdrawalRate || 4}",`;
-                        csv += `"${scenario.targetAmount || 0}",`;
-                        csv += `"${scenario.fiYear || 'Not Calculated'}",`;
-                        csv += `"${scenario.finalPortfolioValue || 'Not Calculated'}",`;
-                        csv += `"${scenario.monthlySavingsRequired || 'Not Calculated'}",`;
-                        csv += `"${scenario.dateCreated || 'Unknown'}",`;
-                        csv += `"${scenario.lastModified || 'Unknown'}"\n`;
+                        csv += `"${inputs.currentAge || inputs.initialAge || 'N/A'}",`;
+                        csv += `"${inputs.activeUntilAge || 'N/A'}",`;
+                        csv += `"${inputs.lifeExpectancy || 'N/A'}",`;
+                        csv += `"${inputs.startingCapital || 0}",`;
+                        csv += `"${inputs.annualContributions || 0}",`;
+                        csv += `"${inputs.activeSpending || inputs.annualActiveSpending || 0}",`;
+                        csv += `"${inputs.inactiveSpending || inputs.annualInactiveSpending || inputs.annualSpending || 0}",`;
+                        csv += `"${(inputs.rateOfReturn || 7) * 100}",`;
+                        csv += `"${(inputs.inflationRate || 0.02) * 100}",`;
+                        csv += `"${(inputs.withdrawalRate || 0.04) * 100}",`;
+                        csv += `"${results.fiYear || scenario.fiYear || 'Not Achieved'}",`;
+                        csv += `"${results.fiAge || scenario.fiAge || 'N/A'}",`;
+                        csv += `"${results.finalPortfolioValue ? '$' + results.finalPortfolioValue.toLocaleString('en-US', {maximumFractionDigits: 0}) : 'Not Calculated'}",`;
+                        csv += `"${results.monthlySavingsRequired ? '$' + results.monthlySavingsRequired.toLocaleString('en-US', {maximumFractionDigits: 2}) : 'Not Calculated'}"\n`;
                     });
 
-                    // Investment Account Details for Scenarios
-                    csv += '\n"=== INVESTMENT ACCOUNT DETAILS ==="\n';
-                    csv += '"Scenario Name","Account Name","Annual Contribution","Growth Rate %","Account Type","Notes"\n';
+                    csv += '\n';
 
-                    exportData.gameData.scenarios.forEach(scenario => {
-                        if (scenario.investmentAccounts) {
-                            Object.entries(scenario.investmentAccounts).forEach(([accountName, accountData]) => {
-                                csv += `"${scenario.name || 'Unnamed'}","${accountName}","${accountData.annualContribution || 0}","${accountData.growthRate || scenario.rateOfReturn || 7}","${accountData.accountType || 'Investment'}","${accountData.notes || ''}"\n`;
+                    // Year-by-Year Projections for Each Scenario
+                    exportData.gameData.scenarios.forEach((scenario, scenarioIndex) => {
+                        const results = scenario.results || {};
+
+                        if (results.years && results.years.length > 0) {
+                            csv += `"=== SCENARIO ${scenarioIndex + 1}: ${scenario.name || 'Unnamed'} - YEAR-BY-YEAR PROJECTIONS ==="\n`;
+                            csv += '"Year","Age","Portfolio Value","Annual Spending","Withdrawal Capacity","Contributions","Remaining Debt","Status"\n';
+
+                            results.years.forEach(yearData => {
+                                csv += `"${yearData.year}",`;
+                                csv += `"${yearData.age}",`;
+                                csv += `"$${yearData.portfolioValue.toLocaleString('en-US', {maximumFractionDigits: 0})}",`;
+                                csv += `"$${yearData.annualSpending.toLocaleString('en-US', {maximumFractionDigits: 0})}",`;
+                                csv += `"$${yearData.withdrawalCapacity.toLocaleString('en-US', {maximumFractionDigits: 0})}",`;
+                                csv += `"$${yearData.contributions.toLocaleString('en-US', {maximumFractionDigits: 0})}",`;
+                                csv += `"$${yearData.totalRemainingDebt.toLocaleString('en-US', {maximumFractionDigits: 0})}",`;
+                                csv += `"${yearData.status}"\n`;
                             });
+
+                            csv += '\n';
                         }
                     });
 
-                    // Debt Information for Scenarios
-                    csv += '\n"=== DEBT DETAILS ==="\n';
-                    csv += '"Scenario Name","Debt Type","Outstanding Balance","Interest Rate %","Monthly Payment","Additional Principal","Affects Contributions","Payoff Year"\n';
+                    // Input Parameters for Each Scenario
+                    exportData.gameData.scenarios.forEach((scenario, scenarioIndex) => {
+                        const inputs = scenario.inputs || scenario;
 
-                    exportData.gameData.scenarios.forEach(scenario => {
-                        if (scenario.debts) {
-                            Object.entries(scenario.debts).forEach(([debtType, debtData]) => {
-                                csv += `"${scenario.name || 'Unnamed'}","${debtType}","${debtData.outstandingBalance || 0}","${debtData.interestRate || 0}","${debtData.monthlyPayment || 0}","${debtData.additionalPrincipal || 0}","${debtData.affectContributions ? 'Yes' : 'No'}","${debtData.payoffYear || 'Not Calculated'}"\n`;
+                        csv += `"=== SCENARIO ${scenarioIndex + 1}: ${scenario.name || 'Unnamed'} - INPUT PARAMETERS ==="\n`;
+                        csv += '"Parameter","Value"\n';
+                        csv += `"Current Age","${inputs.currentAge || inputs.initialAge || 'N/A'}"\n`;
+                        csv += `"Active Until Age","${inputs.activeUntilAge || 'N/A'}"\n`;
+                        csv += `"Life Expectancy","${inputs.lifeExpectancy || 'N/A'}"\n`;
+                        csv += `"Starting Capital","$${(inputs.startingCapital || 0).toLocaleString('en-US')}"\n`;
+                        csv += `"Annual Contributions","$${(inputs.annualContributions || 0).toLocaleString('en-US')}"\n`;
+                        csv += `"Annual Active Spending","$${(inputs.activeSpending || inputs.annualActiveSpending || 0).toLocaleString('en-US')}"\n`;
+                        csv += `"Annual Inactive Spending","$${(inputs.inactiveSpending || inputs.annualInactiveSpending || inputs.annualSpending || 0).toLocaleString('en-US')}"\n`;
+                        csv += `"Rate of Return","${((inputs.rateOfReturn || 0.07) * 100).toFixed(2)}%"\n`;
+                        csv += `"Inflation Rate","${((inputs.inflationRate || 0.02) * 100).toFixed(2)}%"\n`;
+                        csv += `"Withdrawal Rate","${((inputs.withdrawalRate || 0.04) * 100).toFixed(2)}%"\n`;
+
+                        // Debt details
+                        if (inputs.debts) {
+                            csv += `"Mortgage Balance","$${(inputs.debts.mortgage?.balance || 0).toLocaleString('en-US')}"\n`;
+                            csv += `"Mortgage Rate","${((inputs.debts.mortgage?.rate || 0) * 100).toFixed(2)}%"\n`;
+                            csv += `"Mortgage Payment","$${(inputs.debts.mortgage?.payment || 0).toLocaleString('en-US')}/month"\n`;
+                            csv += `"Mortgage Extra Payment","$${(inputs.debts.mortgage?.extraPayment || 0).toLocaleString('en-US')}/month"\n`;
+                            csv += `"Mortgage Affects Contributions","${inputs.debts.mortgage?.affectContributions ? 'Yes' : 'No'}"\n`;
+
+                            csv += `"Vehicle Balance","$${(inputs.debts.vehicle?.balance || 0).toLocaleString('en-US')}"\n`;
+                            csv += `"Vehicle Rate","${((inputs.debts.vehicle?.rate || 0) * 100).toFixed(2)}%"\n`;
+                            csv += `"Vehicle Payment","$${(inputs.debts.vehicle?.payment || 0).toLocaleString('en-US')}/month"\n`;
+                            csv += `"Vehicle Extra Payment","$${(inputs.debts.vehicle?.extraPayment || 0).toLocaleString('en-US')}/month"\n`;
+                            csv += `"Vehicle Affects Contributions","${inputs.debts.vehicle?.affectContributions ? 'Yes' : 'No'}"\n`;
+
+                            csv += `"Other Debt Balance","$${(inputs.debts.other?.balance || 0).toLocaleString('en-US')}"\n`;
+                            csv += `"Other Debt Rate","${((inputs.debts.other?.rate || 0) * 100).toFixed(2)}%"\n`;
+                            csv += `"Other Debt Payment","$${(inputs.debts.other?.payment || 0).toLocaleString('en-US')}/month"\n`;
+                            csv += `"Other Debt Extra Payment","$${(inputs.debts.other?.extraPayment || 0).toLocaleString('en-US')}/month"\n`;
+                            csv += `"Other Debt Affects Contributions","${inputs.debts.other?.affectContributions ? 'Yes' : 'No'}"\n`;
+                        }
+
+                        csv += '\n';
+                    });
+
+                    // Account-Level Contribution Details
+                    exportData.gameData.scenarios.forEach((scenario, scenarioIndex) => {
+                        const inputs = scenario.inputs || scenario;
+
+                        if (inputs.accounts && inputs.accounts.length > 0) {
+                            csv += `"=== SCENARIO ${scenarioIndex + 1}: ${scenario.name || 'Unnamed'} - ACCOUNT BREAKDOWN ==="\n`;
+                            csv += '"Account Name","Account Value"\n';
+
+                            inputs.accounts.forEach(account => {
+                                csv += `"${account.name}","$${account.value.toLocaleString('en-US')}"\n`;
                             });
+
+                            csv += '\n';
                         }
                     });
 

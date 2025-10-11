@@ -778,29 +778,219 @@ class UserManager {
     convertCompleteDataToCSV(exportData) {
         let csv = '';
 
-        // Player Information Section
-        csv += '"FIQuest Data Export - Player Information"\n';
-        csv += '"Player Name","Export Date","Last Played","Timezone"\n';
-        csv += `"${exportData.playerData.playerName}","${exportData.exportDate}","${exportData.playerData.lastPlayedDate}","${exportData.exportTimezone}"\n\n`;
+        // Header and Export Information
+        csv += '"FIQuest Complete Data Export"\n';
+        csv += `"Export Date: ${exportData.exportDate}"\n`;
+        csv += `"Data Version: ${exportData.version}"\n`;
+        csv += `"Export Timezone: ${exportData.exportTimezone}"\n\n`;
 
-        // Financial Scenarios Section
+        // Player Profile Information
+        csv += '"=== PLAYER PROFILE ==="\n';
+        csv += '"Field","Value"\n';
+        csv += `"Player Name","${exportData.playerData.playerName}"\n`;
+        csv += `"Date Created","${exportData.playerData.createdDate || 'Unknown'}"\n`;
+        csv += `"Last Played Date","${exportData.playerData.lastPlayedDate}"\n`;
+        csv += `"Player Timezone","${exportData.playerData.timezone || exportData.exportTimezone}"\n\n`;
+
+        // Financial Independence Scenarios - Detailed
         if (exportData.gameData.scenarios && exportData.gameData.scenarios.length > 0) {
-            csv += '"Financial Independence Scenarios"\n';
-            csv += '"Scenario Name","Target Amount","Annual Spending","Withdrawal Rate","Estimated FI Year"\n';
-            exportData.gameData.scenarios.forEach(scenario => {
-                csv += `"${scenario.name || 'Unnamed'}","${scenario.targetAmount || 0}","${scenario.annualSpending || 0}","${scenario.withdrawalRate || 4}","${scenario.fiYear || 'Not Calculated'}"\n`;
+            csv += '"=== FINANCIAL INDEPENDENCE SCENARIOS - SUMMARY ==="\n';
+            csv += '"Scenario Name","Initial Age","Active Until Age","Life Expectancy","Starting Capital","Annual Contributions","Annual Active Spending","Annual Inactive Spending","Rate of Return %","Inflation Rate %","Withdrawal Rate %","FI Year","FI Age","Final Portfolio Value","Monthly Savings Required"\n';
+
+            exportData.gameData.scenarios.forEach((scenario, scenarioIndex) => {
+                // Read from nested inputs structure if available, otherwise fall back to flat structure
+                const inputs = scenario.inputs || scenario;
+                const results = scenario.results || {};
+
+                csv += `"${scenario.name || 'Unnamed Scenario'}",`;
+                csv += `"${inputs.currentAge || inputs.initialAge || 'N/A'}",`;
+                csv += `"${inputs.activeUntilAge || 'N/A'}",`;
+                csv += `"${inputs.lifeExpectancy || 'N/A'}",`;
+                csv += `"${inputs.startingCapital || 0}",`;
+                csv += `"${inputs.annualContributions || 0}",`;
+                csv += `"${inputs.activeSpending || inputs.annualActiveSpending || 0}",`;
+                csv += `"${inputs.inactiveSpending || inputs.annualInactiveSpending || inputs.annualSpending || 0}",`;
+                csv += `"${((inputs.rateOfReturn || 0.07) * 100).toFixed(2)}",`;
+                csv += `"${((inputs.inflationRate || 0.02) * 100).toFixed(2)}",`;
+                csv += `"${((inputs.withdrawalRate || 0.04) * 100).toFixed(2)}",`;
+                csv += `"${results.fiYear || scenario.fiYear || 'Not Achieved'}",`;
+                csv += `"${results.fiAge || scenario.fiAge || 'N/A'}",`;
+                csv += `"${results.finalPortfolioValue ? '$' + results.finalPortfolioValue.toLocaleString('en-US', {maximumFractionDigits: 0}) : 'Not Calculated'}",`;
+                csv += `"${results.monthlySavingsRequired ? '$' + results.monthlySavingsRequired.toLocaleString('en-US', {maximumFractionDigits: 2}) : 'Not Calculated'}"\n`;
             });
+
+            csv += '\n';
+
+            // Year-by-Year Projections for Each Scenario
+            exportData.gameData.scenarios.forEach((scenario, scenarioIndex) => {
+                const results = scenario.results || {};
+
+                if (results.years && results.years.length > 0) {
+                    csv += `"=== SCENARIO ${scenarioIndex + 1}: ${scenario.name || 'Unnamed'} - YEAR-BY-YEAR PROJECTIONS ==="\n`;
+                    csv += '"Year","Age","Portfolio Value","Annual Spending","Withdrawal Capacity","Contributions","Remaining Debt","Status"\n';
+
+                    results.years.forEach(yearData => {
+                        csv += `"${yearData.year}",`;
+                        csv += `"${yearData.age}",`;
+                        csv += `"$${yearData.portfolioValue.toLocaleString('en-US', {maximumFractionDigits: 0})}",`;
+                        csv += `"$${yearData.annualSpending.toLocaleString('en-US', {maximumFractionDigits: 0})}",`;
+                        csv += `"$${yearData.withdrawalCapacity.toLocaleString('en-US', {maximumFractionDigits: 0})}",`;
+                        csv += `"$${yearData.contributions.toLocaleString('en-US', {maximumFractionDigits: 0})}",`;
+                        csv += `"$${yearData.totalRemainingDebt.toLocaleString('en-US', {maximumFractionDigits: 0})}",`;
+                        csv += `"${yearData.status}"\n`;
+                    });
+
+                    csv += '\n';
+                }
+            });
+
+            // Input Parameters for Each Scenario
+            exportData.gameData.scenarios.forEach((scenario, scenarioIndex) => {
+                const inputs = scenario.inputs || scenario;
+
+                csv += `"=== SCENARIO ${scenarioIndex + 1}: ${scenario.name || 'Unnamed'} - INPUT PARAMETERS ==="\n`;
+                csv += '"Parameter","Value"\n';
+                csv += `"Current Age","${inputs.currentAge || inputs.initialAge || 'N/A'}"\n`;
+                csv += `"Active Until Age","${inputs.activeUntilAge || 'N/A'}"\n`;
+                csv += `"Life Expectancy","${inputs.lifeExpectancy || 'N/A'}"\n`;
+                csv += `"Starting Capital","$${(inputs.startingCapital || 0).toLocaleString('en-US')}"\n`;
+                csv += `"Annual Contributions","$${(inputs.annualContributions || 0).toLocaleString('en-US')}"\n`;
+                csv += `"Annual Active Spending","$${(inputs.activeSpending || inputs.annualActiveSpending || 0).toLocaleString('en-US')}"\n`;
+                csv += `"Annual Inactive Spending","$${(inputs.inactiveSpending || inputs.annualInactiveSpending || inputs.annualSpending || 0).toLocaleString('en-US')}"\n`;
+                csv += `"Rate of Return","${((inputs.rateOfReturn || 0.07) * 100).toFixed(2)}%"\n`;
+                csv += `"Inflation Rate","${((inputs.inflationRate || 0.02) * 100).toFixed(2)}%"\n`;
+                csv += `"Withdrawal Rate","${((inputs.withdrawalRate || 0.04) * 100).toFixed(2)}%"\n`;
+
+                // Debt details
+                if (inputs.debts) {
+                    csv += `"Mortgage Balance","$${(inputs.debts.mortgage?.balance || 0).toLocaleString('en-US')}"\n`;
+                    csv += `"Mortgage Rate","${((inputs.debts.mortgage?.rate || 0) * 100).toFixed(2)}%"\n`;
+                    csv += `"Mortgage Payment","$${(inputs.debts.mortgage?.payment || 0).toLocaleString('en-US')}/month"\n`;
+                    csv += `"Mortgage Extra Payment","$${(inputs.debts.mortgage?.extraPayment || 0).toLocaleString('en-US')}/month"\n`;
+                    csv += `"Mortgage Affects Contributions","${inputs.debts.mortgage?.affectContributions ? 'Yes' : 'No'}"\n`;
+
+                    csv += `"Vehicle Balance","$${(inputs.debts.vehicle?.balance || 0).toLocaleString('en-US')}"\n`;
+                    csv += `"Vehicle Rate","${((inputs.debts.vehicle?.rate || 0) * 100).toFixed(2)}%"\n`;
+                    csv += `"Vehicle Payment","$${(inputs.debts.vehicle?.payment || 0).toLocaleString('en-US')}/month"\n`;
+                    csv += `"Vehicle Extra Payment","$${(inputs.debts.vehicle?.extraPayment || 0).toLocaleString('en-US')}/month"\n`;
+                    csv += `"Vehicle Affects Contributions","${inputs.debts.vehicle?.affectContributions ? 'Yes' : 'No'}"\n`;
+
+                    csv += `"Other Debt Balance","$${(inputs.debts.other?.balance || 0).toLocaleString('en-US')}"\n`;
+                    csv += `"Other Debt Rate","${((inputs.debts.other?.rate || 0) * 100).toFixed(2)}%"\n`;
+                    csv += `"Other Debt Payment","$${(inputs.debts.other?.payment || 0).toLocaleString('en-US')}/month"\n`;
+                    csv += `"Other Debt Extra Payment","$${(inputs.debts.other?.extraPayment || 0).toLocaleString('en-US')}/month"\n`;
+                    csv += `"Other Debt Affects Contributions","${inputs.debts.other?.affectContributions ? 'Yes' : 'No'}"\n`;
+                }
+
+                csv += '\n';
+            });
+
+            // Account-Level Contribution Details
+            exportData.gameData.scenarios.forEach((scenario, scenarioIndex) => {
+                const inputs = scenario.inputs || scenario;
+
+                if (inputs.accounts && inputs.accounts.length > 0) {
+                    csv += `"=== SCENARIO ${scenarioIndex + 1}: ${scenario.name || 'Unnamed'} - ACCOUNT BREAKDOWN ==="\n`;
+                    csv += '"Account Name","Account Value"\n';
+
+                    inputs.accounts.forEach(account => {
+                        csv += `"${account.name}","$${account.value.toLocaleString('en-US')}"\n`;
+                    });
+
+                    csv += '\n';
+                }
+            });
+
             csv += '\n';
         }
 
-        // Net Worth Tracking Section
-        if (exportData.playerData.gameData && exportData.playerData.gameData.netWorthTracking) {
-            csv += '"Net Worth Tracking History"\n';
-            csv += '"Date","Total Assets","Total Liabilities","Net Worth","Projected Net Worth","Variance","Notes"\n';
-            exportData.playerData.gameData.netWorthTracking.forEach(entry => {
-                csv += `"${entry.date}","${entry.totals.totalAssets}","${entry.totals.totalLiabilities}","${entry.totals.netWorth}","${entry.totals.projectedNetWorth || 0}","${entry.totals.netVariance || 0}","${entry.notes || ''}"\n`;
-            });
+        // Net Worth Setup Configuration
+        if (exportData.gameData.netWorthSetup) {
+            csv += '"=== NET WORTH SETUP CONFIGURATION ==="\n';
+            csv += '"Category","Account Name","Account Type","Initial Value","Growth Rate %","Notes"\n';
+
+            const setup = exportData.gameData.netWorthSetup;
+
+            // Assets
+            if (setup.assetCategories) {
+                Object.entries(setup.assetCategories).forEach(([categoryName, accounts]) => {
+                    if (typeof accounts === 'object') {
+                        Object.entries(accounts).forEach(([accountName, accountData]) => {
+                            csv += `"${categoryName}","${accountName}","Asset","${accountData.initialValue || 0}","${accountData.growthRate || 0}","${accountData.notes || ''}"\n`;
+                        });
+                    }
+                });
+            }
+
+            // Liabilities
+            if (setup.liabilityCategories) {
+                Object.entries(setup.liabilityCategories).forEach(([categoryName, accounts]) => {
+                    if (typeof accounts === 'object') {
+                        Object.entries(accounts).forEach(([accountName, accountData]) => {
+                            csv += `"${categoryName}","${accountName}","Liability","${accountData.initialValue || 0}","${accountData.interestRate || 0}","${accountData.notes || ''}"\n`;
+                        });
+                    }
+                });
+            }
+
+            csv += '\n';
         }
+
+        // Net Worth Tracking History with Account Details
+        if (exportData.playerData.gameData && exportData.playerData.gameData.netWorthTracking) {
+            csv += '"=== NET WORTH TRACKING HISTORY ==="\n';
+            csv += '"Entry Date","Date Created","Total Assets","Total Liabilities","Net Worth","Projected Net Worth","Net Variance","Asset Variance","Liability Variance","Entry Notes","Entry ID"\n';
+
+            exportData.playerData.gameData.netWorthTracking.forEach(entry => {
+                csv += `"${entry.date}","${entry.dateCreated || 'Unknown'}","${entry.totals.totalAssets}","${entry.totals.totalLiabilities}","${entry.totals.netWorth}","${entry.totals.projectedNetWorth || 0}","${entry.totals.netVariance || 0}","${entry.totals.assetVariance || 0}","${entry.totals.liabilityVariance || 0}","${entry.notes || ''}","${entry.id || 'Unknown'}"\n`;
+            });
+
+            // Individual Account Values for each Net Worth Entry
+            csv += '\n"=== INDIVIDUAL ACCOUNT VALUES ==="\n';
+            csv += '"Entry Date","Account Category","Account Name","Account Type","Actual Value","Projected Value","Variance","Entry ID"\n';
+
+            exportData.playerData.gameData.netWorthTracking.forEach(entry => {
+                // Asset accounts
+                if (entry.accounts && entry.accounts.assets) {
+                    Object.entries(entry.accounts.assets).forEach(([accountName, accountData]) => {
+                        const category = accountData.category || 'Unknown Category';
+                        csv += `"${entry.date}","${category}","${accountName}","Asset","${accountData.actual || 0}","${accountData.projected || 0}","${accountData.variance || 0}","${entry.id || 'Unknown'}"\n`;
+                    });
+                }
+
+                // Liability accounts
+                if (entry.accounts && entry.accounts.liabilities) {
+                    Object.entries(entry.accounts.liabilities).forEach(([accountName, accountData]) => {
+                        const category = accountData.category || 'Unknown Category';
+                        csv += `"${entry.date}","${category}","${accountName}","Liability","${accountData.actual || 0}","${accountData.projected || 0}","${accountData.variance || 0}","${entry.id || 'Unknown'}"\n`;
+                    });
+                }
+            });
+
+            csv += '\n';
+        }
+
+        // Active Scenario Information
+        if (exportData.gameData.activeScenario) {
+            csv += '"=== ACTIVE SCENARIO ==="\n';
+            csv += '"Field","Value"\n';
+            csv += `"Active Scenario Name","${exportData.gameData.activeScenario.name || 'Unnamed'}"\n`;
+            csv += `"Selected Date","${exportData.gameData.activeScenario.selectedDate || 'Unknown'}"\n`;
+            csv += `"Setup Year","${exportData.gameData.activeScenario.setupYear || 'Unknown'}"\n`;
+            csv += `"Current Year","${new Date().getFullYear()}"\n\n`;
+        }
+
+        // Data Statistics
+        csv += '"=== DATA STATISTICS ==="\n';
+        csv += '"Metric","Count"\n';
+        csv += `"Total Scenarios","${exportData.gameData.scenarios ? exportData.gameData.scenarios.length : 0}"\n`;
+        csv += `"Net Worth Entries","${exportData.playerData.gameData && exportData.playerData.gameData.netWorthTracking ? exportData.playerData.gameData.netWorthTracking.length : 0}"\n`;
+        csv += `"Export File Size (chars)","${JSON.stringify(exportData).length}"\n\n`;
+
+        // Footer
+        csv += '"=== END OF EXPORT ==="\n';
+        csv += `"Generated by FIQuest Data Management System on ${exportData.exportDate}"\n`;
+        csv += '"For data import, use the JSON format for full compatibility"\n';
 
         return csv;
     }
