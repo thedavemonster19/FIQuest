@@ -331,7 +331,7 @@
         /* Grid Layout Styles */
         .item-grid {
             display: grid;
-            grid-template-columns: 180px 180px;
+            grid-template-columns: 198px 198px;
             gap: 10px;
             margin-bottom: 8px;
             align-items: center;
@@ -339,11 +339,23 @@
 
         .total-grid {
             display: grid;
-            grid-template-columns: 180px 180px;
+            grid-template-columns: 198px 198px;
             gap: 10px;
             margin-top: 10px;
             padding-top: 10px;
             border-top: 1px solid #757575;
+        }
+
+        .total-label-input, .total-value-input {
+            font-weight: 700;
+            font-size: 16px;
+            border: none;
+            background: transparent;
+            padding: 0;
+        }
+
+        .total-label-input {
+            color: #ffffff;
         }
 
         .asset-grid {
@@ -656,8 +668,8 @@
                             <h4 style="margin: 0 0 10px 0; color: #ffffff;">Investment Accounts (from FI scenario)</h4>
                             <div id="investmentAccountsList"></div>
                             <div class="total-grid" style="border-top: 1px solid #757575;">
-                                <span class="total-label-span" style="color: #ffffff;">Total:</span>
-                                <span id="totalInvestmentAccounts" style="font-weight: 700; color: #28a745; font-size: 16px;">$0</span>
+                                <input type="text" class="total-label-input" value="Total:" readonly>
+                                <input type="text" id="totalInvestmentAccounts" class="total-value-input" value="$0" readonly style="color: #28a745;">
                             </div>
                         </div>
 
@@ -699,8 +711,8 @@
                             <h4 style="margin: 0 0 10px 0; color: #ffffff;">Debts (from FI scenario)</h4>
                             <div id="scenarioDebtsList"></div>
                             <div class="total-grid" style="border-top: 1px solid #757575;">
-                                <span class="total-label-span" style="color: #ffffff;">Total:</span>
-                                <span id="totalScenarioDebts" style="font-weight: 700; color: #dc3545; font-size: 16px;">$0</span>
+                                <input type="text" class="total-label-input" value="Total:" readonly>
+                                <input type="text" id="totalScenarioDebts" class="total-value-input" value="$0" readonly style="color: #dc3545;">
                             </div>
                         </div>
 
@@ -740,7 +752,7 @@
                     <!-- Asset Allocation Chart -->
                     <div style="margin-bottom: 30px;">
                         <h3 style="color: #ffffff; border-bottom: 2px solid #D3AF37; padding-bottom: 10px; margin-bottom: 20px;">📊 Asset Allocation</h3>
-                        <div style="background: #16213e; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <div style="background: #16213e; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); max-width: 800px; margin: 0 auto;">
                             <div style="height: 400px; position: relative;">
                                 <canvas id="assetAllocationChart"></canvas>
                             </div>
@@ -828,7 +840,7 @@
             
             defaultAccounts.forEach(account => {
                 const accountDiv = document.createElement('div');
-                accountDiv.style.cssText = 'display: grid; grid-template-columns: 180px 180px; gap: 10px; margin-bottom: 8px; align-items: center;';
+                accountDiv.style.cssText = 'display: grid; grid-template-columns: 198px 198px; gap: 10px; margin-bottom: 8px; align-items: center;';
 
                 const nameInput = document.createElement('input');
                 nameInput.type = 'text';
@@ -849,7 +861,7 @@
                 totalInvestment += account.value;
             });
             
-            document.getElementById('totalInvestmentAccounts').textContent = '$' + formatNumber(totalInvestment);
+            document.getElementById('totalInvestmentAccounts').value = '$' + formatNumber(totalInvestment);
         }
 
         function populateDefaultScenarioDebts() {
@@ -888,7 +900,7 @@
             
             scenarioDebts.forEach(debt => {
                 const debtDiv = document.createElement('div');
-                debtDiv.style.cssText = 'display: grid; grid-template-columns: 180px 180px; gap: 10px; margin-bottom: 8px; align-items: center;';
+                debtDiv.style.cssText = 'display: grid; grid-template-columns: 198px 198px; gap: 10px; margin-bottom: 8px; align-items: center;';
                 
                 const nameSpan = document.createElement('span');
                 nameSpan.textContent = debt.name;
@@ -905,7 +917,7 @@
                 totalDebt += debt.value;
             });
             
-            document.getElementById('totalScenarioDebts').textContent = '$' + formatNumber(totalDebt);
+            document.getElementById('totalScenarioDebts').value = '$' + formatNumber(totalDebt);
         }
 
         function populateInvestmentAccounts(scenario) {
@@ -918,7 +930,7 @@
                 // Use actual account data from scenario
                 scenario.inputs.accounts.forEach(account => {
                     const accountDiv = document.createElement('div');
-                    accountDiv.style.cssText = 'display: grid; grid-template-columns: 180px 180px; gap: 10px; margin-bottom: 8px; align-items: center;';
+                    accountDiv.style.cssText = 'display: grid; grid-template-columns: 198px 198px; gap: 10px; margin-bottom: 8px; align-items: center;';
 
                     const nameInput = document.createElement('input');
                     nameInput.type = 'text';
@@ -944,7 +956,7 @@
                 return;
             }
             
-            document.getElementById('totalInvestmentAccounts').textContent = '$' + formatNumber(totalInvestment);
+            document.getElementById('totalInvestmentAccounts').value = '$' + formatNumber(totalInvestment);
         }
 
         function populateScenarioDebts(scenario) {
@@ -961,7 +973,7 @@
             if (scenario.inputs?.debts?.mortgage && scenario.inputs.debts.mortgage.balance > 0) {
                 const mortgageBalance = scenario.inputs.debts.mortgage.balance;
                 const debtDiv = document.createElement('div');
-                debtDiv.style.cssText = 'display: grid; grid-template-columns: 180px 180px; gap: 10px; margin-bottom: 8px; align-items: center;';
+                debtDiv.style.cssText = 'display: grid; grid-template-columns: 198px 198px; gap: 10px; margin-bottom: 8px; align-items: center;';
 
                 const nameInput = document.createElement('input');
                 nameInput.type = 'text';
@@ -986,7 +998,7 @@
             if (scenario.inputs?.debts?.vehicle && scenario.inputs.debts.vehicle.balance > 0) {
                 const vehicleBalance = scenario.inputs.debts.vehicle.balance;
                 const debtDiv = document.createElement('div');
-                debtDiv.style.cssText = 'display: grid; grid-template-columns: 180px 180px; gap: 10px; margin-bottom: 8px; align-items: center;';
+                debtDiv.style.cssText = 'display: grid; grid-template-columns: 198px 198px; gap: 10px; margin-bottom: 8px; align-items: center;';
 
                 const nameInput = document.createElement('input');
                 nameInput.type = 'text';
@@ -1011,7 +1023,7 @@
             if (scenario.inputs?.debts?.other && scenario.inputs.debts.other.balance > 0) {
                 const otherBalance = scenario.inputs.debts.other.balance;
                 const debtDiv = document.createElement('div');
-                debtDiv.style.cssText = 'display: grid; grid-template-columns: 180px 180px; gap: 10px; margin-bottom: 8px; align-items: center;';
+                debtDiv.style.cssText = 'display: grid; grid-template-columns: 198px 198px; gap: 10px; margin-bottom: 8px; align-items: center;';
 
                 const nameInput = document.createElement('input');
                 nameInput.type = 'text';
@@ -1040,7 +1052,7 @@
                 debtsList.appendChild(noDebtsDiv);
             }
             
-            document.getElementById('totalScenarioDebts').textContent = '$' + formatNumber(totalDebt);
+            document.getElementById('totalScenarioDebts').value = '$' + formatNumber(totalDebt);
         }
 
         function initializeNetWorthInputs() {
@@ -1111,10 +1123,10 @@
             // Gather data for chart
             const data = [];
             const labels = [];
-            const colors = ['#D3AF37', '#D3AF37', '#FF9800', '#9C27B0', '#607D8B', '#795548', '#E91E63', '#00BCD4'];
+            const colors = ['#D3AF37', '#4CAF50', '#FF9800', '#2196F3', '#9C27B0', '#607D8B', '#E91E63', '#00BCD4'];
             
             // Investment accounts (combined as "Stocks")
-            const investmentTotal = unformatNumber(document.getElementById('totalInvestmentAccounts').textContent.replace('$', ''));
+            const investmentTotal = unformatNumber(document.getElementById('totalInvestmentAccounts').value.replace('$', ''));
             if (investmentTotal > 0) {
                 data.push(((investmentTotal / totalAssets) * 100).toFixed(1));
                 labels.push('Stocks');
