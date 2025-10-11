@@ -331,7 +331,7 @@
         /* Grid Layout Styles */
         .item-grid {
             display: grid;
-            grid-template-columns: 150px 150px;
+            grid-template-columns: 180px 180px;
             gap: 10px;
             margin-bottom: 8px;
             align-items: center;
@@ -339,11 +339,49 @@
 
         .total-grid {
             display: grid;
-            grid-template-columns: 150px 150px;
+            grid-template-columns: 180px 180px;
             gap: 10px;
             margin-top: 10px;
             padding-top: 10px;
             border-top: 1px solid #757575;
+        }
+
+        .asset-grid {
+            display: grid;
+            grid-template-columns: 165px 165px;
+            gap: 10px;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+
+        /* Summary Card Styles */
+        .key-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #D3AF37 0%, #B8941E 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .result-card h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0 0 10px 0;
+            opacity: 0.9;
+        }
+
+        .result-card .value {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: #ffffff;
         }
 
         /* Input Field Variants */
@@ -627,23 +665,23 @@
                         <div style="background: #e0e0e0; padding: 15px; border-radius: 8px;">
                             <h4 style="margin: 0 0 15px 0; color: #222222;">Additional Assets</h4>
                             <div id="additionalAssetsList">
-                                <div class="asset-item item-grid">
+                                <div class="asset-item asset-grid">
                                     <input type="text" id="asset1Name" value="Cash" class="asset-name-input">
                                     <input type="text" id="asset1Value" value="2,000" oninput="updateNetWorth()" class="asset-value-input">
                                 </div>
-                                <div class="asset-item item-grid">
+                                <div class="asset-item asset-grid">
                                     <input type="text" id="asset2Name" value="Home" class="asset-name-input">
                                     <input type="text" id="asset2Value" value="700,000" oninput="updateNetWorth()" class="asset-value-input">
                                 </div>
-                                <div class="asset-item item-grid">
+                                <div class="asset-item asset-grid">
                                     <input type="text" id="asset3Name" value="Stock Options/RSUs" class="asset-name-input">
                                     <input type="text" id="asset3Value" value="10,000" oninput="updateNetWorth()" class="asset-value-input">
                                 </div>
-                                <div class="asset-item item-grid">
+                                <div class="asset-item asset-grid">
                                     <input type="text" id="asset4Name" value="Crypto" class="asset-name-input">
                                     <input type="text" id="asset4Value" value="4,000" oninput="updateNetWorth()" class="asset-value-input">
                                 </div>
-                                <div class="asset-item item-grid">
+                                <div class="asset-item asset-grid">
                                     <input type="text" id="asset5Name" value="Other" class="asset-name-input">
                                     <input type="text" id="asset5Value" value="1,000" oninput="updateNetWorth()" class="asset-value-input">
                                 </div>
@@ -670,11 +708,11 @@
                         <div style="background: #e0e0e0; padding: 15px; border-radius: 8px;">
                             <h4 style="margin: 0 0 15px 0; color: #222222;">Additional Liabilities</h4>
                             <div id="additionalLiabilitiesList">
-                                <div class="liability-item item-grid">
+                                <div class="liability-item asset-grid">
                                     <input type="text" id="liability1Name" value="HELOC" class="asset-name-input">
                                     <input type="text" id="liability1Value" value="0" oninput="updateNetWorth()" class="asset-value-input">
                                 </div>
-                                <div class="liability-item item-grid">
+                                <div class="liability-item asset-grid">
                                     <input type="text" id="liability2Name" value="Other" class="asset-name-input">
                                     <input type="text" id="liability2Value" value="0" oninput="updateNetWorth()" class="asset-value-input">
                                 </div>
@@ -684,20 +722,18 @@
                     </div>
 
                     <!-- Net Worth Totals Summary -->
-                    <div style="background: linear-gradient(135deg, #D3AF37 0%, #B8941E 100%); padding: 20px; border-radius: 8px; margin-bottom: 30px;">
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; text-align: center;">
-                            <div>
-                                <strong style="color: #ffffff; font-size: 16px;">Total Assets</strong><br>
-                                <input type="text" id="totalAssets" readonly style="font-size: 20px; font-weight: 700; color: #ffffff; border: none; background: transparent; text-align: center; width: 100%;">
-                            </div>
-                            <div>
-                                <strong style="color: #ffffff; font-size: 16px;">Total Liabilities</strong><br>
-                                <input type="text" id="totalLiabilities" readonly style="font-size: 20px; font-weight: 700; color: #ffffff; border: none; background: transparent; text-align: center; width: 100%;">
-                            </div>
-                            <div>
-                                <strong style="color: #ffffff; font-size: 16px;">Net Worth</strong><br>
-                                <input type="text" id="currentNetWorth" readonly style="font-size: 20px; font-weight: 700; color: #ffffff; border: none; background: transparent; text-align: center; width: 100%;">
-                            </div>
+                    <div class="key-results">
+                        <div class="result-card">
+                            <h3>Total Assets</h3>
+                            <div class="value" id="totalAssets">$0</div>
+                        </div>
+                        <div class="result-card">
+                            <h3>Total Liabilities</h3>
+                            <div class="value" id="totalLiabilities">$0</div>
+                        </div>
+                        <div class="result-card">
+                            <h3>Net Worth</h3>
+                            <div class="value" id="currentNetWorth">$0</div>
                         </div>
                     </div>
 
@@ -792,7 +828,7 @@
             
             defaultAccounts.forEach(account => {
                 const accountDiv = document.createElement('div');
-                accountDiv.style.cssText = 'display: grid; grid-template-columns: 150px 150px; gap: 10px; margin-bottom: 8px; align-items: center;';
+                accountDiv.style.cssText = 'display: grid; grid-template-columns: 180px 180px; gap: 10px; margin-bottom: 8px; align-items: center;';
 
                 const nameInput = document.createElement('input');
                 nameInput.type = 'text';
@@ -852,7 +888,7 @@
             
             scenarioDebts.forEach(debt => {
                 const debtDiv = document.createElement('div');
-                debtDiv.style.cssText = 'display: grid; grid-template-columns: 150px 150px; gap: 10px; margin-bottom: 8px; align-items: center;';
+                debtDiv.style.cssText = 'display: grid; grid-template-columns: 180px 180px; gap: 10px; margin-bottom: 8px; align-items: center;';
                 
                 const nameSpan = document.createElement('span');
                 nameSpan.textContent = debt.name;
@@ -882,7 +918,7 @@
                 // Use actual account data from scenario
                 scenario.inputs.accounts.forEach(account => {
                     const accountDiv = document.createElement('div');
-                    accountDiv.style.cssText = 'display: grid; grid-template-columns: 150px 150px; gap: 10px; margin-bottom: 8px; align-items: center;';
+                    accountDiv.style.cssText = 'display: grid; grid-template-columns: 180px 180px; gap: 10px; margin-bottom: 8px; align-items: center;';
 
                     const nameInput = document.createElement('input');
                     nameInput.type = 'text';
@@ -925,7 +961,7 @@
             if (scenario.inputs?.debts?.mortgage && scenario.inputs.debts.mortgage.balance > 0) {
                 const mortgageBalance = scenario.inputs.debts.mortgage.balance;
                 const debtDiv = document.createElement('div');
-                debtDiv.style.cssText = 'display: grid; grid-template-columns: 150px 150px; gap: 10px; margin-bottom: 8px; align-items: center;';
+                debtDiv.style.cssText = 'display: grid; grid-template-columns: 180px 180px; gap: 10px; margin-bottom: 8px; align-items: center;';
 
                 const nameInput = document.createElement('input');
                 nameInput.type = 'text';
@@ -950,7 +986,7 @@
             if (scenario.inputs?.debts?.vehicle && scenario.inputs.debts.vehicle.balance > 0) {
                 const vehicleBalance = scenario.inputs.debts.vehicle.balance;
                 const debtDiv = document.createElement('div');
-                debtDiv.style.cssText = 'display: grid; grid-template-columns: 150px 150px; gap: 10px; margin-bottom: 8px; align-items: center;';
+                debtDiv.style.cssText = 'display: grid; grid-template-columns: 180px 180px; gap: 10px; margin-bottom: 8px; align-items: center;';
 
                 const nameInput = document.createElement('input');
                 nameInput.type = 'text';
@@ -975,7 +1011,7 @@
             if (scenario.inputs?.debts?.other && scenario.inputs.debts.other.balance > 0) {
                 const otherBalance = scenario.inputs.debts.other.balance;
                 const debtDiv = document.createElement('div');
-                debtDiv.style.cssText = 'display: grid; grid-template-columns: 150px 150px; gap: 10px; margin-bottom: 8px; align-items: center;';
+                debtDiv.style.cssText = 'display: grid; grid-template-columns: 180px 180px; gap: 10px; margin-bottom: 8px; align-items: center;';
 
                 const nameInput = document.createElement('input');
                 nameInput.type = 'text';
@@ -1055,11 +1091,11 @@
             }
             
             // Update displays
-            document.getElementById('totalAssets').value = '$' + formatNumber(totalAssets);
-            document.getElementById('totalLiabilities').value = '$' + formatNumber(totalLiabilities);
+            document.getElementById('totalAssets').textContent = '$' + formatNumber(totalAssets);
+            document.getElementById('totalLiabilities').textContent = '$' + formatNumber(totalLiabilities);
             
             const netWorth = totalAssets - totalLiabilities;
-            document.getElementById('currentNetWorth').value = '$' + formatNumber(netWorth);
+            document.getElementById('currentNetWorth').textContent = '$' + formatNumber(netWorth);
             
             // Update asset allocation chart
             updateAssetAllocationChart(totalAssets);
