@@ -348,7 +348,8 @@
 
         .total-label-input, .total-value-input {
             font-weight: 700;
-            font-size: 16px;
+            font-size: 14px;
+            padding: 8px;
         }
 
         .total-label-input {
@@ -934,13 +935,13 @@
                     nameInput.type = 'text';
                     nameInput.value = account.name;
                     nameInput.readOnly = true;
-                    nameInput.style.cssText = 'display: inline-block; font-weight: 600; color: #ffffff; margin-right: 10px;';
+                    nameInput.style.cssText = 'display: inline-block; font-weight: 600; color: #ffffff; margin-right: 10px; padding: 8px; font-size: 14px;';
 
                     const valueInput = document.createElement('input');
                     valueInput.type = 'text';
                     valueInput.value = '$' + formatNumber(account.value);
                     valueInput.readOnly = true;
-                    valueInput.style.cssText = 'font-weight: 700; color: #28a745; font-size: 16px;';
+                    valueInput.style.cssText = 'font-weight: 700; color: #28a745; font-size: 14px; padding: 8px;';
 
                     accountDiv.appendChild(nameInput);
                     accountDiv.appendChild(valueInput);
@@ -977,13 +978,13 @@
                 nameInput.type = 'text';
                 nameInput.value = 'Mortgage';
                 nameInput.readOnly = true;
-                nameInput.style.cssText = 'display: inline-block; font-weight: 600; color: #ffffff; margin-right: 10px;';
+                nameInput.style.cssText = 'display: inline-block; font-weight: 600; color: #ffffff; margin-right: 10px; padding: 8px; font-size: 14px;';
 
                 const valueInput = document.createElement('input');
                 valueInput.type = 'text';
                 valueInput.value = '$' + formatNumber(mortgageBalance);
                 valueInput.readOnly = true;
-                valueInput.style.cssText = 'font-weight: 700; color: #dc3545; font-size: 16px;';
+                valueInput.style.cssText = 'font-weight: 700; color: #dc3545; font-size: 14px; padding: 8px;';
 
                 debtDiv.appendChild(nameInput);
                 debtDiv.appendChild(valueInput);
@@ -1002,13 +1003,13 @@
                 nameInput.type = 'text';
                 nameInput.value = 'Vehicle Loan';
                 nameInput.readOnly = true;
-                nameInput.style.cssText = 'display: inline-block; font-weight: 600; color: #ffffff; margin-right: 10px;';
+                nameInput.style.cssText = 'display: inline-block; font-weight: 600; color: #ffffff; margin-right: 10px; padding: 8px; font-size: 14px;';
 
                 const valueInput = document.createElement('input');
                 valueInput.type = 'text';
                 valueInput.value = '$' + formatNumber(vehicleBalance);
                 valueInput.readOnly = true;
-                valueInput.style.cssText = 'font-weight: 700; color: #dc3545; font-size: 16px;';
+                valueInput.style.cssText = 'font-weight: 700; color: #dc3545; font-size: 14px; padding: 8px;';
 
                 debtDiv.appendChild(nameInput);
                 debtDiv.appendChild(valueInput);
@@ -1027,13 +1028,13 @@
                 nameInput.type = 'text';
                 nameInput.value = 'Other Debt';
                 nameInput.readOnly = true;
-                nameInput.style.cssText = 'display: inline-block; font-weight: 600; color: #ffffff; margin-right: 10px;';
+                nameInput.style.cssText = 'display: inline-block; font-weight: 600; color: #ffffff; margin-right: 10px; padding: 8px; font-size: 14px;';
 
                 const valueInput = document.createElement('input');
                 valueInput.type = 'text';
                 valueInput.value = '$' + formatNumber(otherBalance);
                 valueInput.readOnly = true;
-                valueInput.style.cssText = 'font-weight: 700; color: #dc3545; font-size: 16px;';
+                valueInput.style.cssText = 'font-weight: 700; color: #dc3545; font-size: 14px; padding: 8px;';
 
                 debtDiv.appendChild(nameInput);
                 debtDiv.appendChild(valueInput);
