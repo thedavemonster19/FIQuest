@@ -1253,9 +1253,9 @@
                     additionalLiabilities: {}
                 },
                 totals: {
-                    totalAssets: parseFloat(document.getElementById('totalAssets').value.replace(/[$,]/g, '')),
-                    totalLiabilities: parseFloat(document.getElementById('totalLiabilities').value.replace(/[$,]/g, '')),
-                    netWorth: parseFloat(document.getElementById('currentNetWorth').value.replace(/[$,]/g, ''))
+                    totalAssets: parseFloat(document.getElementById('totalAssets').textContent.replace(/[$,]/g, '')),
+                    totalLiabilities: parseFloat(document.getElementById('totalLiabilities').textContent.replace(/[$,]/g, '')),
+                    netWorth: parseFloat(document.getElementById('currentNetWorth').textContent.replace(/[$,]/g, ''))
                 }
             };
             
@@ -1291,8 +1291,7 @@
 
             console.log('Saved net worth setup with individual accounts:', netWorthData);
 
-            // Show success message
-            alert('✅ Net Worth Setup saved successfully!\n\nAll data is now available across the FIQuest app.\n\n💡 Remember to update your save file from the Data Management page when you\'re ready to backup your progress.');
+            // Success message removed - auto-navigating to next page
         }
 
         // Utility functions
