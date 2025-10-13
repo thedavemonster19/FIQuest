@@ -3170,12 +3170,12 @@
                     </label>
                     <span style="display: inline-block; width: 120px; text-align: right; color: #666; margin-right: 10px;">
                         <small style="color: #666;">Projected:</small>
-                        <strong>$${formatNumber(projectedValue)}</strong>
+                        <strong style="color: #222222;">$${formatNumber(projectedValue)}</strong>
                     </span>
                     <input type="text" id="${id}_actual" value="$${formatNumber(defaultActual)}"
                            data-projected="${projectedValue}"
                            data-account-id="${id}"
-                           style="width: 120px; padding: 8px; border: 1px solid #757575; border-radius: 8px; font-size: 14px; text-align: right; background: #ffffff;"
+                           style="width: 120px; padding: 8px; border: 1px solid #757575; border-radius: 8px; font-size: 14px; text-align: right; background: #ffffff; color: #222222;"
                            onInput="formatInputValue(this); updateTotals(); updateVariances();">
                     <span id="${id}_variance" style="display: inline-block; width: 100px; text-align: right; font-weight: bold; margin-left: 10px;">$0</span>
                 </div>
@@ -3191,17 +3191,12 @@
                                style="width: 180px; padding: 8px; border: 1px solid #757575; border-radius: 8px; font-size: 14px; color: #222222; background: #ffffff;"
                                onInput="updateTotals();">
                     </label>
-                    <span style="display: inline-block; width: 120px; text-align: right; color: #999; margin-right: 10px;">
-                        <small style="color: #666;">Projected:</small>
-                        <strong>--</strong>
-                    </span>
                     <input type="text" id="${id}_actual" value="" placeholder="$0"
                            data-projected="0"
                            data-account-id="${id}"
                            data-is-new="true"
-                           style="width: 120px; padding: 8px; border: 1px solid #757575; border-radius: 8px; font-size: 14px; text-align: right; background: #ffffff;"
+                           style="width: 120px; padding: 8px; border: 1px solid #757575; border-radius: 8px; font-size: 14px; text-align: right; background: #ffffff; color: #222222;"
                            onInput="formatInputValue(this); updateTotals(); updateVariances();">
-                    <span id="${id}_variance" style="display: inline-block; width: 100px; text-align: right; font-weight: bold; color: #999; margin-left: 10px;">--</span>
                 </div>
             `;
         }
@@ -3245,35 +3240,61 @@
         }
 
         function updateVariances() {
-            let totalProjected = 0;
-            let totalActual = 0;
-            
-            // Update individual account variances using data attributes
-            const inputs = document.querySelectorAll('#accountValuesSection input[type="text"]');
-            inputs.forEach(input => {
+            let totalProjectedAssets = 0;
+            let totalActualAssets = 0;
+            let totalProjectedLiabilities = 0;
+            let totalActualLiabilities = 0;
+
+            // Process asset inputs
+            const assetInputs = document.querySelectorAll('#investmentAccountInputs input[data-account-id], #additionalAssetInputs input[data-account-id]');
+            assetInputs.forEach(input => {
                 const accountId = input.getAttribute('data-account-id');
                 const projectedValue = parseFloat(input.getAttribute('data-projected')) || 0;
                 const actualValue = unformatNumber(input.value);
                 const variance = actualValue - projectedValue;
-                
-                // Update the variance display
+
+                // Update individual variance display
                 const varianceElement = document.getElementById(accountId + '_variance');
                 if (varianceElement) {
                     varianceElement.textContent = '$' + formatNumber(variance);
-                    varianceElement.style.color = variance >= 0 ? '#8B6914' : '#c62828';
+                    varianceElement.style.color = variance >= 0 ? '#28a745' : '#c62828';
                 }
-                
-                // Track totals for overall variance
-                totalProjected += projectedValue;
-                totalActual += actualValue;
+
+                // Track asset totals
+                totalProjectedAssets += projectedValue;
+                totalActualAssets += actualValue;
             });
-            
-            // Update overall variance in the totals section
-            const overallVariance = totalActual - totalProjected;
+
+            // Process liability inputs
+            const liabilityInputs = document.querySelectorAll('#scenarioDebtInputs input[data-account-id], #additionalLiabilityInputs input[data-account-id]');
+            liabilityInputs.forEach(input => {
+                const accountId = input.getAttribute('data-account-id');
+                const projectedValue = parseFloat(input.getAttribute('data-projected')) || 0;
+                const actualValue = unformatNumber(input.value);
+                const variance = actualValue - projectedValue;
+
+                // Update individual variance display
+                const varianceElement = document.getElementById(accountId + '_variance');
+                if (varianceElement) {
+                    varianceElement.textContent = '$' + formatNumber(variance);
+                    varianceElement.style.color = variance >= 0 ? '#28a745' : '#c62828';
+                }
+
+                // Track liability totals
+                totalProjectedLiabilities += projectedValue;
+                totalActualLiabilities += actualValue;
+            });
+
+            // Calculate overall net worth variance
+            const projectedNetWorth = totalProjectedAssets - totalProjectedLiabilities;
+            const actualNetWorth = totalActualAssets - totalActualLiabilities;
+            const overallVariance = actualNetWorth - projectedNetWorth;
+
+            // Update overall variance display in the totals section
             const varianceDisplay = document.getElementById('varianceDisplay');
             if (varianceDisplay) {
                 varianceDisplay.textContent = '$' + formatNumber(overallVariance);
-                varianceDisplay.style.color = overallVariance >= 0 ? '#8B6914' : '#c62828';
+                varianceDisplay.style.color = overallVariance >= 0 ? '#28a745' : '#c62828';
             }
         }
 
