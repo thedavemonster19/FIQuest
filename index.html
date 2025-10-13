@@ -182,12 +182,18 @@
 
 
     <script>
+        // Flags to prevent duplicate function calls
+        let isLoadingFile = false;
+
         // Add keyboard support
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Enter' || event.key === ' ') {
                 startNewGame();
             } else if (event.key === 'l' || event.key === 'L') {
-                loadSaveFile();
+                // Only trigger if not already loading
+                if (!isLoadingFile) {
+                    loadSaveFile();
+                }
             }
         });
 
@@ -203,6 +209,13 @@
         }
 
         function loadSaveFile() {
+            // Prevent duplicate calls
+            if (isLoadingFile) {
+                return;
+            }
+
+            isLoadingFile = true;
+
             // Add transition effect
             const btn = document.getElementById('loadGameBtn');
             btn.style.transform = 'scale(0.9)';
@@ -215,16 +228,41 @@
                 input.accept = '.json';
                 input.style.display = 'none';
 
+                let fileSelected = false;
+
                 input.onchange = function(event) {
                     const file = event.target.files[0];
                     if (file) {
+                        fileSelected = true;
                         importSaveFile(file);
                     } else {
                         // Reset button if no file selected
                         btn.innerHTML = '📁 Load Save File';
                         btn.style.transform = 'scale(1)';
+                        isLoadingFile = false;
                     }
                 };
+
+                // Reset loading flag when file picker is canceled/closed (not supported in all browsers)
+                input.oncancel = function() {
+                    btn.innerHTML = '📁 Load Save File';
+                    btn.style.transform = 'scale(1)';
+                    isLoadingFile = false;
+                };
+
+                // Fallback: Check if file was selected after a delay
+                // This handles browsers that don't support oncancel
+                setTimeout(() => {
+                    if (!fileSelected && isLoadingFile) {
+                        // User likely canceled the file picker
+                        btn.innerHTML = '📁 Load Save File';
+                        btn.style.transform = 'scale(1)';
+                        isLoadingFile = false;
+                    }
+                }, 1000);
+
+                // Reset button transform immediately after opening picker
+                btn.style.transform = 'scale(1)';
 
                 document.body.appendChild(input);
                 input.click();
