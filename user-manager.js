@@ -674,7 +674,7 @@ class UserManager {
     }
 
     // Complete Data Export/Import System for Local Storage
-    exportAllUserData(format = 'json', includeEncryption = false) {
+    exportAllUserData(format = 'json') {
         if (!this.currentPlayer) {
             throw new Error('No user logged in to export data');
         }
@@ -711,7 +711,7 @@ class UserManager {
 
             if (format === 'json') {
                 const jsonData = JSON.stringify(exportData, null, 2);
-                return includeEncryption ? this.encryptData(jsonData) : jsonData;
+                return jsonData;
             } else if (format === 'csv') {
                 return this.convertCompleteDataToCSV(exportData);
             } else {
@@ -745,35 +745,6 @@ class UserManager {
         return hash.toString(16);
     }
 
-    encryptData(data) {
-        // Simple encryption for export files (base64 + simple cipher)
-        // Note: This is basic protection, not cryptographically secure
-        const encoded = btoa(data);
-        let encrypted = '';
-        const key = 'FIQuest2025';
-        for (let i = 0; i < encoded.length; i++) {
-            encrypted += String.fromCharCode(
-                encoded.charCodeAt(i) ^ key.charCodeAt(i % key.length)
-            );
-        }
-        return btoa(encrypted);
-    }
-
-    decryptData(encryptedData) {
-        try {
-            const encrypted = atob(encryptedData);
-            let decrypted = '';
-            const key = 'FIQuest2025';
-            for (let i = 0; i < encrypted.length; i++) {
-                decrypted += String.fromCharCode(
-                    encrypted.charCodeAt(i) ^ key.charCodeAt(i % key.length)
-                );
-            }
-            return atob(decrypted);
-        } catch (error) {
-            throw new Error('Failed to decrypt data - invalid encryption or corrupted file');
-        }
-    }
 
     convertCompleteDataToCSV(exportData) {
         let csv = '';
@@ -995,16 +966,9 @@ class UserManager {
         return csv;
     }
 
-    importAllUserData(importData, isEncrypted = false) {
+    importAllUserData(importData) {
         try {
-            // Decrypt if needed
-            let parsedData;
-            if (isEncrypted) {
-                const decryptedData = this.decryptData(importData);
-                parsedData = JSON.parse(decryptedData);
-            } else {
-                parsedData = typeof importData === 'string' ? JSON.parse(importData) : importData;
-            }
+            const parsedData = typeof importData === 'string' ? JSON.parse(importData) : importData;
 
             // Validate import data structure
             if (!this.validateImportData(parsedData)) {
@@ -1104,11 +1068,10 @@ class UserManager {
         URL.revokeObjectURL(url);
     }
 
-    generateExportFilename(format = 'json', includeEncryption = false) {
+    generateExportFilename(format = 'json') {
         const date = DateTimeUtils.getFilenameDateFormat();
         const playerName = this.currentPlayer.playerName.toLowerCase().replace(/[^a-z0-9]/g, '');
-        const encryptSuffix = includeEncryption ? '_encrypted' : '';
-        return `fiquest_${playerName}_${date}${encryptSuffix}.${format}`;
+        return `fiquest_${playerName}_${date}.${format}`;
     }
 
     getDataManagementInfo() {

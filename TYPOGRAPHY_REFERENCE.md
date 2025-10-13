@@ -1,6 +1,6 @@
 # FIQuest Typography Reference
 
-**Date**: October 6, 2025
+**Date**: October 13, 2025
 **Theme**: Simplified Type System for Dark Mode
 
 ## Overview
@@ -22,14 +22,14 @@ FIQuest uses a streamlined, single-font typography system optimized for readabil
 
 ## Font Size Scale
 
-**5 sizes total** (reduced from 8 for improved consistency)
+**6 sizes total** (reduced from 8 for improved consistency)
 
 | Size | Usage | Elements |
 |------|-------|----------|
 | **28px** | Page titles | Main page headings (`.page-title`) |
 | **20px** | Section headers | Container section titles (`.section-title`, `.app-title`) |
-| **16px** | Default/body text | Navigation links, labels, form inputs, data values, subsection headers |
-| **14px** | Secondary text | Table headers, user info, disclaimer text |
+| **16px** | Default/body text | Navigation links, labels, data values, subsection headers |
+| **14px** | Secondary text/cells | Table headers, form input cells, user info, disclaimer text |
 | **12px** | Tertiary/labels | Tooltip text, small captions, result card labels, toggle arrows |
 
 ### Size Application Guidelines
@@ -104,24 +104,34 @@ All text meets WCAG AA standards for dark backgrounds:
 
 ## Implementation Status
 
-### Consolidation Complete ✅
+### Typography System Complete ✅
 
-**Font Sizes Eliminated:**
+**Font Sizes Consolidated:**
 - 24px → 20px (section headers, result card values)
 - 13px → 12px (tooltip text)
+- Final scale: 28px, 20px, 16px, 14px, 12px (6 sizes total)
 
-**Font Weights Eliminated:**
+**Font Weights Consolidated:**
 - 300 → 400 (page title now uses normal weight)
 - 500 → 600 (consolidated to semi-bold)
 - "bold" → 700 (explicit numeric value)
+- Final weights: 400 (normal), 600 (semi-bold), 700 (bold)
 
-**Pages Updated:**
-- ✅ my-scenario.html (October 6, 2025)
+**All Pages Updated**: ✅ October 13, 2025
+- index.html
+- fi-calculator.html
+- create-player.html
+- login-player.html
+- menu.html
+- my-scenario.html
+- net-worth.html
+- net-worth-tracking.html
+- data-management.html
 
-**Remaining Work:**
-- Apply same consolidation to other 8 HTML pages
-- Verify mobile responsive typography
-- Test readability on various screen sizes
+**Verification Complete:**
+- ✅ Mobile responsive typography tested
+- ✅ Readability verified on various screen sizes
+- ✅ Consistent application across all pages
 
 ---
 
@@ -297,9 +307,47 @@ If switching fonts in future:
 
 ---
 
+## Form Typography Standards (Light-Styled Inputs)
+
+### Input Field Typography
+- **Font Size**: 14px (form cells and input fields)
+- **Font Weight**: 400 (normal) for input text
+- **Text Color**: `#222222` (black on white backgrounds)
+- **Background**: `#ffffff` (white)
+- **Padding**: 8px (consistent cell height)
+
+### Form Label Typography
+- **Font Size**: 14px (matches input fields)
+- **Font Weight**: 600 (semi-bold for emphasis)
+- **Text Color**: `#222222` (black on light containers)
+- **Label Spacing**: margin-bottom: 8px
+
+### Projected Value Display
+- **Font Size**: 14px (aligns with input fields)
+- **Font Weight**: 700 (bold for values)
+- **Text Color**: `#222222` (black for visibility on light backgrounds)
+- **Label Size**: 12px (small label "Projected:")
+- **Label Color**: `#666` (dark grey, de-emphasized)
+
+### Variance Display
+- **Font Size**: 14px (consistent with row)
+- **Font Weight**: 700 (bold for emphasis)
+- **Text Color**: Conditional - `#28a745` (green) for positive, `#c62828` (red) for negative
+- **Alignment**: right-aligned for numeric values
+
+### Summary Card Typography
+- **Label Font Size**: 14px
+- **Label Font Weight**: 700 (bold)
+- **Label Color**: `#ffffff` (white on gold background)
+- **Value Font Size**: 18px-20px (larger for emphasis)
+- **Value Font Weight**: 700 (bold)
+- **Value Color**: `#ffffff` (white on gold background)
+
+---
+
 **Documentation Created**: October 6, 2025
-**Last Updated**: October 6, 2025
+**Last Updated**: October 13, 2025
 **Project**: FIQuest Financial Independence Application
 **Branch**: dark-mode-implementation
-**Reference Page**: my-scenario.html (complete implementation)
-**Status**: Ready for application to other 8 pages
+**Reference Pages**: All 9 HTML pages (complete implementation)
+**Status**: Typography system complete and consistently applied

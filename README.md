@@ -15,20 +15,24 @@ FIQuest transforms the complex journey of financial independence planning into a
 
 ### Key Features
 
-- **🎮 Gamified Experience**: Character creation and progress tracking
-- **📊 Interactive FI Calculator**: Multi-account portfolio planning with compound growth projections
-- **💰 Net Worth Tracking**: Comprehensive asset and liability management
-- **📈 Visual Analytics**: Real-time charts showing portfolio growth, spending capacity, and debt reduction
-- **🎯 Scenario Management**: Save and compare multiple financial independence strategies
-- **📱 Responsive Design**: Works seamlessly on desktop and mobile devices
+- **🎮 Gamified Experience**: Character creation and progress tracking with save file management
+- **📊 Interactive FI Calculator**: Multi-account portfolio planning with year-by-year projections
+- **💰 Net Worth Tracking**: Comprehensive asset/liability tracking with variance analysis
+- **📈 Visual Analytics**: Real-time charts for portfolio growth, asset allocation, and net worth trends
+- **🎯 Scenario Management**: Save and compare up to 3 financial independence strategies
+- **💾 Data Export**: Comprehensive CSV export with year-by-year projections and detailed inputs
+- **📱 Responsive Design**: Dark mode interface optimized for desktop and mobile devices
+- **🔒 Privacy-First**: All data stored locally in browser with optional save file exports
 
 ## 🛠️ Technology Stack
 
 - **Frontend**: Pure HTML5, CSS3, JavaScript (ES6+)
 - **Charts**: Chart.js v3.9.1 for data visualization
 - **Storage**: LocalStorage for client-side data persistence
+- **File Management**: FileSaver.js for save file exports
 - **Deployment**: GitHub Pages (static hosting)
 - **Architecture**: Multi-page single-file structure (no build process required)
+- **Design**: Dark mode with gold accents optimized for readability
 
 ## 🏗️ Application Structure
 
@@ -42,7 +46,9 @@ FIQuest/
 ├── my-scenario.html        # Display and manage saved FI scenarios
 ├── net-worth.html          # Initial net worth setup
 ├── net-worth-tracking.html # Ongoing net worth entry and tracking
+├── data-management.html    # Save file management and CSV export
 ├── user-manager.js         # Centralized user data management
+├── file-saver.js           # File download utility for save files
 ├── chart.min.js           # Chart.js library for visualizations
 └── CLAUDE.md              # Development documentation
 ```
@@ -104,10 +110,12 @@ FIQuest is designed as a pure static web application - simply open any HTML file
 - **Variance analysis** between projected and actual values
 
 ### Data Management
-- **LocalStorage persistence** for client-side data
+- **LocalStorage persistence** for client-side data (no server required)
 - **UserManager class** for centralized data operations
-- **Cross-page data synchronization**
-- **Import/export capabilities** for data backup
+- **Cross-page data synchronization** across all features
+- **Save file import/export** for data backup and portability
+- **Comprehensive CSV export** with year-by-year projections and account details
+- **Privacy-focused** - all data stays on your device unless you export it
 
 ## 🎨 Features Showcase
 

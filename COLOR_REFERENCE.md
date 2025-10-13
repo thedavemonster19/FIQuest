@@ -1,6 +1,6 @@
 # FIQuest Current Color Scheme Reference
 
-**Date**: October 1, 2025
+**Date**: October 13, 2025
 **Theme**: Dark Mode with Gold Accents (Updated)
 
 ## Current Color Palette
@@ -10,11 +10,14 @@
 - **Secondary Dark**: `#16213e` (cards, sections, content areas, sidebars)
 - **Dark Grey**: `#3b3b3b` (row labels, projections, secondary backgrounds)
 - **Medium Grey**: `#757575` (actual data cells, borders, dividers)
+- **Light Container**: `#e0e0e0` (editable input sections, light-styled forms)
+- **White**: `#ffffff` (input field backgrounds, maximum contrast text)
 
 ### Text Colors
-- **Primary Text**: `#ffffff` (main headings, labels)
+- **Primary Text**: `#ffffff` (main headings, labels on dark backgrounds)
 - **Secondary Text**: `#e0e0e0` (body text, descriptions)
 - **Muted Text**: `#b0b0b0` (subtle text, placeholders)
+- **Black Text**: `#222222` (text on light backgrounds, input fields)
 
 ### Gold Accent Colors
 - **Primary Gold**: `#D3AF37` (primary buttons, borders, highlights, "FI" branding)
@@ -167,6 +170,15 @@ All 9 pages now use the consistent color scheme:
   - Assets/Positive: `#28a745` (green)
   - Debts/Negative: `#dc3545` (red)
 
+- **Variance Colors**
+  - Positive Variance: `#28a745` (green) - actual exceeds projected
+  - Negative Variance: `#c62828` (red) - actual below projected
+
+- **Action Button Colors**
+  - Save/Confirm: `#28a745` (green)
+  - Cancel: `linear-gradient(135deg, #f44336 0%, #d32f2f 100%)` (red gradient)
+  - Primary Action: `linear-gradient(135deg, #D3AF37 0%, #B8941E 100%)` (gold gradient)
+
 - **Disclaimer**
   - Background: `#3b3b3b` (dark grey)
   - Text: `#b0b0b0` (muted text)
@@ -182,9 +194,36 @@ All 9 pages now use the consistent color scheme:
 - **Hover State**
   - Background: `#B8941E` (hover gold)
 
+### Form Component Colors (Light-Styled Inputs)
+
+- **Additional Liabilities Container**
+  - Background: `#e0e0e0` (light container)
+  - Border: `1px solid #757575` (medium grey)
+  - Border radius: `5px`
+  - Padding: `15px`
+
+- **Form Input Fields (Light Style)**
+  - Background: `#ffffff` (white)
+  - Border: `1px solid #757575` (medium grey)
+  - Border radius: `8px`
+  - Text color: `#222222` (black)
+  - Padding: `8px`
+
+- **Projected Value Display (Light Style)**
+  - Label color: `#666` (dark grey)
+  - Value color: `#222222` (black)
+  - Font weight: 700 (bold)
+
+- **Summary Card (Gold Style)**
+  - Background: `linear-gradient(135deg, #D3AF37 0%, #B8941E 100%)` (gold gradient)
+  - Text color: `#ffffff` (white)
+  - All labels and values: white for maximum contrast
+  - Border radius: `8px`
+  - Padding: `15px`
+
 ---
 **Documentation Created**: October 1, 2025
-**Last Updated**: October 6, 2025
+**Last Updated**: October 13, 2025
 **Project**: FIQuest Financial Independence Application
 **Branch**: dark-mode-implementation
-**Reference Page**: my-scenario.html (fully updated)
+**Reference Page**: net-worth-tracking.html (fully updated with form styling)

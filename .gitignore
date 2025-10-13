@@ -12,6 +12,7 @@ Thumbs.db
 
 # Archive folder (development history)
 Archive/
+archive/
 
 # Session summaries and development notes
 SESSION_SUMMARY_*.md

@@ -8,22 +8,25 @@ FIQuest is a financial independence tracking application that uses gamification 
 
 ## Architecture
 
-**Multi-Page Single-File Structure**: The application consists of 8 main HTML files, each containing all functionality for its specific feature:
+**Multi-Page Single-File Structure**: The application consists of 9 main HTML files, each containing all functionality for its specific feature:
 - `index.html` - Welcome/landing page for new and returning users (renamed from start.html for GitHub Pages)
-- `fi-calculator.html` - Main FI calculator with scenario planning (322KB, includes embedded Chart.js)
+- `fi-calculator.html` - Main FI calculator with scenario planning
 - `create-player.html` - User registration and character creation
 - `login-player.html` - User authentication and game selection
 - `menu.html` - Main navigation hub after user login
 - `my-scenario.html` - Display and manage saved FI scenarios
 - `net-worth.html` - Initial net worth setup with asset/liability tracking
-- `net-worth-tracking.html` - Ongoing net worth entry and progress tracking (118KB)
+- `net-worth-tracking.html` - Ongoing net worth entry and progress tracking
+- `data-management.html` - Save file management and comprehensive CSV export
 
 **Technology Stack**:
 - Pure HTML/CSS/JavaScript (no framework or build system)
-- Chart.js v3.9.1 library (embedded and minified) for data visualization
-- LocalStorage for persistent data (planned migration to Supabase cloud storage)
+- Chart.js v3.9.1 library (external chart.min.js file) for data visualization
+- FileSaver.js library (file-saver.js) for save file downloads
+- LocalStorage for persistent data (all client-side, no server required)
 - Vanilla JavaScript for calculations and DOM manipulation
 - CSS Grid and Flexbox for responsive layout
+- Dark mode design theme with gold accents for premium feel
 
 **Data Persistence Architecture**:
 - `user-manager.js` - Centralized user data management with UserManager class
@@ -52,6 +55,44 @@ FIQuest is a financial independence tracking application that uses gamification 
 - Ongoing tracking via `net-worth-tracking.html` with date-based entries
 - Asset allocation analysis with pie chart visualizations
 - Projected vs actual variance tracking for goal monitoring
+- Prorated projected values based on entry date for accurate variance calculations
+
+**CSV Export**: Comprehensive data export functionality
+- Year-by-year projection data for all scenarios
+- Complete input parameters and account-level details
+- Net worth tracking history with all entries
+- All data exported in organized CSV format for external analysis
+
+## Design Standards
+
+**Color Palette** (Dark Mode with Gold Accents):
+- **Primary Gold**: #D3AF37 (buttons, highlights, section underlines)
+- **Secondary Gold**: #B8941E (button gradients, hover states)
+- **Dark Backgrounds**: #222222 (main), #16213e (containers), #3b3b3b (secondary)
+- **Light Containers**: #e0e0e0 (editable input sections)
+- **Text Colors**: #ffffff (primary), #e0e0e0 (secondary), #b0b0b0 (muted)
+- **Success Green**: #28a745 (positive variances, save buttons)
+- **Danger Red**: #dc3545 (negative variances, debt values)
+- **Cancel Red**: #f44336 → #d32f2f (cancel button gradient)
+
+**Typography Standards**:
+- **Font Family**: 'Helvetica Neue', Arial, sans-serif (universal)
+- **Font Sizes**: 28px (page titles), 20px (section headers), 16px (body/inputs), 14px (secondary/cells), 12px (labels)
+- **Font Weights**: 400 (normal), 600 (semi-bold labels), 700 (bold headers/values)
+- **Minimum Input Size**: 16px to prevent iOS zoom
+
+**Layout Standards**:
+- **Containers**: Dark navy (#16213e) background, 1px solid #757575 border, 12px radius
+- **Summary Cards**: Gold gradient background with white text
+- **Form Inputs**: Light containers (#e0e0e0) for editable sections, white (#ffffff) input backgrounds
+- **Grid Layouts**: CSS Grid for uniform cell sizing, typically 198px for readonly, 165px for editable
+- **Spacing**: 8px padding for cells, 20px for sections, 30px for containers
+
+**Component Patterns**:
+- **Readonly Values**: Simple display with colored values (green for assets, red for debts)
+- **Editable Sections**: Light grey containers with white input fields and black text (#222222)
+- **Variance Display**: Green (#28a745) for positive, red (#c62828) for negative
+- **Action Buttons**: Gold for primary, red for cancel, green for save
 
 ## Development Workflow
 
@@ -86,7 +127,7 @@ FIQuest is a financial independence tracking application that uses gamification 
 
 **Chart Integration**:
 - Chart.js v3.9.1 library: standalone `chart.min.js` file (200KB)
-- Embedded in `index.html` (321KB total) and `net-worth-tracking.html` (117KB total)
+- External file loaded via script tag (cached across all pages)
 - Multiple chart types: portfolio growth, asset allocation pie charts, net worth tracking
 - Dynamic data updates when scenarios or net worth entries change
 - Responsive sizing for mobile/desktop compatibility
@@ -95,6 +136,21 @@ FIQuest is a financial independence tracking application that uses gamification 
 - Menu system organized around user progression: Initial Setup → Ongoing Tracking
 - Context-aware navigation based on user completion status
 - Seamless data persistence across page transitions
+
+**Variance Calculations** (net-worth-tracking.html):
+- Separates assets and liabilities for proper net worth variance computation
+- Formula: `(Actual Assets - Actual Liabilities) - (Projected Assets - Projected Liabilities)`
+- Prevents incorrect calculation where liabilities would increase variance
+- Individual account variances: `Actual Value - Projected Value`
+- Color-coded display: Green for positive, red for negative
+- Prorated projected values based on entry date for accuracy
+
+**Form Styling Patterns**:
+- **Light Containers**: Used for editable input sections (#e0e0e0 background)
+- **Dark Containers**: Used for readonly data display (#222222 or #3b3b3b background)
+- **Input Fields**: White backgrounds (#ffffff) with black text (#222222) in light containers
+- **Summary Cards**: Gold gradient backgrounds with white text for key metrics
+- **Button Styling**: Gold for primary actions, green for save, red for cancel
 
 ## Key Implementation Functions
 

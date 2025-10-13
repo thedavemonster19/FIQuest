@@ -605,12 +605,6 @@
                             </div>
                         </div>
 
-                        <div class="checkbox-option">
-                            <input type="checkbox" id="export-encrypt">
-                            <label for="export-encrypt">Encrypt export file (recommended for sensitive data)</label>
-                        </div>
-                        <div class="help-text">Encryption adds basic protection to your export file.</div>
-
                         <div class="button-group">
                             <button class="btn btn-primary" onclick="exportUserData()">
                                 💾 Update Save File
@@ -639,11 +633,6 @@
                             <label for="importFile" class="file-input-label">
                                 📁 Choose File to Import
                             </label>
-                        </div>
-
-                        <div class="checkbox-option">
-                            <input type="checkbox" id="import-encrypted">
-                            <label for="import-encrypted">File is encrypted</label>
                         </div>
 
                         <div class="button-group">
@@ -802,7 +791,7 @@
                 }
             }
 
-            exportAllUserData(format = 'json', includeEncryption = false) {
+            exportAllUserData(format = 'json') {
                 if (!this.currentPlayer) {
                     throw new Error('No user logged in to export data');
                 }
@@ -836,7 +825,7 @@
 
                     if (format === 'json') {
                         const jsonData = JSON.stringify(exportData, null, 2);
-                        return includeEncryption ? this.encryptData(jsonData) : jsonData;
+                        return jsonData;
                     } else if (format === 'csv') {
                         return this.convertCompleteDataToCSV(exportData);
                     } else {
@@ -857,34 +846,6 @@
                     hash = hash & hash;
                 }
                 return hash.toString(16);
-            }
-
-            encryptData(data) {
-                const encoded = btoa(data);
-                let encrypted = '';
-                const key = 'FIQuest2025';
-                for (let i = 0; i < encoded.length; i++) {
-                    encrypted += String.fromCharCode(
-                        encoded.charCodeAt(i) ^ key.charCodeAt(i % key.length)
-                    );
-                }
-                return btoa(encrypted);
-            }
-
-            decryptData(encryptedData) {
-                try {
-                    const encrypted = atob(encryptedData);
-                    let decrypted = '';
-                    const key = 'FIQuest2025';
-                    for (let i = 0; i < encrypted.length; i++) {
-                        decrypted += String.fromCharCode(
-                            encrypted.charCodeAt(i) ^ key.charCodeAt(i % key.length)
-                        );
-                    }
-                    return atob(decrypted);
-                } catch (error) {
-                    throw new Error('Failed to decrypt data - invalid encryption or corrupted file');
-                }
             }
 
             convertCompleteDataToCSV(exportData) {
@@ -1124,15 +1085,9 @@
                 return csv;
             }
 
-            importAllUserData(importData, isEncrypted = false) {
+            importAllUserData(importData) {
                 try {
-                    let parsedData;
-                    if (isEncrypted) {
-                        const decryptedData = this.decryptData(importData);
-                        parsedData = JSON.parse(decryptedData);
-                    } else {
-                        parsedData = typeof importData === 'string' ? JSON.parse(importData) : importData;
-                    }
+                    const parsedData = typeof importData === 'string' ? JSON.parse(importData) : importData;
 
                     if (!this.validateImportData(parsedData)) {
                         throw new Error('Invalid import data format');
@@ -1342,11 +1297,10 @@
                 }
             }
 
-            generateExportFilename(format = 'json', includeEncryption = false) {
+            generateExportFilename(format = 'json') {
                 const date = DateTimeUtils.getFilenameDateFormat();
                 const playerName = this.currentPlayer.playerName.toLowerCase().replace(/[^a-z0-9]/g, '');
-                const encryptSuffix = includeEncryption ? '_encrypted' : '';
-                return `fiquest_${playerName}_${date}${encryptSuffix}.${format}`;
+                return `fiquest_${playerName}_${date}.${format}`;
             }
 
             getDataManagementInfo() {
@@ -1533,12 +1487,11 @@
                 showStatus('exportStatus', 'Preparing export...', 'info');
 
                 const format = document.querySelector('input[name="exportFormat"]:checked').value;
-                const includeEncryption = document.getElementById('export-encrypt').checked;
 
                 setTimeout(() => {
                     try {
-                        const exportData = userManager.exportAllUserData(format, includeEncryption);
-                        const filename = userManager.generateExportFilename(format, includeEncryption);
+                        const exportData = userManager.exportAllUserData(format);
+                        const filename = userManager.generateExportFilename(format);
 
                         userManager.downloadExportFile(exportData, filename, format);
 
@@ -1587,14 +1540,12 @@
             showStatus('importStatus', 'Reading file...', 'info');
 
             const reader = new FileReader();
-            const isEncrypted = document.getElementById('import-encrypted').checked;
-
             reader.onload = function(e) {
                 try {
                     showStatus('importStatus', 'Importing data...', 'info');
 
                     setTimeout(() => {
-                        const result = userManager.importAllUserData(e.target.result, isEncrypted);
+                        const result = userManager.importAllUserData(e.target.result);
 
                         showProgress('import', false);
 
