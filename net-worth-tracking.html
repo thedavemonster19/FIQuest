@@ -669,7 +669,7 @@
 
                         <!-- Form Actions -->
                         <div style="display: flex; gap: 15px; justify-content: flex-end;">
-                            <button onclick="closeUpdateForm()" style="background: #e0e0e0; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">Cancel</button>
+                            <button onclick="closeUpdateForm()" style="background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">Cancel</button>
                             <button onclick="saveCurrentValues()" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold;">💾 Save Entry</button>
                         </div>
                     </div>
@@ -2845,7 +2845,7 @@
 
             const accountsHTML = `
                 <div style="background: #16213e; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-                    <h4 style="color: #8B6914; margin-bottom: 15px; border-bottom: 2px solid #D3AF37; padding-bottom: 8px;">📈 Assets</h4>
+                    <h4 style="color: #ffffff; margin-bottom: 15px; border-bottom: 2px solid #D3AF37; padding-bottom: 8px;">📈 Assets</h4>
                     
                     <!-- Investment Accounts -->
                     <div style="margin-bottom: 20px;">
@@ -2861,39 +2861,39 @@
                 </div>
 
                 <div style="background: #16213e; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-                    <h4 style="color: #c62828; margin-bottom: 15px; border-bottom: 2px solid #f44336; padding-bottom: 8px;">🏠 Liabilities</h4>
-                    
+                    <h4 style="color: #ffffff; margin-bottom: 15px; border-bottom: 2px solid #D3AF37; padding-bottom: 8px;">🏠 Liabilities</h4>
+
                     <!-- Scenario Debts -->
-                    <div style="margin-bottom: 20px;">
+                    <div>
                         <h5 style="color: #b0b0b0; margin-bottom: 10px;">Scenario Debts</h5>
                         <div id="scenarioDebtInputs"></div>
                     </div>
-                    
-                    <!-- Additional Liabilities -->
-                    <div>
-                        <h5 style="color: #b0b0b0; margin-bottom: 10px;">Additional Liabilities</h5>
-                        <div id="additionalLiabilityInputs"></div>
-                    </div>
+                </div>
+
+                <!-- Additional Liabilities (separate container with light grey styling) -->
+                <div style="padding: 15px; border: 1px solid #757575; border-radius: 5px; background-color: #e0e0e0; margin-bottom: 20px;">
+                    <h5 style="margin: 0 0 10px 0; color: #222222; font-size: 14px; font-weight: 600;">Additional Liabilities</h5>
+                    <div id="additionalLiabilityInputs"></div>
                 </div>
 
                 <!-- Real-time Totals -->
-                <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; border-left: 4px solid #D3AF37;">
+                <div style="background: linear-gradient(135deg, #D3AF37 0%, #B8941E 100%); padding: 15px; border-radius: 8px;">
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; text-align: center;">
                         <div>
-                            <strong style="color: #8B6914;">Total Assets</strong><br>
-                            <span id="totalAssetsDisplay" style="font-size: 18px; font-weight: bold; color: #8B6914;">$0</span>
+                            <strong style="color: #ffffff;">Total Assets</strong><br>
+                            <span id="totalAssetsDisplay" style="font-size: 18px; font-weight: bold; color: #ffffff;">$0</span>
                         </div>
                         <div>
-                            <strong style="color: #c62828;">Total Liabilities</strong><br>
-                            <span id="totalLiabilitiesDisplay" style="font-size: 18px; font-weight: bold; color: #c62828;">$0</span>
+                            <strong style="color: #ffffff;">Total Liabilities</strong><br>
+                            <span id="totalLiabilitiesDisplay" style="font-size: 18px; font-weight: bold; color: #ffffff;">$0</span>
                         </div>
                         <div>
-                            <strong style="color: #1565c0;">Net Worth</strong><br>
-                            <span id="netWorthDisplay" style="font-size: 20px; font-weight: bold; color: #1565c0;">$0</span>
+                            <strong style="color: #ffffff;">Net Worth</strong><br>
+                            <span id="netWorthDisplay" style="font-size: 20px; font-weight: bold; color: #ffffff;">$0</span>
                         </div>
                         <div>
-                            <strong style="color: #ff9800;">Variance</strong><br>
-                            <span id="varianceDisplay" style="font-size: 18px; font-weight: bold; color: #ff9800;">$0</span>
+                            <strong style="color: #ffffff;">Variance</strong><br>
+                            <span id="varianceDisplay" style="font-size: 18px; font-weight: bold; color: #ffffff;">$0</span>
                         </div>
                     </div>
                 </div>
@@ -2995,7 +2995,7 @@
                         const entryDate = document.getElementById('entryDate').value;
                         // Calculate prorated projected value based on entry date (additional liabilities don't change)
                         const projectedValue = calculateProratedProjectedValue({name, value}, entryDate, savedSetup, 'additional');
-                        html += createAccountInput(`additional_liability_${existingLiabilityCount}`, name, projectedValue, value);
+                        html += createLightAccountInput(`additional_liability_${existingLiabilityCount}`, name, projectedValue, value);
                         existingLiabilityCount++;
                     }
                 });
@@ -3007,7 +3007,7 @@
 
             for (let i = 0; i < emptySlots; i++) {
                 const slotIndex = existingLiabilityCount + i;
-                html += createEmptyAccountInput(`new_additional_liability_${slotIndex}`, `New Liability ${slotIndex + 1}`, 'liability');
+                html += createLightEmptyAccountInput(`new_additional_liability_${slotIndex}`, `New Liability ${slotIndex + 1}`, 'liability');
             }
 
             container.innerHTML = html;
@@ -3157,6 +3157,51 @@
                         <small style="color: #b0b0b0;">Variance:</small><br>
                         <span id="${id}_variance" style="font-weight: bold; color: #999;">--</span>
                     </div>
+                </div>
+            `;
+        }
+
+        // Light-styled input functions for light grey containers (matching fi-calculator style)
+        function createLightAccountInput(id, name, projectedValue, defaultActual = 0) {
+            return `
+                <div style="margin-bottom: 15px;">
+                    <label style="display: inline-block; width: 200px; font-size: 14px; color: #222222; margin-right: 10px;">
+                        <span style="display: inline-block; min-width: 180px;">${name}</span>
+                    </label>
+                    <span style="display: inline-block; width: 120px; text-align: right; color: #666; margin-right: 10px;">
+                        <small style="color: #666;">Projected:</small>
+                        <strong>$${formatNumber(projectedValue)}</strong>
+                    </span>
+                    <input type="text" id="${id}_actual" value="$${formatNumber(defaultActual)}"
+                           data-projected="${projectedValue}"
+                           data-account-id="${id}"
+                           style="width: 120px; padding: 8px; border: 1px solid #757575; border-radius: 8px; font-size: 14px; text-align: right; background: #ffffff;"
+                           onInput="formatInputValue(this); updateTotals(); updateVariances();">
+                    <span id="${id}_variance" style="display: inline-block; width: 100px; text-align: right; font-weight: bold; margin-left: 10px;">$0</span>
+                </div>
+            `;
+        }
+
+        function createLightEmptyAccountInput(id, label, type) {
+            const placeholderText = type === 'asset' ? 'e.g., Car, Jewelry' : 'e.g., Credit Card, Personal Loan';
+            return `
+                <div style="margin-bottom: 15px;">
+                    <label style="display: inline-block; width: 200px; font-size: 14px; color: #222222; margin-right: 10px;">
+                        <input type="text" id="${id}_name" placeholder="${placeholderText}"
+                               style="width: 180px; padding: 8px; border: 1px solid #757575; border-radius: 8px; font-size: 14px; color: #222222; background: #ffffff;"
+                               onInput="updateTotals();">
+                    </label>
+                    <span style="display: inline-block; width: 120px; text-align: right; color: #999; margin-right: 10px;">
+                        <small style="color: #666;">Projected:</small>
+                        <strong>--</strong>
+                    </span>
+                    <input type="text" id="${id}_actual" value="" placeholder="$0"
+                           data-projected="0"
+                           data-account-id="${id}"
+                           data-is-new="true"
+                           style="width: 120px; padding: 8px; border: 1px solid #757575; border-radius: 8px; font-size: 14px; text-align: right; background: #ffffff;"
+                           onInput="formatInputValue(this); updateTotals(); updateVariances();">
+                    <span id="${id}_variance" style="display: inline-block; width: 100px; text-align: right; font-weight: bold; color: #999; margin-left: 10px;">--</span>
                 </div>
             `;
         }
