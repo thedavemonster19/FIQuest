@@ -270,6 +270,24 @@
             }, 500);
         }
 
+        function decryptData(encryptedData) {
+            // Decrypt save files using XOR cipher
+            // Matches encryption in user-manager.js and data-management.html
+            try {
+                const encrypted = atob(encryptedData);
+                let decrypted = '';
+                const key = 'FIQuest2025';
+                for (let i = 0; i < encrypted.length; i++) {
+                    decrypted += String.fromCharCode(
+                        encrypted.charCodeAt(i) ^ key.charCodeAt(i % key.length)
+                    );
+                }
+                return atob(decrypted);
+            } catch (error) {
+                throw new Error('Failed to decrypt data - invalid encryption or corrupted file');
+            }
+        }
+
         function importSaveFile(file) {
             const reader = new FileReader();
             const loadBtn = document.getElementById('loadGameBtn');
@@ -278,7 +296,20 @@
 
             reader.onload = function(e) {
                 try {
-                    const saveData = JSON.parse(e.target.result);
+                    // Auto-detect encryption and decrypt if needed
+                    let saveData;
+                    try {
+                        // Try to decrypt first (for new encrypted files)
+                        const decryptedData = decryptData(e.target.result);
+                        saveData = JSON.parse(decryptedData);
+                    } catch (decryptError) {
+                        // If decryption fails, try parsing as plain JSON (for old unencrypted files)
+                        try {
+                            saveData = JSON.parse(e.target.result);
+                        } catch (parseError) {
+                            throw new Error('File is not a valid FIQuest save file (corrupted or invalid format)');
+                        }
+                    }
 
                     // Validate save file structure
                     if (!saveData.playerData || !saveData.playerData.playerName) {
