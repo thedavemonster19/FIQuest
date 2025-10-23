@@ -711,7 +711,8 @@ class UserManager {
 
             if (format === 'json') {
                 const jsonData = JSON.stringify(exportData, null, 2);
-                return jsonData;
+                // Always encrypt JSON exports for security-by-obscurity
+                return this.encryptData(jsonData);
             } else if (format === 'csv') {
                 return this.convertCompleteDataToCSV(exportData);
             } else {
@@ -745,6 +746,36 @@ class UserManager {
         return hash.toString(16);
     }
 
+    encryptData(data) {
+        // Simple encryption for export files (base64 + XOR cipher)
+        // Note: This is basic protection for security-by-obscurity, not cryptographically secure
+        // Purpose: Prevent casual inspection of save files without the web app
+        const encoded = btoa(data);
+        let encrypted = '';
+        const key = 'FIQuest2025';
+        for (let i = 0; i < encoded.length; i++) {
+            encrypted += String.fromCharCode(
+                encoded.charCodeAt(i) ^ key.charCodeAt(i % key.length)
+            );
+        }
+        return btoa(encrypted);
+    }
+
+    decryptData(encryptedData) {
+        try {
+            const encrypted = atob(encryptedData);
+            let decrypted = '';
+            const key = 'FIQuest2025';
+            for (let i = 0; i < encrypted.length; i++) {
+                decrypted += String.fromCharCode(
+                    encrypted.charCodeAt(i) ^ key.charCodeAt(i % key.length)
+                );
+            }
+            return atob(decrypted);
+        } catch (error) {
+            throw new Error('Failed to decrypt data - invalid encryption or corrupted file');
+        }
+    }
 
     convertCompleteDataToCSV(exportData) {
         let csv = '';
@@ -968,7 +999,24 @@ class UserManager {
 
     importAllUserData(importData) {
         try {
-            const parsedData = typeof importData === 'string' ? JSON.parse(importData) : importData;
+            // Auto-detect encryption and decrypt if needed
+            let parsedData;
+            if (typeof importData === 'string') {
+                // Try to decrypt first (for new encrypted files)
+                try {
+                    const decryptedData = this.decryptData(importData);
+                    parsedData = JSON.parse(decryptedData);
+                } catch (decryptError) {
+                    // If decryption fails, try parsing as plain JSON (for old unencrypted files)
+                    try {
+                        parsedData = JSON.parse(importData);
+                    } catch (parseError) {
+                        throw new Error('File is not a valid FIQuest save file (corrupted or invalid format)');
+                    }
+                }
+            } else {
+                parsedData = importData;
+            }
 
             // Validate import data structure
             if (!this.validateImportData(parsedData)) {
