@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #0E0E55 0%, #0E0E55 100%);
+            background: #000;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -84,12 +84,12 @@
         input[type="text"]:focus {
             outline: none;
             background: #2a2a4a;
-            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.3), inset 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 0 0 3px rgba(211, 175, 55, 0.3), inset 0 2px 5px rgba(0,0,0,0.1);
             transform: scale(1.02);
         }
 
         .login-btn {
-            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            background: linear-gradient(135deg, #D3AF37 0%, #B8941E 100%);
             color: white;
             border: none;
             padding: 18px 40px;
@@ -107,7 +107,7 @@
 
         .login-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(33, 150, 243, 0.4);
+            box-shadow: 0 8px 20px rgba(211, 175, 55, 0.4);
         }
 
         .login-btn:active {
@@ -125,7 +125,7 @@
             position: absolute;
             top: 30px;
             left: 30px;
-            background: rgba(22, 33, 62, 0.4);
+            background: linear-gradient(135deg, #16213e 0%, #1a2844 100%);
             color: white;
             border: none;
             padding: 12px 16px;
@@ -133,10 +133,11 @@
             cursor: pointer;
             font-size: 16px;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
         .back-btn:hover {
-            background: rgba(22, 33, 62, 0.5);
+            box-shadow: 0 6px 16px rgba(22, 33, 62, 0.6);
             transform: translateX(-2px);
         }
 
@@ -261,7 +262,7 @@
     <button class="back-btn" onclick="goBack()">← Back</button>
 
     <div class="login-container">
-        <img src="FIQuest.png" alt="FIQuest" class="title-image">
+        <img src="FIQuestNBv1_wide.jpg" alt="FIQuest" class="title-image">
         
         <div class="page-title">Continue Game</div>
         <div class="subtitle">Enter your player name to continue your financial journey</div>
