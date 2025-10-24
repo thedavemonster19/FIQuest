@@ -137,21 +137,6 @@
             flex-direction: column;
             align-items: center;
             gap: 10px;
-            position: relative;
-        }
-
-        /* Subtle overlay gradient behind buttons for better readability */
-        .game-container::before {
-            content: '';
-            position: absolute;
-            bottom: -5vh;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 150%;
-            height: 30vh;
-            background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
-            z-index: -1;
-            pointer-events: none;
         }
 
         @media (max-width: 768px) {
