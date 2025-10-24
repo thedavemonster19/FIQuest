@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #0E0E55 0%, #0E0E55 100%);
+            background: #000;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -84,11 +84,11 @@
         }
 
         .menu-btn.continue-btn {
-            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            background: linear-gradient(135deg, #16213e 0%, #1a2844 100%);
         }
 
         .menu-btn.continue-btn:hover {
-            box-shadow: 0 8px 20px rgba(33, 150, 243, 0.4);
+            box-shadow: 0 8px 20px rgba(22, 33, 62, 0.6);
         }
 
         .menu-btn::before {
@@ -110,7 +110,7 @@
             position: absolute;
             top: 30px;
             left: 30px;
-            background: rgba(22, 33, 62, 0.4);
+            background: linear-gradient(135deg, #16213e 0%, #1a2844 100%);
             color: white;
             border: none;
             padding: 12px 16px;
@@ -118,10 +118,11 @@
             cursor: pointer;
             font-size: 16px;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
         .back-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 6px 16px rgba(22, 33, 62, 0.6);
             transform: translateX(-2px);
         }
 
@@ -166,7 +167,7 @@
     <button class="back-btn" onclick="goBack()">← Back</button>
 
     <div class="menu-container">
-        <img src="FIQuest.png" alt="FIQuest" class="title-image">
+        <img src="FIQuestNBv1_wide.jpg" alt="FIQuest" class="title-image">
         
         <div class="menu-title">Choose Your Path</div>
         
