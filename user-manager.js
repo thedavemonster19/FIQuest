@@ -129,35 +129,58 @@ class UserManager {
             localStorage.removeItem('fiquest_net_worth_setup');
         }
 
-        // Load net worth tracking history from localStorage into UserManager
-        const netWorthHistory = localStorage.getItem('fiquest_net_worth_history');
-        if (netWorthHistory) {
-            try {
-                const parsedHistory = JSON.parse(netWorthHistory);
-                if (!this.currentPlayer.gameData.netWorthTracking) {
-                    this.currentPlayer.gameData.netWorthTracking = [];
-                }
-                // Merge localStorage data with existing player data, avoiding duplicates
-                parsedHistory.forEach(entry => {
-                    const existingIndex = this.currentPlayer.gameData.netWorthTracking.findIndex(existing =>
-                        existing.date === entry.date && existing.dateCreated === entry.dateCreated
-                    );
-                    if (existingIndex === -1) {
-                        this.currentPlayer.gameData.netWorthTracking.push(entry);
-                    }
-                });
-                // Sort by date (newest first)
-                this.currentPlayer.gameData.netWorthTracking.sort((a, b) => new Date(b.date) - new Date(a.date));
-            } catch (error) {
-                console.warn('Error parsing net worth history from localStorage:', error);
-                if (!this.currentPlayer.gameData.netWorthTracking) {
-                    this.currentPlayer.gameData.netWorthTracking = [];
-                }
-            }
+        // Net worth tracking history lives canonically in gameData.netWorthTracking.
+        // It is written exclusively by addNetWorthEntry/updateNetWorthEntry/
+        // deleteNetWorthEntry, so there is no longer any merge from a parallel store.
+        if (!Array.isArray(this.currentPlayer.gameData.netWorthTracking)) {
+            this.currentPlayer.gameData.netWorthTracking = [];
+        }
+
+        // Adopt any data still sitting in the legacy `fiquest_net_worth_history`
+        // store (a one-time migration). Entries in the old, incompatible shape are
+        // never merged in, because the rest of the app expects the current shape.
+        this.migrateLegacyNetWorthHistory();
+    }
+
+    // Migrate the legacy `fiquest_net_worth_history` store into the canonical
+    // gameData.netWorthTracking array, then retire the legacy key. Only entries in
+    // the current shape (those with `accounts` + `totals`) are adopted; if any
+    // entry is in an old, incompatible shape the legacy key is left untouched so
+    // the data can be recovered manually rather than silently corrupting the array.
+    migrateLegacyNetWorthHistory() {
+        const legacy = localStorage.getItem('fiquest_net_worth_history');
+        if (!legacy) return;
+
+        let parsed;
+        try {
+            parsed = JSON.parse(legacy);
+        } catch (error) {
+            console.warn('Could not parse legacy net worth history; leaving it untouched:', error);
+            return;
+        }
+
+        if (!Array.isArray(parsed) || parsed.length === 0) {
+            localStorage.removeItem('fiquest_net_worth_history');
+            return;
+        }
+
+        const tracking = this.currentPlayer.gameData.netWorthTracking;
+        const compatible = parsed.filter(entry => entry && entry.accounts && entry.totals);
+        const hasIncompatible = compatible.length !== parsed.length;
+
+        // Only adopt legacy entries when the canonical store is empty, to avoid
+        // duplicating entries that are already present.
+        if (compatible.length > 0 && tracking.length === 0) {
+            tracking.push(...compatible);
+            tracking.sort((a, b) => new Date(b.date) - new Date(a.date));
+            this.savePlayerData();
+            console.log(`Migrated ${compatible.length} legacy net worth entries into canonical store`);
+        }
+
+        if (hasIncompatible) {
+            console.warn('Legacy net worth history contains entries in an old format; leaving fiquest_net_worth_history in place for manual recovery.');
         } else {
-            if (!this.currentPlayer.gameData.netWorthTracking) {
-                this.currentPlayer.gameData.netWorthTracking = [];
-            }
+            localStorage.removeItem('fiquest_net_worth_history');
         }
     }
 
@@ -170,13 +193,19 @@ class UserManager {
             const activeScenario = localStorage.getItem('fiquest_active_scenario');
             const netWorthSetup = localStorage.getItem('fiquest_net_worth_setup');
 
-            // Update player's game data (preserve existing netWorthTracking)
+            // The loose fiquest_* keys are a working cache that individual pages
+            // populate. When a key is *absent* (getItem returns null) we must keep
+            // the previously saved value rather than overwriting it with empty —
+            // otherwise autosave/beforeunload on a page that never set the key would
+            // wipe good data. A key explicitly set to '[]'/'null' (e.g. clearing
+            // scenarios) is honored as a real change.
+            const existing = this.currentPlayer.gameData || {};
             this.currentPlayer.gameData = {
-                scenarios: scenarios ? JSON.parse(scenarios) : [],
-                activeScenario: activeScenario ? JSON.parse(activeScenario) : null,
-                netWorthSetup: netWorthSetup ? JSON.parse(netWorthSetup) : null,
-                netWorthTracking: this.currentPlayer.gameData.netWorthTracking || [], // Preserve existing tracking data
-                preferences: this.currentPlayer.gameData.preferences || {
+                scenarios: scenarios !== null ? JSON.parse(scenarios) : (existing.scenarios || []),
+                activeScenario: activeScenario !== null ? JSON.parse(activeScenario) : (existing.activeScenario || null),
+                netWorthSetup: netWorthSetup !== null ? JSON.parse(netWorthSetup) : (existing.netWorthSetup || null),
+                netWorthTracking: existing.netWorthTracking || [], // canonical store, never sourced from a loose key
+                preferences: existing.preferences || {
                     currency: 'USD',
                     dateFormat: 'MM/DD/YYYY'
                 }
@@ -370,7 +399,7 @@ class UserManager {
             }
 
             // Generate unique ID for entry
-            const entryId = 'nw_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            const entryId = 'nw_' + Date.now() + '_' + Math.random().toString(36).slice(2, 11);
             
             // Create complete entry with metadata
             const completeEntry = {
@@ -797,7 +826,7 @@ class UserManager {
         // Financial Independence Scenarios - Detailed
         if (exportData.gameData.scenarios && exportData.gameData.scenarios.length > 0) {
             csv += '"=== FINANCIAL INDEPENDENCE SCENARIOS - SUMMARY ==="\n';
-            csv += '"Scenario Name","Initial Age","Active Until Age","Life Expectancy","Starting Capital","Annual Contributions","Annual Active Spending","Annual Inactive Spending","Rate of Return %","Inflation Rate %","Withdrawal Rate %","FI Year","FI Age","Final Portfolio Value","Monthly Savings Required"\n';
+            csv += '"Scenario Name","Initial Age","Active Until Age","Life Expectancy","Starting Capital","Annual Contributions","Annual Active Spending","Annual Inactive Spending","Rate of Return %","Inflation Rate %","Withdrawal Rate %","FI Year","FI Age","Final Portfolio Value","Monthly Savings to Reach FI"\n';
 
             exportData.gameData.scenarios.forEach((scenario, scenarioIndex) => {
                 // Read from nested inputs structure if available, otherwise fall back to flat structure

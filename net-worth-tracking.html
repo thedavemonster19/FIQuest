@@ -2585,95 +2585,12 @@
             });
         }
 
-        function updateNetWorthTracking() {
-            const trackingData = {
-                timestamp: new Date().toISOString(),
-                scenario: JSON.parse(localStorage.getItem('fiquest_active_scenario')),
-                assets: {
-                    investmentAccounts: parseFloat(document.getElementById('totalInvestmentAccounts').value.replace(/[$,]/g, '')),
-                    additionalAssets: {}
-                },
-                liabilities: {
-                    scenarioDebts: parseFloat(document.getElementById('totalScenarioDebts').value.replace(/[$,]/g, '')),
-                    additionalLiabilities: {}
-                },
-                totals: {
-                    totalAssets: parseFloat(document.getElementById('totalAssets').value.replace(/[$,]/g, '')),
-                    totalLiabilities: parseFloat(document.getElementById('totalLiabilities').value.replace(/[$,]/g, '')),
-                    netWorth: parseFloat(document.getElementById('currentNetWorth').value.replace(/[$,]/g, ''))
-                }
-            };
-            
-            // Capture additional asset data from existing and new inputs
-            const additionalAssetInputs = document.querySelectorAll('#additionalAssetInputs input[data-account-id]');
-            additionalAssetInputs.forEach(input => {
-                const accountId = input.getAttribute('data-account-id');
-                const isNew = input.getAttribute('data-is-new') === 'true';
-                let name = '';
-                let value = 0;
-
-                if (isNew) {
-                    // For new inputs, get name from the name input field
-                    const nameInput = document.getElementById(`${accountId}_name`);
-                    name = nameInput ? nameInput.value.trim() : '';
-                    value = parseFloat(input.value.replace(/[$,]/g, '')) || 0;
-                } else {
-                    // For existing inputs, name is in the span element next to the input
-                    const inputRow = input.closest('div[style*="grid"]');
-                    const nameSpan = inputRow ? inputRow.querySelector('span') : null;
-                    name = nameSpan ? nameSpan.textContent.trim() : '';
-                    value = parseFloat(input.value.replace(/[$,]/g, '')) || 0;
-                }
-
-                if (name && value > 0) {
-                    trackingData.assets.additionalAssets[name] = value;
-                }
-            });
-
-            // Capture additional liability data from existing and new inputs
-            const additionalLiabilityInputs = document.querySelectorAll('#additionalLiabilityInputs input[data-account-id]');
-            additionalLiabilityInputs.forEach(input => {
-                const accountId = input.getAttribute('data-account-id');
-                const isNew = input.getAttribute('data-is-new') === 'true';
-                let name = '';
-                let value = 0;
-
-                if (isNew) {
-                    // For new inputs, get name from the name input field
-                    const nameInput = document.getElementById(`${accountId}_name`);
-                    name = nameInput ? nameInput.value.trim() : '';
-                    value = parseFloat(input.value.replace(/[$,]/g, '')) || 0;
-                } else {
-                    // For existing inputs, name is in the span element next to the input
-                    const inputRow = input.closest('div[style*="grid"]');
-                    const nameSpan = inputRow ? inputRow.querySelector('span') : null;
-                    name = nameSpan ? nameSpan.textContent.trim() : '';
-                    value = parseFloat(input.value.replace(/[$,]/g, '')) || 0;
-                }
-
-                if (name && value > 0) {
-                    trackingData.liabilities.additionalLiabilities[name] = value;
-                }
-            });
-            
-            // Get existing tracking history
-            const existingHistory = JSON.parse(localStorage.getItem('fiquest_net_worth_history') || '[]');
-            existingHistory.push(trackingData);
-            
-            // Save updated history
-            localStorage.setItem('fiquest_net_worth_history', JSON.stringify(existingHistory));
-            
-            // Update current snapshot
-            const currentData = {
-                timestamp: trackingData.timestamp,
-                netWorth: trackingData.totals.netWorth,
-                totalAssets: trackingData.totals.totalAssets,
-                totalLiabilities: trackingData.totals.totalLiabilities
-            };
-            localStorage.setItem('fiquest_current_net_worth', JSON.stringify(currentData));
-            
-            alert(`Net Worth updated successfully! Current Net Worth: $${formatNumber(trackingData.totals.netWorth)}`);
-        }
+        // NOTE: updateNetWorthTracking() was removed here. It was dead code (never
+        // wired to any button) that wrote net worth entries in an old, incompatible
+        // shape to the legacy `fiquest_net_worth_history` key. The live "Save Entry"
+        // button uses saveCurrentValues() -> userManager.addNetWorthEntry(), which
+        // stores entries canonically in gameData.netWorthTracking. Legacy data, if
+        // any, is migrated once on load by user-manager.js migrateLegacyNetWorthHistory().
 
         function saveNetWorthSetup() {
             const netWorthData = {

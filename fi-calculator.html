@@ -1150,7 +1150,7 @@
                     <div class="value" id="finalValue">-</div>
                 </div>
                 <div class="result-card">
-                    <h3>Monthly Savings Required</h3>
+                    <h3 title="The minimum monthly contribution needed to reach financial independence by your 'active until' age.">Monthly Savings to Reach FI</h3>
                     <div class="value" id="monthlySavings">-</div>
                 </div>
             </div>
@@ -1340,7 +1340,26 @@
                 if (savedScenarios) {
                     scenarios = JSON.parse(savedScenarios);
                     console.log(`Loaded ${scenarios.length} saved scenarios:`, scenarios);
-                    
+
+                    // Backfill results for scenarios saved before depletion detection
+                    // and the required-contribution solver existed, so they render
+                    // with the new fields instead of "Not achievable".
+                    let backfilled = false;
+                    scenarios.forEach(scenario => {
+                        if (scenario && scenario.inputs && scenario.results &&
+                            scenario.results.requiredAnnualContribution === undefined) {
+                            const recalculated = performCalculations(scenario.inputs);
+                            const requiredAnnual = solveRequiredContribution(scenario.inputs);
+                            recalculated.requiredAnnualContribution = requiredAnnual;
+                            recalculated.monthlySavingsRequired = (requiredAnnual === null) ? null : requiredAnnual / 12;
+                            scenario.results = recalculated;
+                            backfilled = true;
+                        }
+                    });
+                    if (backfilled) {
+                        localStorage.setItem('fiquest_scenarios', JSON.stringify(scenarios));
+                    }
+
                     // Update UI if scenarios exist
                     if (scenarios.length > 0) {
                         console.log('Displaying scenarios and updating UI');
@@ -1584,6 +1603,48 @@
             }
         }
         
+        // Validate a parsed inputs object. Returns an array of human-readable error
+        // messages (empty when everything is valid). Guards against blank fields
+        // (which parse to NaN) and nonsensical combinations that previously produced
+        // empty or garbage projections.
+        function validateInputs(inputs) {
+            const errors = [];
+            const isNum = (v) => typeof v === 'number' && Number.isFinite(v);
+
+            if (!isNum(inputs.currentAge) || inputs.currentAge < 0 || inputs.currentAge > 120) {
+                errors.push('Current age must be a number between 0 and 120.');
+            }
+            if (!isNum(inputs.lifeExpectancy) || inputs.lifeExpectancy <= inputs.currentAge) {
+                errors.push('Life expectancy must be greater than current age.');
+            }
+            if (!isNum(inputs.activeUntilAge) || inputs.activeUntilAge < inputs.currentAge || inputs.activeUntilAge > inputs.lifeExpectancy) {
+                errors.push('"Active until" age must be between current age and life expectancy.');
+            }
+            if (!isNum(inputs.startingCapital) || inputs.startingCapital < 0) {
+                errors.push('Starting capital must be zero or positive.');
+            }
+            if (!isNum(inputs.rateOfReturn) || inputs.rateOfReturn < -1 || inputs.rateOfReturn > 1) {
+                errors.push('Rate of return must be a percentage between -100 and 100.');
+            }
+            if (!isNum(inputs.inflationRate) || inputs.inflationRate < -1 || inputs.inflationRate > 1) {
+                errors.push('Inflation rate must be a percentage between -100 and 100.');
+            }
+            if (!isNum(inputs.withdrawalRate) || inputs.withdrawalRate <= 0 || inputs.withdrawalRate > 1) {
+                errors.push('Withdrawal rate must be a percentage between 0 and 100.');
+            }
+            if (!isNum(inputs.activeSpending) || inputs.activeSpending < 0) {
+                errors.push('Active spending must be zero or positive.');
+            }
+            if (!isNum(inputs.inactiveSpending) || inputs.inactiveSpending < 0) {
+                errors.push('Inactive (post-active) spending must be zero or positive.');
+            }
+            if (!isNum(inputs.annualContributions) || inputs.annualContributions < 0) {
+                errors.push('Annual contributions must be zero or positive.');
+            }
+
+            return errors;
+        }
+
         function calculateFI() {
             // Update totals from individual accounts
             updateTotalStartingCapital();
@@ -1648,8 +1709,18 @@
                 }
             }
             
+            const validationErrors = validateInputs(inputs);
+            if (validationErrors.length > 0) {
+                alert('Please fix the following before calculating:\n\n• ' + validationErrors.join('\n• '));
+                return;
+            }
+
             const results = performCalculations(inputs);
-            
+            // Solve for the contribution actually required to reach FI by the target age.
+            const requiredAnnual = solveRequiredContribution(inputs);
+            results.requiredAnnualContribution = requiredAnnual;
+            results.monthlySavingsRequired = (requiredAnnual === null) ? null : requiredAnnual / 12;
+
             scenarios.push({
                 name: scenarioName,
                 inputs: inputs,
@@ -2222,6 +2293,8 @@
             let fiAchieved = false;
             let fiYear = null;
             let fiAge = null;
+            let depletionYear = null;   // first year the portfolio is fully drained post-FI
+            let depletionAge = null;
             let currentYear = new Date().getFullYear();
             
             // Initialize debt tracking with months remaining
@@ -2328,9 +2401,20 @@
                         // Conservative approach: Apply withdrawals BEFORE growth
                         // First subtract annual spending from portfolio
                         portfolioValue -= annualSpending;
-                        // Then apply growth to the remaining balance
-                        const growthReturn = portfolioValue * inputs.rateOfReturn;
-                        portfolioValue += growthReturn;
+                        if (portfolioValue <= 0) {
+                            // Funds exhausted. Clamp to zero (don't apply "growth" to a
+                            // negative balance, which would otherwise drive it further
+                            // negative) and record the first year the money runs out.
+                            portfolioValue = 0;
+                            if (depletionAge === null) {
+                                depletionAge = age + 1;          // next year is entered with nothing left
+                                depletionYear = actualYear + 1;
+                            }
+                        } else {
+                            // Then apply growth to the remaining balance
+                            const growthReturn = portfolioValue * inputs.rateOfReturn;
+                            portfolioValue += growthReturn;
+                        }
                     } else {
                         // Before FI, apply growth first then add net contributions
                         const growthReturn = portfolioValue * inputs.rateOfReturn;
@@ -2340,15 +2424,55 @@
             }
             
             const finalPortfolioValue = portfolioValue;
-            const monthlySavingsRequired = inputs.annualContributions / 12;
-            
+
             return {
                 years: years,
                 fiYear: fiYear,
                 fiAge: fiAge,
                 finalPortfolioValue: finalPortfolioValue,
-                monthlySavingsRequired: monthlySavingsRequired
+                depletionYear: depletionYear,
+                depletionAge: depletionAge
+                // requiredAnnualContribution / monthlySavingsRequired are attached by
+                // calculateFI() via solveRequiredContribution() to avoid recursion.
             };
+        }
+
+        // Find the minimum annual contribution required to reach FI by `activeUntilAge`
+        // (the age active/working spending ends). Returns 0 when FI is already reached
+        // by that age with no extra saving, a positive dollar amount, or null when FI by
+        // that age is unreachable at any savings level (e.g. spending outpaces returns).
+        function solveRequiredContribution(inputs) {
+            const targetAge = inputs.activeUntilAge;
+            if (!Number.isFinite(targetAge)) return null;
+
+            const achievesByTarget = (annualContribution) => {
+                const trial = performCalculations({ ...inputs, annualContributions: annualContribution });
+                return trial.fiAge !== null && trial.fiAge <= targetAge;
+            };
+
+            // Already FI by the target age without contributing anything more?
+            if (achievesByTarget(0)) return 0;
+
+            // Grow an upper bound until it succeeds (or conclude it's unreachable).
+            let high = Math.max(12000, inputs.annualContributions || 0, 1000);
+            let guard = 0;
+            while (!achievesByTarget(high) && guard < 30) {
+                high *= 2;
+                guard++;
+            }
+            if (!achievesByTarget(high)) return null;
+
+            // Binary search for the smallest contribution that still hits the target.
+            let low = 0;
+            for (let i = 0; i < 40; i++) {
+                const mid = (low + high) / 2;
+                if (achievesByTarget(mid)) {
+                    high = mid;
+                } else {
+                    low = mid;
+                }
+            }
+            return high;
         }
         
         function displayAllScenarios() {
@@ -2361,14 +2485,27 @@
             document.getElementById('results').style.display = 'block';
         }
         
+        // Escape user-supplied text before injecting it into innerHTML, so a scenario
+        // name like `<img onerror=...>` can't execute.
+        function escapeHtml(value) {
+            return String(value == null ? '' : value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
         function displayScenarioResults() {
             // Financial Independence Year
             let fiYearHTML = '';
             scenarios.forEach((scenario, index) => {
-                const fiText = scenario.results.fiYear ? 
+                const fiText = scenario.results.fiYear ?
                     `${scenario.results.fiYear} (Age ${scenario.results.fiAge})` : 'Not Achieved';
+                const depletionNote = scenario.results.depletionAge ?
+                    `<div style="color: #dc3545; font-size: 12px; margin-top: 2px;">⚠️ Funds depleted at age ${scenario.results.depletionAge} (${scenario.results.depletionYear})</div>` : '';
                 fiYearHTML += `<div class="scenario-result scenario-${index + 1}">
-                    <strong>${scenario.name}:</strong> ${fiText}
+                    <strong>${escapeHtml(scenario.name)}:</strong> ${fiText}${depletionNote}
                 </div>`;
             });
             document.getElementById('fiYear').innerHTML = fiYearHTML;
@@ -2377,16 +2514,27 @@
             let finalValueHTML = '';
             scenarios.forEach((scenario, index) => {
                 finalValueHTML += `<div class="scenario-result scenario-${index + 1}">
-                    <strong>${scenario.name}:</strong> ${formatCurrency(scenario.results.finalPortfolioValue)}
+                    <strong>${escapeHtml(scenario.name)}:</strong> ${formatCurrency(scenario.results.finalPortfolioValue)}
                 </div>`;
             });
             document.getElementById('finalValue').innerHTML = finalValueHTML;
-            
-            // Monthly Savings Required
+
+            // Monthly Savings to Reach FI — the contribution actually required to be
+            // FI by the "active until" age, solved for rather than echoing the input.
             let monthlySavingsHTML = '';
             scenarios.forEach((scenario, index) => {
+                const required = scenario.results.requiredAnnualContribution;
+                const targetAge = scenario.inputs.activeUntilAge;
+                let text;
+                if (required === null || required === undefined) {
+                    text = `Not achievable by age ${targetAge}`;
+                } else if (required <= 0) {
+                    text = `${formatCurrency(0)} — already on track`;
+                } else {
+                    text = `${formatCurrency(required / 12)}/mo (by age ${targetAge})`;
+                }
                 monthlySavingsHTML += `<div class="scenario-result scenario-${index + 1}">
-                    <strong>${scenario.name}:</strong> ${formatCurrency(scenario.results.monthlySavingsRequired)}
+                    <strong>${escapeHtml(scenario.name)}:</strong> ${text}
                 </div>`;
             });
             document.getElementById('monthlySavings').innerHTML = monthlySavingsHTML;
