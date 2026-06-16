@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Scenario - FIQuest</title>
+    <link rel="stylesheet" href="theme.css">
     <style>
         * {
             margin: 0;
@@ -12,8 +13,8 @@
         }
 
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            background: #222222;
+            font-family: var(--font-family);
+            background: var(--bg-dark);
         }
 
         .app-container {
@@ -22,7 +23,7 @@
 
         .sidebar {
             width: 250px;
-            background: #16213e;
+            background: var(--bg-navy);
             color: white;
             padding: 0;
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
@@ -141,13 +142,13 @@
             background: rgba(255,255,255,0.15);
             color: white;
             font-weight: 700;
-            border-right: 3px solid #fff;
+            border-right: 3px solid var(--white);
         }
 
         .main-content {
             margin-left: 250px;
             padding: 0;
-            background: #222222;
+            background: var(--bg-dark);
             min-height: 100vh;
         }
 
@@ -158,17 +159,17 @@
         }
 
         .page-header {
-            background: #16213e;
+            background: var(--bg-navy);
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            border: 1px solid #757575;
+            border: 1px solid var(--border-gray);
         }
 
         .page-title {
             font-size: 28px;
-            color: #ffffff;
+            color: var(--white);
             margin-bottom: 8px;
             font-weight: 400;
             text-align: center;
@@ -177,7 +178,7 @@
 
         .page-subtitle {
             font-size: 16px;
-            color: #e0e0e0;
+            color: var(--gray-light);
             margin: 0;
             font-weight: 400;
             text-align: center;
@@ -185,21 +186,21 @@
         }
 
         .container {
-            background: #16213e;
+            background: var(--bg-navy);
             border-radius: 12px;
             padding: 30px;
             margin-bottom: 30px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border: 1px solid #757575;
+            border: 1px solid var(--border-gray);
         }
 
         .section-title {
             font-size: 20px;
             font-weight: 700;
-            color: #ffffff;
+            color: var(--white);
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #D3AF37;
+            border-bottom: 2px solid var(--gold-primary);
         }
 
         .input-section {
@@ -216,18 +217,18 @@
         
         label {
             font-weight: 600;
-            color: #ffffff;
+            color: var(--white);
             margin-bottom: 8px;
             font-size: 14px;
         }
 
         .readonly-input {
             padding: 12px 16px;
-            border: 2px solid #757575;
+            border: 2px solid var(--border-gray);
             border-radius: 8px;
             font-size: 16px;
-            background-color: #3b3b3b;
-            color: #ffffff;
+            background-color: var(--bg-secondary);
+            color: var(--white);
             font-weight: 600;
         }
 
@@ -242,7 +243,7 @@
             width: 16px;
             height: 16px;
             border-radius: 50%;
-            background-color: #D3AF37;
+            background-color: var(--gold-primary);
             color: white;
             text-align: center;
             line-height: 16px;
@@ -256,8 +257,8 @@
         .tooltip-text {
             visibility: hidden;
             width: 300px;
-            background-color: #3b3b3b;
-            color: #ffffff;
+            background-color: var(--bg-secondary);
+            color: var(--white);
             text-align: left;
             border-radius: 8px;
             padding: 10px;
@@ -281,7 +282,7 @@
             margin-left: -5px;
             border-width: 5px;
             border-style: solid;
-            border-color: #3b3b3b transparent transparent transparent;
+            border-color: var(--bg-secondary) transparent transparent transparent;
         }
 
         .tooltip-container:hover .tooltip-text,
@@ -340,26 +341,26 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #3b3b3b;
+            background: var(--bg-secondary);
             padding: 12px 16px;
             border-radius: 8px;
-            border: 2px solid #757575;
+            border: 2px solid var(--border-gray);
         }
 
         .account-name, .debt-name {
             font-weight: 600;
-            color: #ffffff;
+            color: var(--white);
         }
 
         .account-value {
             font-weight: 700;
-            color: #28a745;
+            color: var(--success);
             font-size: 16px;
         }
 
         .debt-value {
             font-weight: 700;
-            color: #dc3545;
+            color: var(--danger);
             font-size: 16px;
         }
 
@@ -375,7 +376,7 @@
         }
 
         .result-card {
-            background: linear-gradient(135deg, #D3AF37 0%, #B8941E 100%);
+            background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-secondary) 100%);
             color: white;
             padding: 20px;
             border-radius: 8px;
@@ -404,39 +405,39 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
-            background: #16213e;
+            background: var(--bg-navy);
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         .data-table th {
-            background: #222222;
+            background: var(--bg-dark);
             padding: 15px 12px;
             text-align: left;
             font-weight: 600;
-            color: #ffffff;
-            border-bottom: 2px solid #000000;
+            color: var(--white);
+            border-bottom: 2px solid var(--black);
             font-size: 14px;
         }
 
         .data-table td {
             padding: 15px 12px;
-            border-bottom: 1px solid #000000;
-            color: #ffffff;
+            border-bottom: 1px solid var(--black);
+            color: var(--white);
         }
 
         .data-table tr:hover {
-            background: #222222;
+            background: var(--bg-dark);
         }
 
         .status-building {
-            color: #ff9800;
+            color: var(--warning);
             font-weight: 700;
         }
 
         .status-fi {
-            color: #D3AF37;
+            color: var(--gold-primary);
             font-weight: 700;
         }
 
@@ -447,7 +448,7 @@
             top: 20px;
             right: 20px;
             z-index: 1001;
-            background: #D3AF37;
+            background: var(--gold-primary);
             color: white;
             border: none;
             padding: 10px 15px;
@@ -458,7 +459,7 @@
         }
 
         .mobile-menu-btn:hover {
-            background: #B8941E;
+            background: var(--gold-secondary);
         }
 
         /* Enhanced Mobile Styles */
@@ -616,13 +617,13 @@
         .chart-container {
             margin: 30px 0;
             padding: 20px;
-            background: #16213e;
+            background: var(--bg-navy);
             border-radius: 12px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         .chart-title {
-            color: #ffffff;
+            color: var(--white);
             margin-bottom: 20px;
             font-size: 18px;
             font-weight: 600;
@@ -637,20 +638,20 @@
         .disclaimer {
             margin: 40px 0;
             padding: 30px;
-            background-color: #3b3b3b;
+            background-color: var(--bg-secondary);
             border-radius: 10px;
-            border: 1px solid #757575;
+            border: 1px solid var(--border-gray);
         }
 
         .disclaimer h3 {
-            color: #ffffff;
+            color: var(--white);
             margin-top: 0;
             margin-bottom: 15px;
             font-size: 18px;
         }
 
         .disclaimer p {
-            color: #b0b0b0;
+            color: var(--text-muted);
             font-size: 14px;
             line-height: 1.6;
             margin: 0;
@@ -911,6 +912,7 @@
         </main>
     </div>
 
+    <script src="fiquest-utils.js"></script>
     <script>
         function formatCurrency(amount) {
             if (amount === 0 || amount === null || amount === undefined) return '$0';

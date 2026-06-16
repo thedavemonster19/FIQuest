@@ -1,0 +1,54 @@
+/* =====================================================================
+   FIQuest Design System — single source of truth for the visual theme.
+   Loaded first on every page (before each page's own <style> block) so
+   these tokens are available to all rules. This replaces the hand-kept
+   COLOR_REFERENCE.md / TYPOGRAPHY_REFERENCE.md as the canonical palette.
+
+   Dark mode with gold accents. To re-theme the whole app, change a value
+   here once instead of editing every HTML file.
+   ===================================================================== */
+
+:root {
+    /* --- Brand: gold accents --- */
+    --gold-primary: #D3AF37;     /* buttons, highlights, section underlines */
+    --gold-secondary: #B8941E;   /* button gradients, hover states */
+
+    /* --- Backgrounds (dark) --- */
+    --bg-dark: #222222;          /* main page background */
+    --bg-navy: #16213e;          /* containers / cards */
+    --bg-navy-light: #1a2844;    /* navy gradient partner */
+    --bg-secondary: #3b3b3b;     /* secondary panels, inputs on dark */
+    --bg-dark-alt: #2a2a2a;      /* input focus state */
+
+    /* --- Neutrals --- */
+    --gray-light: #e0e0e0;       /* light/editable input containers */
+    --border-gray: #757575;      /* container borders */
+    --text-muted: #b0b0b0;       /* muted/secondary text */
+    --white: #ffffff;            /* primary text on dark */
+    --black: #000000;            /* deepest background / chart grid */
+
+    /* --- Status colors --- */
+    --success: #28a745;          /* positive variance, save actions */
+    --danger: #dc3545;           /* negative variance, debt values */
+    --cancel: #f44336;           /* cancel button gradient start */
+    --cancel-dark: #d32f2f;      /* cancel button gradient end */
+    --warning: #ff9800;          /* "add entry" / attention actions */
+
+    /* --- Typography --- */
+    --font-family: 'Helvetica Neue', Arial, sans-serif;
+    --fs-title: 28px;            /* page titles */
+    --fs-section: 20px;          /* section headers */
+    --fs-body: 16px;             /* body text / inputs (>=16px avoids iOS zoom) */
+    --fs-cell: 14px;             /* table cells / secondary */
+    --fs-label: 12px;            /* small labels */
+    --fw-normal: 400;
+    --fw-semibold: 600;
+    --fw-bold: 700;
+}
+
+/* Universal reset shared by every page. */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}

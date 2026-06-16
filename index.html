@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FIQuest - Start Your Financial Journey</title>
+    <link rel="stylesheet" href="theme.css">
     <style>
         * {
             margin: 0;
@@ -12,13 +13,13 @@
         }
 
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-family: var(--font-family);
             min-height: 100vh;
             margin: 0;
             padding: 0;
             overflow: hidden;
             position: relative;
-            background-color: #000;
+            background-color: var(--black);
         }
 
         /* Cinematic container with letterbox bars */
@@ -26,7 +27,7 @@
             position: relative;
             width: 100vw;
             height: 100vh;
-            background-color: #000;
+            background-color: var(--black);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -47,18 +48,18 @@
             position: absolute;
             width: 100%;
             height: 12.5vh;
-            background: linear-gradient(to bottom, #000 0%, #000 80%, rgba(0,0,0,0.8) 100%);
+            background: linear-gradient(to bottom, var(--black) 0%, var(--black) 80%, rgba(0,0,0,0.8) 100%);
             z-index: 5;
         }
 
         .letterbox-top {
             top: 0;
-            background: linear-gradient(to bottom, #000 0%, #000 80%, rgba(0,0,0,0.8) 100%);
+            background: linear-gradient(to bottom, var(--black) 0%, var(--black) 80%, rgba(0,0,0,0.8) 100%);
         }
 
         .letterbox-bottom {
             bottom: 0;
-            background: linear-gradient(to top, #000 0%, #000 80%, rgba(0,0,0,0.8) 100%);
+            background: linear-gradient(to top, var(--black) 0%, var(--black) 80%, rgba(0,0,0,0.8) 100%);
         }
 
         .game-container {
@@ -81,7 +82,7 @@
         }
 
         .press-start-btn {
-            background: linear-gradient(135deg, #D3AF37 0%, #B8941E 100%);
+            background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-secondary) 100%);
             color: white;
             border: none;
             padding: 20px 40px;
@@ -124,7 +125,7 @@
         }
 
         .continue-btn {
-            background: linear-gradient(135deg, #16213e 0%, #1a2844 100%) !important;
+            background: linear-gradient(135deg, var(--bg-navy) 0%, var(--bg-navy-light) 100%) !important;
             margin-top: 20px;
         }
 
@@ -179,6 +180,7 @@
     </div>
 
 
+    <script src="fiquest-utils.js"></script>
     <script>
         // Flags to prevent duplicate function calls
         let isLoadingFile = false;

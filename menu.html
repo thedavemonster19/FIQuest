@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FIQuest - Game Menu</title>
+    <link rel="stylesheet" href="theme.css">
     <style>
         * {
             margin: 0;
@@ -12,8 +13,8 @@
         }
 
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            background: #000;
+            font-family: var(--font-family);
+            background: var(--black);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -58,7 +59,7 @@
         }
 
         .menu-btn {
-            background: linear-gradient(135deg, #D3AF37 0%, #B8941E 100%);
+            background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-secondary) 100%);
             color: white;
             border: none;
             padding: 18px 40px;
@@ -84,7 +85,7 @@
         }
 
         .menu-btn.continue-btn {
-            background: linear-gradient(135deg, #16213e 0%, #1a2844 100%);
+            background: linear-gradient(135deg, var(--bg-navy) 0%, var(--bg-navy-light) 100%);
         }
 
         .menu-btn.continue-btn:hover {
@@ -110,7 +111,7 @@
             position: absolute;
             top: 30px;
             left: 30px;
-            background: linear-gradient(135deg, #16213e 0%, #1a2844 100%);
+            background: linear-gradient(135deg, var(--bg-navy) 0%, var(--bg-navy-light) 100%);
             color: white;
             border: none;
             padding: 12px 16px;
@@ -187,6 +188,7 @@
         </div>
     </div>
 
+    <script src="fiquest-utils.js"></script>
     <script>
         // Keyboard navigation support
         document.addEventListener('keydown', function(event) {

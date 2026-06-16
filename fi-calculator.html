@@ -4,16 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Financial Independence Calculator</title>
-    <script src="chart.min.js"></script>    <style>
+    <script src="chart.min.js"></script>    <link rel="stylesheet" href="theme.css">
+    <style>
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-family: var(--font-family);
             font-size: 16px;
             font-weight: 400;
             line-height: 1.5;
-            color: #ffffff;
+            color: var(--white);
             margin: 0;
             padding: 20px;
-            background-color: #222222;
+            background-color: var(--bg-dark);
         }
 
         /* Typography System - Simplified to 5 sizes, 3 weights */
@@ -31,16 +32,16 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background: #16213e;
+            background: var(--bg-navy);
             border-radius: 10px;
             padding: 30px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border: 1px solid #757575;
+            border: 1px solid var(--border-gray);
         }
         
         h1 {
             text-align: center;
-            color: #ffffff;
+            color: var(--white);
             margin-bottom: 30px;
         }
         
@@ -59,26 +60,26 @@
         label {
             font-weight: 600;
             margin-bottom: 5px;
-            color: #e0e0e0;
+            color: var(--gray-light);
             font-size: 14px;
         }
         
         input {
             padding: 12px 16px;
-            border: 2px solid #757575;
+            border: 2px solid var(--border-gray);
             border-radius: 8px;
             font-size: 16px;
             font-weight: 600;
             box-sizing: border-box;
             font-family: inherit;
-            background-color: #3b3b3b;
-            color: #ffffff;
+            background-color: var(--bg-secondary);
+            color: var(--white);
         }
 
         input[readonly] {
-            background-color: #3b3b3b;
-            color: #ffffff;
-            border: 2px solid #757575;
+            background-color: var(--bg-secondary);
+            color: var(--white);
+            border: 2px solid var(--border-gray);
             cursor: not-allowed;
             font-weight: 600;
         }
@@ -86,13 +87,13 @@
         /* Light container input overrides */
         #accountDetailsSection input,
         #contributionsDetailsSection input {
-            background-color: #ffffff;
-            color: #222222;
-            border: 1px solid #757575;
+            background-color: var(--white);
+            color: var(--bg-dark);
+            border: 1px solid var(--border-gray);
         }
 
         .calculate-btn {
-            background-color: #D3AF37;
+            background-color: var(--gold-primary);
             color: white;
             padding: 15px 30px;
             border: none;
@@ -112,7 +113,7 @@
         }
         
         .calculate-btn:hover {
-            background-color: #B8941E;
+            background-color: var(--gold-secondary);
         }
         
         .results-section {
@@ -127,7 +128,7 @@
         }
         
         .result-card {
-            background: linear-gradient(135deg, #D3AF37 0%, #B8941E 100%);
+            background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-secondary) 100%);
             padding: 20px;
             border-radius: 8px;
             text-align: center;
@@ -136,13 +137,13 @@
         
         .result-card h3 {
             margin: 0 0 10px 0;
-            color: #ffffff;
+            color: var(--white);
         }
         
         .result-card .value {
             font-size: 20px;
             font-weight: 700;
-            color: #222222;
+            color: var(--bg-dark);
         }
         
         .chart-container {
@@ -165,13 +166,13 @@
         th, td {
             padding: 12px;
             text-align: right;
-            border-bottom: 1px solid #000000;
+            border-bottom: 1px solid var(--black);
         }
         
         th {
-            background-color: #222222;
+            background-color: var(--bg-dark);
             font-weight: bold;
-            color: #ffffff;
+            color: var(--white);
         }
         
         .status-building {
@@ -180,12 +181,12 @@
         }
         
         .status-fi {
-            color: #D3AF37;
+            color: var(--gold-primary);
             font-weight: bold;
         }
         
         .fi-row {
-            background-color: #3b3b3b;
+            background-color: var(--bg-secondary);
         }
         
         #results {
@@ -195,7 +196,7 @@
         .debt-section {
             margin: 30px 0;
             padding: 20px;
-            background: #222222;
+            background: var(--bg-dark);
             border-radius: 10px;
         }
         
@@ -207,13 +208,13 @@
         }
         
         .debt-section h2 {
-            color: #ffffff;
+            color: var(--white);
             margin: 0;
             flex-grow: 1;
         }
         
         .debt-toggle-btn {
-            background: #D3AF37;
+            background: var(--gold-primary);
             color: white;
             border: none;
             padding: 8px 16px;
@@ -228,7 +229,7 @@
         }
         
         .debt-toggle-btn:hover {
-            background: #B8941E;
+            background: var(--gold-secondary);
         }
         
         .toggle-icon {
@@ -259,7 +260,7 @@
         }
         
         .debt-item {
-            background: #16213e;
+            background: var(--bg-navy);
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -267,10 +268,10 @@
         
         .debt-item h3 {
             margin: 0 0 15px 0;
-            color: #ffffff;
+            color: var(--white);
             text-align: center;
             font-size: 18px;
-            border-bottom: 2px solid #D3AF37;
+            border-bottom: 2px solid var(--gold-primary);
             padding-bottom: 10px;
         }
         
@@ -294,7 +295,7 @@
             padding: 10px;
             font-size: 14px;
             font-weight: 400;
-            border: 1px solid #757575;
+            border: 1px solid var(--border-gray);
             border-radius: 8px;
             font-family: inherit;
             width: 85%;
@@ -319,7 +320,7 @@
         }
         
         .clear-btn {
-            background-color: #f44336;
+            background-color: var(--cancel);
             color: white;
             padding: 15px 30px;
             border: none;
@@ -331,7 +332,7 @@
         }
         
         .clear-btn:hover {
-            background-color: #d32f2f;
+            background-color: var(--cancel-dark);
         }
         
         .scenario-result {
@@ -340,9 +341,9 @@
             border-radius: 4px;
         }
         
-        .scenario-1 { background-color: rgba(59, 59, 59, 1.0); border-left: 4px solid #4CAF50; color: #ffffff; }
-        .scenario-2 { background-color: rgba(59, 59, 59, 1.0); border-left: 4px solid #2196F3; color: #ffffff; }
-        .scenario-3 { background-color: rgba(59, 59, 59, 1.0); border-left: 4px solid #FF9800; color: #ffffff; }
+        .scenario-1 { background-color: rgba(59, 59, 59, 1.0); border-left: 4px solid #4CAF50; color: var(--white); }
+        .scenario-2 { background-color: rgba(59, 59, 59, 1.0); border-left: 4px solid #2196F3; color: var(--white); }
+        .scenario-3 { background-color: rgba(59, 59, 59, 1.0); border-left: 4px solid var(--warning); color: var(--white); }
         
         /* Tooltip Styles */
         .tooltip-container {
@@ -355,7 +356,7 @@
             width: 16px;
             height: 16px;
             border-radius: 50%;
-            background-color: #D3AF37;
+            background-color: var(--gold-primary);
             color: white;
             text-align: center;
             line-height: 16px;
@@ -369,8 +370,8 @@
         .tooltip-text {
             visibility: hidden;
             width: 300px;
-            background-color: #3b3b3b;
-            color: #ffffff;
+            background-color: var(--bg-secondary);
+            color: var(--white);
             text-align: left;
             border-radius: 8px;
             padding: 10px;
@@ -395,7 +396,7 @@
             margin-left: -5px;
             border-width: 5px;
             border-style: solid;
-            border-color: #3b3b3b transparent transparent transparent;
+            border-color: var(--bg-secondary) transparent transparent transparent;
         }
         
         .tooltip-container:hover .tooltip-text,
@@ -413,20 +414,20 @@
             max-width: 1200px;
             margin: 40px auto;
             padding: 30px;
-            background-color: #3b3b3b;
+            background-color: var(--bg-secondary);
             border-radius: 10px;
-            border: 1px solid #757575;
+            border: 1px solid var(--border-gray);
         }
         
         .disclaimer h3 {
-            color: #ffffff;
+            color: var(--white);
             margin-top: 0;
             margin-bottom: 15px;
             font-size: 18px;
         }
         
         .disclaimer p {
-            color: #b0b0b0;
+            color: var(--text-muted);
             font-size: 14px;
             line-height: 1.6;
             margin: 0;
@@ -496,12 +497,12 @@
         /* SPA Navigation Styles */
         .app-container {
             min-height: 100vh;
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-family: var(--font-family);
         }
 
         .sidebar {
             width: 250px;
-            background: #16213e;
+            background: var(--bg-navy);
             color: white;
             padding: 0;
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
@@ -629,14 +630,14 @@
 
         .nav-subitem.active {
             background: rgba(255,255,255,0.15);
-            border-right: 3px solid #fff;
+            border-right: 3px solid var(--white);
             color: white !important;
         }
 
         .main-content {
             margin-left: 250px;
             padding: 0;
-            background: #222222;
+            background: var(--bg-dark);
             min-height: 100vh;
         }
 
@@ -647,7 +648,7 @@
         }
 
         .container {
-            background: #16213e;
+            background: var(--bg-navy);
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -658,17 +659,17 @@
         }
 
         .page-header {
-            background: #16213e;
+            background: var(--bg-navy);
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            border: 1px solid #757575;
+            border: 1px solid var(--border-gray);
         }
 
         .page-title {
             margin: 0;
-            color: #ffffff;
+            color: var(--white);
             font-size: 28px;
             font-weight: 400;
             text-align: center;
@@ -676,7 +677,7 @@
         }
 
         .page-subtitle {
-            color: #e0e0e0;
+            color: var(--gray-light);
             margin: 8px 0 0 0;
             font-size: 16px;
             font-weight: 400;
@@ -697,7 +698,7 @@
             top: 20px;
             right: 20px;
             z-index: 1001;
-            background: #D3AF37;
+            background: var(--gold-primary);
             color: white;
             border: none;
             padding: 10px 15px;
@@ -708,7 +709,7 @@
         }
 
         .mobile-menu-btn:hover {
-            background: #B8941E;
+            background: var(--gold-secondary);
         }
 
         /* Mobile Responsive CSS */
@@ -1198,6 +1199,7 @@
         <p>This material is provided for general informational purposes only and does not constitute financial, investment, tax, legal or accounting advice, it should not be relied upon in that regard or be considered predictive of any future market performance, nor does it constitute an offer or solicitation to buy or sell any securities referred to. Individual circumstances and current events are critical to sound investment planning; anyone wishing to act on this material should consult with their advisor. Before making any investment decisions, we encourage you to consider these and other factors carefully. Past performance may not be repeated and is not indicative of future results.</p>
     </div>
 
+    <script src="fiquest-utils.js"></script>
     <script>
         // Touch device detection and tooltip functionality
         function isTouchDevice() {
@@ -1404,14 +1406,8 @@
         }
         
         // Number formatting functions
-        function formatNumber(num) {
-            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-        }
-        
-        function unformatNumber(str) {
-            return parseFloat(str.toString().replace(/,/g, '')) || 0;
-        }
-        
+        // formatNumber() and unformatNumber() are provided by fiquest-utils.js.
+
         function formatCurrencyInput(inputElement) {
             const value = unformatNumber(inputElement.value);
             inputElement.value = formatNumber(value);
@@ -2485,16 +2481,7 @@
             document.getElementById('results').style.display = 'block';
         }
         
-        // Escape user-supplied text before injecting it into innerHTML, so a scenario
-        // name like `<img onerror=...>` can't execute.
-        function escapeHtml(value) {
-            return String(value == null ? '' : value)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#39;');
-        }
+        // escapeHtml() is provided by fiquest-utils.js.
 
         function displayScenarioResults() {
             // Financial Independence Year

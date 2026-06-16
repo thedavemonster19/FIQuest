@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Net Worth Tracking - FIQuest</title>
+    <link rel="stylesheet" href="theme.css">
     <style>
         * {
             margin: 0;
@@ -12,12 +13,12 @@
         }
 
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-family: var(--font-family);
             font-size: 16px;
             font-weight: 400;
             line-height: 1.5;
-            color: #ffffff;
-            background: #222222;
+            color: var(--white);
+            background: var(--bg-dark);
         }
 
         /* Typography System - Simplified to 5 sizes, 3 weights */
@@ -32,7 +33,7 @@
 
         .sidebar {
             width: 250px;
-            background: #16213e;
+            background: var(--bg-navy);
             color: white;
             padding: 0;
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
@@ -147,13 +148,13 @@
             background: rgba(255,255,255,0.15);
             color: white;
             font-weight: 700;
-            border-right: 3px solid #fff;
+            border-right: 3px solid var(--white);
         }
 
         .main-content {
             margin-left: 250px;
             padding: 0;
-            background: #222222;
+            background: var(--bg-dark);
             min-height: 100vh;
         }
 
@@ -164,16 +165,16 @@
         }
 
         .page-header {
-            background: #16213e;
+            background: var(--bg-navy);
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            border: 1px solid #757575;
+            border: 1px solid var(--border-gray);
         }
 
         .page-title {
-            color: #ffffff;
+            color: var(--white);
             font-size: 28px;
             margin-bottom: 8px;
             font-weight: 400;
@@ -182,7 +183,7 @@
         }
 
         .page-subtitle {
-            color: #e0e0e0;
+            color: var(--gray-light);
             font-size: 16px;
             margin: 0;
             font-weight: 400;
@@ -191,12 +192,12 @@
         }
 
         .container {
-            background: #16213e;
+            background: var(--bg-navy);
             border-radius: 12px;
             padding: 30px;
             margin-bottom: 30px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border: 1px solid #757575;
+            border: 1px solid var(--border-gray);
         }
 
         .input-section {
@@ -214,27 +215,27 @@
         label {
             font-weight: 600;
             margin-bottom: 8px;
-            color: #ffffff;
+            color: var(--white);
             font-size: 14px;
         }
 
         input {
             padding: 12px 16px;
-            border: 2px solid #757575;
+            border: 2px solid var(--border-gray);
             border-radius: 8px;
             font-size: 16px;
-            background-color: #3b3b3b;
-            color: #ffffff;
+            background-color: var(--bg-secondary);
+            color: var(--white);
             font-weight: 600;
         }
 
         input[readonly] {
-            background-color: #3b3b3b;
-            color: #ffffff;
+            background-color: var(--bg-secondary);
+            color: var(--white);
         }
 
         .calculate-btn, .clear-btn {
-            background: #D3AF37;
+            background: var(--gold-primary);
             color: white;
             border: none;
             padding: 12px 24px;
@@ -245,7 +246,7 @@
         }
 
         .calculate-btn:hover, .clear-btn:hover {
-            background: #B8941E;
+            background: var(--gold-secondary);
         }
 
         .scenario-controls {
@@ -256,7 +257,7 @@
         /* Tracking Table Styles */
         #trackingTableWrapper {
             position: relative;
-            background: #16213e;
+            background: var(--bg-navy);
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             overflow: hidden;
@@ -266,8 +267,8 @@
             position: sticky;
             top: 0;
             z-index: 5;
-            background: #16213e;
-            border-bottom: 2px solid #000000;
+            background: var(--bg-navy);
+            border-bottom: 2px solid var(--black);
         }
 
         #trackingTableContainer {
@@ -285,15 +286,15 @@
         #netWorthTrackingTable td {
             padding: 12px;
             text-align: right;
-            border: 1px solid #000000;
+            border: 1px solid var(--black);
             white-space: nowrap;
             min-width: 120px;
         }
 
         #netWorthTrackingTable thead th {
-            background: #222222;
+            background: var(--bg-dark);
             font-weight: 600;
-            color: #ffffff;
+            color: var(--white);
             position: sticky;
             top: 0;
             z-index: 4;
@@ -304,7 +305,7 @@
             text-align: left;
             position: sticky;
             left: 0;
-            background: #16213e;
+            background: var(--bg-navy);
             z-index: 3;
             font-weight: bold;
             min-width: 200px;
@@ -312,47 +313,47 @@
         }
 
         #netWorthTrackingTable thead th:first-child {
-            background: #222222;
+            background: var(--bg-dark);
             color: white;
             z-index: 5;
         }
 
         /* Asset and Liability Section Headers */
         .section-header td {
-            background: #3b3b3b !important;
+            background: var(--bg-secondary) !important;
             font-weight: 700;
-            color: #28a745 !important;
+            color: var(--success) !important;
         }
 
         .liability-section-header td {
-            background: #3b3b3b !important;
-            color: #dc3545 !important;
+            background: var(--bg-secondary) !important;
+            color: var(--danger) !important;
             font-weight: 700;
         }
 
         .total-row {
-            background: #222222 !important;
+            background: var(--bg-dark) !important;
             font-weight: 700;
-            border-top: 2px solid #000000 !important;
+            border-top: 2px solid var(--black) !important;
         }
 
         .total-row td {
-            background: #222222 !important;
+            background: var(--bg-dark) !important;
         }
 
         .net-worth-row {
-            background: #222222 !important;
+            background: var(--bg-dark) !important;
             color: white !important;
             font-weight: 700;
             font-size: 16px;
         }
 
         .net-worth-row td {
-            background: #222222 !important;
+            background: var(--bg-dark) !important;
         }
 
         .net-worth-row td:first-child {
-            color: #D3AF37 !important;
+            color: var(--gold-primary) !important;
         }
 
         /* Mobile Menu Button */
@@ -362,7 +363,7 @@
             top: 20px;
             right: 20px;
             z-index: 1001;
-            background: #D3AF37;
+            background: var(--gold-primary);
             color: white;
             border: none;
             padding: 10px 15px;
@@ -373,7 +374,7 @@
         }
 
         .mobile-menu-btn:hover {
-            background: #B8941E;
+            background: var(--gold-secondary);
         }
 
         /* Enhanced Mobile Styles */
@@ -457,7 +458,7 @@
                 min-width: 120px;
                 position: sticky;
                 left: 0;
-                background: #16213e;
+                background: var(--bg-navy);
                 z-index: 2;
                 box-shadow: 2px 0 4px rgba(0,0,0,0.1);
             }
@@ -523,20 +524,20 @@
         .disclaimer {
             margin: 40px 0;
             padding: 30px;
-            background-color: #3b3b3b;
+            background-color: var(--bg-secondary);
             border-radius: 10px;
-            border: 1px solid #757575;
+            border: 1px solid var(--border-gray);
         }
 
         .disclaimer h3 {
-            color: #ffffff;
+            color: var(--white);
             margin-top: 0;
             margin-bottom: 15px;
             font-size: 18px;
         }
 
         .disclaimer p {
-            color: #b0b0b0;
+            color: var(--text-muted);
             font-size: 14px;
             line-height: 1.6;
             margin: 0;
@@ -702,6 +703,7 @@
     <!-- Chart.js Library -->
     <script src="chart.min.js"></script>
     
+    <script src="fiquest-utils.js"></script>
     <script>
         // Net Worth Setup Functions
         let assetAllocationChart = null;
@@ -2664,13 +2666,7 @@
         }
 
         // Utility functions
-        function formatNumber(num) {
-            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        }
-
-        function unformatNumber(str) {
-            return parseFloat(str.replace(/[$,]/g, '')) || 0;
-        }
+        // formatNumber() and unformatNumber() are provided by fiquest-utils.js.
 
         function formatCurrencyInput(input) {
             input.addEventListener('input', function() {

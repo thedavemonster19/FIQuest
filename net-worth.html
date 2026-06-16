@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Net Worth Setup - FIQuest</title>
+    <link rel="stylesheet" href="theme.css">
     <style>
         * {
             margin: 0;
@@ -12,12 +13,12 @@
         }
 
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-family: var(--font-family);
             font-size: 16px;
             font-weight: 400;
             line-height: 1.5;
-            color: #ffffff;
-            background: #222222;
+            color: var(--white);
+            background: var(--bg-dark);
         }
 
         /* Typography System - Simplified to 5 sizes, 3 weights */
@@ -38,7 +39,7 @@
 
         .sidebar {
             width: 250px;
-            background: #16213e;
+            background: var(--bg-navy);
             color: white;
             padding: 0;
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
@@ -156,13 +157,13 @@
             background: rgba(255,255,255,0.15);
             color: white;
             font-weight: bold;
-            border-right: 3px solid #fff;
+            border-right: 3px solid var(--white);
         }
 
         .main-content {
             margin-left: 250px;
             padding: 0;
-            background: #222222;
+            background: var(--bg-dark);
             min-height: 100vh;
         }
 
@@ -173,16 +174,16 @@
         }
 
         .page-header {
-            background: #16213e;
+            background: var(--bg-navy);
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            border: 2px solid #757575;
+            border: 2px solid var(--border-gray);
         }
 
         .page-title {
-            color: #ffffff;
+            color: var(--white);
             font-size: 28px;
             margin-bottom: 8px;
             text-align: center;
@@ -191,7 +192,7 @@
         }
 
         .page-subtitle {
-            color: #b0b0b0;
+            color: var(--text-muted);
             font-size: 16px;
             margin: 0;
             text-align: center;
@@ -200,11 +201,11 @@
         }
 
         .container {
-            background: #16213e;
+            background: var(--bg-navy);
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            border: 2px solid #757575;
+            border: 2px solid var(--border-gray);
         }
 
         .input-section {
@@ -222,32 +223,32 @@
         label {
             font-weight: 600;
             margin-bottom: 8px;
-            color: #e0e0e0;
+            color: var(--gray-light);
             font-size: 14px;
         }
 
         input {
             padding: 12px 16px;
-            border: 2px solid #757575;
+            border: 2px solid var(--border-gray);
             border-radius: 8px;
             font-size: 16px;
             font-weight: 600;
             box-sizing: border-box;
             font-family: inherit;
-            background-color: #3b3b3b;
-            color: #ffffff;
+            background-color: var(--bg-secondary);
+            color: var(--white);
         }
 
         input[readonly] {
-            background-color: #3b3b3b;
-            color: #e0e0e0;
-            border: 2px solid #757575;
+            background-color: var(--bg-secondary);
+            color: var(--gray-light);
+            border: 2px solid var(--border-gray);
             cursor: not-allowed;
             font-weight: 600;
         }
 
         .calculate-btn, .clear-btn {
-            background: #D3AF37;
+            background: var(--gold-primary);
             color: white;
             border: none;
             padding: 12px 24px;
@@ -259,11 +260,11 @@
         }
 
         .calculate-btn:hover, .clear-btn:hover {
-            background: #B8941E;
+            background: var(--gold-secondary);
         }
 
         .next-btn {
-            background: #FF9800;
+            background: var(--warning);
             color: white;
             border: none;
             padding: 12px 24px;
@@ -308,20 +309,20 @@
         .disclaimer {
             margin: 40px 0;
             padding: 30px;
-            background-color: #3b3b3b;
+            background-color: var(--bg-secondary);
             border-radius: 10px;
-            border: 1px solid #757575;
+            border: 1px solid var(--border-gray);
         }
 
         .disclaimer h3 {
-            color: #ffffff;
+            color: var(--white);
             margin-top: 0;
             margin-bottom: 15px;
             font-size: 18px;
         }
 
         .disclaimer p {
-            color: #b0b0b0;
+            color: var(--text-muted);
             font-size: 14px;
             line-height: 1.6;
             margin: 0;
@@ -343,7 +344,7 @@
             gap: 10px;
             margin-top: 10px;
             padding-top: 10px;
-            border-top: 1px solid #757575;
+            border-top: 1px solid var(--border-gray);
         }
 
         .total-label-input {
@@ -351,7 +352,7 @@
             font-size: 14px;
             padding: 8px;
             margin-right: 10px;
-            color: #ffffff;
+            color: var(--white);
             display: inline-block;
         }
 
@@ -378,7 +379,7 @@
         }
 
         .result-card {
-            background: linear-gradient(135deg, #D3AF37 0%, #B8941E 100%);
+            background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-secondary) 100%);
             color: white;
             padding: 20px;
             border-radius: 8px;
@@ -396,37 +397,37 @@
             font-size: 20px;
             font-weight: 700;
             margin-bottom: 5px;
-            color: #ffffff;
+            color: var(--white);
         }
 
         /* Input Field Variants */
         .asset-name-input {
-            border: 1px solid #757575;
+            border: 1px solid var(--border-gray);
             padding: 8px;
             border-radius: 8px;
-            background: #ffffff;
-            color: #222222;
+            background: var(--white);
+            color: var(--bg-dark);
             font-size: 14px;
         }
 
         .asset-value-input {
-            border: 1px solid #757575;
+            border: 1px solid var(--border-gray);
             padding: 8px;
             border-radius: 8px;
-            background: #ffffff;
-            color: #222222;
+            background: var(--white);
+            color: var(--bg-dark);
             font-weight: 400;
             font-size: 14px;
         }
 
         .readonly-total-input {
-            background: #222222;
-            border: 1px solid #757575;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-gray);
             padding: 5px;
             border-radius: 6px;
             font-weight: 400;
             font-size: 14px;
-            color: #e0e0e0;
+            color: var(--gray-light);
             cursor: not-allowed;
         }
 
@@ -442,7 +443,7 @@
             top: 20px;
             right: 20px;
             z-index: 1001;
-            background: #D3AF37;
+            background: var(--gold-primary);
             color: white;
             border: none;
             padding: 10px 15px;
@@ -453,7 +454,7 @@
         }
 
         .mobile-menu-btn:hover {
-            background: #B8941E;
+            background: var(--gold-secondary);
         }
 
         /* Enhanced Mobile Styles */
@@ -520,7 +521,7 @@
 
             .total-label-span {
                 font-weight: bold;
-                color: #ffffff;
+                color: var(--white);
             }
 
             .readonly-total-input {
@@ -551,9 +552,9 @@
                 gap: 8px;
                 margin-bottom: 15px;
                 padding: 10px;
-                border: 1px solid #e0e0e0;
+                border: 1px solid var(--gray-light);
                 border-radius: 6px;
-                background: #16213e;
+                background: var(--bg-navy);
             }
 
             /* Section headers */
@@ -778,6 +779,7 @@
     <!-- Chart.js Library -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
+    <script src="fiquest-utils.js"></script>
     <script>
         // Net Worth Setup Functions
         let assetAllocationChart = null;
@@ -1295,13 +1297,7 @@
         }
 
         // Utility functions
-        function formatNumber(num) {
-            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        }
-
-        function unformatNumber(str) {
-            return parseFloat(str.replace(/[$,]/g, '')) || 0;
-        }
+        // formatNumber() and unformatNumber() are provided by fiquest-utils.js.
 
         function formatCurrencyInput(input) {
             input.addEventListener('input', function() {
