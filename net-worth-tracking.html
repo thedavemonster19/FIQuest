@@ -748,9 +748,10 @@
                 
             } else if (activeScenario) {
                 // Fallback to scenario data if no setup saved
-                
+
                 document.getElementById('scenarioNameDisplay').textContent = activeScenario.name;
                 document.getElementById('setupDateDisplay').textContent = 'Setup Required - Please complete Net Worth Setup first';
+                setSummaryCardsPlaceholder();
                 
                 // Show message to complete setup first
                 const table = document.getElementById('netWorthTrackingTable');
@@ -770,10 +771,20 @@
                 // No data available
                 document.getElementById('scenarioNameDisplay').textContent = 'No Data Available';
                 document.getElementById('setupDateDisplay').textContent = 'No setup data found';
-                
+                setSummaryCardsPlaceholder();
+
                 const table = document.getElementById('netWorthTrackingTable');
                 table.innerHTML = '<tr><td style="text-align: center; padding: 40px; color: #b0b0b0;">No data available. Please start with the FI Calculator.</td></tr>';
             }
+        }
+
+        // Reset the three summary cards out of their "Loading..." placeholder state
+        // when there is no setup to populate them with.
+        function setSummaryCardsPlaceholder() {
+            ['initialNetWorthDisplay', 'fiTargetNetWorthDisplay', 'yearsToFiDisplay'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = '—';
+            });
         }
 
         function getEarliestEntryYear(netWorthEntries, setupYear) {

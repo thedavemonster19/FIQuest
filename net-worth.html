@@ -1291,6 +1291,14 @@
             };
             localStorage.setItem('fiquest_current_net_worth', JSON.stringify(simplifiedData));
 
+            // Persist to the canonical player record immediately so the setup
+            // survives navigation. Previously this relied on the beforeunload
+            // autosave, which is unreliable and could leave the setup orphaned in
+            // a loose key that the next page's loadPlayerGameData() then deleted.
+            if (window.userManager) {
+                userManager.savePlayerData();
+            }
+
             console.log('Saved net worth setup with individual accounts:', netWorthData);
 
             // Success message removed - auto-navigating to next page

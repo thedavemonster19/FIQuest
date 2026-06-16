@@ -108,25 +108,50 @@ class UserManager {
 
         const gameData = this.currentPlayer.gameData;
 
-        // Load scenarios (always set, even if empty to clear previous data)
-        if (gameData.scenarios && gameData.scenarios.length > 0) {
-            localStorage.setItem('fiquest_scenarios', JSON.stringify(gameData.scenarios));
-        } else {
-            localStorage.removeItem('fiquest_scenarios');
-        }
+        // Reconcile each working-cache key with the canonical gameData:
+        //  - If gameData has a value, it wins: (re)write the loose key from it.
+        //  - If gameData is empty BUT a loose key exists, the page wrote data that
+        //    was never mirrored into gameData (e.g. a save that didn't persist before
+        //    navigation). Promote that loose value up into gameData instead of
+        //    deleting it — otherwise we'd silently destroy the user's just-entered
+        //    data. This removes the previous reliance on the flaky beforeunload save.
+        //  - If both are empty, clear the loose key.
+        // Loose keys are cleared on logout (clearAllData) and reset on login
+        // (login-player.html), so a key present here always belongs to THIS player —
+        // promotion can't leak another player's data in.
+        let promoted = false;
+        const reconcile = (key, current, isEmpty) => {
+            if (!isEmpty(current)) {
+                localStorage.setItem(key, JSON.stringify(current));
+                return current;
+            }
+            const loose = localStorage.getItem(key);
+            if (loose !== null) {
+                try {
+                    const parsed = JSON.parse(loose);
+                    if (!isEmpty(parsed)) {
+                        promoted = true;
+                        return parsed;
+                    }
+                } catch (e) {
+                    // malformed loose value — fall through and clear it
+                }
+            }
+            localStorage.removeItem(key);
+            return current;
+        };
 
-        // Load active scenario (always set/clear)
-        if (gameData.activeScenario) {
-            localStorage.setItem('fiquest_active_scenario', JSON.stringify(gameData.activeScenario));
-        } else {
-            localStorage.removeItem('fiquest_active_scenario');
-        }
+        const emptyArray = (v) => !Array.isArray(v) || v.length === 0;
+        const emptyValue = (v) => v === null || v === undefined;
 
-        // Load net worth setup (always set/clear)
-        if (gameData.netWorthSetup) {
-            localStorage.setItem('fiquest_net_worth_setup', JSON.stringify(gameData.netWorthSetup));
-        } else {
-            localStorage.removeItem('fiquest_net_worth_setup');
+        gameData.scenarios = reconcile('fiquest_scenarios', gameData.scenarios, emptyArray);
+        gameData.activeScenario = reconcile('fiquest_active_scenario', gameData.activeScenario, emptyValue);
+        gameData.netWorthSetup = reconcile('fiquest_net_worth_setup', gameData.netWorthSetup, emptyValue);
+
+        // If we adopted any orphaned loose data, write it back to the player record
+        // so it is now canonical.
+        if (promoted) {
+            this.savePlayerData();
         }
 
         // Net worth tracking history lives canonically in gameData.netWorthTracking.

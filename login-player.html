@@ -357,7 +357,16 @@
                 player.lastPlayedDate = new Date().toISOString();
                 localStorage.setItem(`fiquest_player_${playerName.toLowerCase()}`, JSON.stringify(player));
                 localStorage.setItem('fiquest_current_player', playerName);
-                
+
+                // Clear any working-cache keys left over from a previously loaded
+                // player before hydrating this one. This keeps the loose keys owned
+                // by the current player, which is what lets loadPlayerGameData safely
+                // promote orphaned loose data without leaking it across players.
+                localStorage.removeItem('fiquest_scenarios');
+                localStorage.removeItem('fiquest_active_scenario');
+                localStorage.removeItem('fiquest_net_worth_setup');
+                localStorage.removeItem('fiquest_current_net_worth');
+
                 // Load player's game data back into the app
                 if (player.gameData.scenarios && player.gameData.scenarios.length > 0) {
                     localStorage.setItem('fiquest_scenarios', JSON.stringify(player.gameData.scenarios));
